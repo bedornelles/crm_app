@@ -1,3 +1,4 @@
+import 'package:crm_app/app/shared/theme/light/theme_light.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -8,11 +9,8 @@ class AppWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'teste 123',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+      title: 'teste1 app_widget',
+      theme: ThemeLight.themeData,
       routerConfig: Modular.routerConfig,
     );
   }
