@@ -1,6 +1,7 @@
 import 'package:crm_app/app/shared/theme/light/theme_light.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AppWidget extends StatelessWidget{
@@ -9,8 +10,13 @@ class AppWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'teste1 app_widget',
       theme: ThemeLight.themeData,
+
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      supportedLocales: const [Locale('pt', 'BR')],
+
       routerConfig: Modular.routerConfig,
     );
   }
