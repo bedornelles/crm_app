@@ -11,6 +11,7 @@ class ThemeLight {
 
   static ThemeData get themeData => ThemeData(
     colorScheme: colorScheme,
+    fontFamily: 'PlusJakartaSans',
     scaffoldBackgroundColor: const Color(0xFFFAFAFA),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFFAFAFA),
@@ -27,6 +28,11 @@ class ThemeLight {
       isDense: true,
       fillColor: Colors.white,
       filled: true,
+
+      hintStyle: TextStyle(
+        color: Color(0xFFB3B3B3),
+        fontSize: 14,
+      ),
     ),
 
     floatingActionButtonTheme: FloatingActionButtonThemeData(
