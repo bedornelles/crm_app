@@ -28,10 +28,10 @@ dependencies:
   geolocator: ^14.0.2
   date_field: ^3.0.0
   brasil_fields: ^1.19.0
-#  pkg_flutter_utils:
-#    git:
-#      url:
-#      ref:
+  pkg_flutter_utils:
+    git:
+      url: git@github.com:dev-cervantes/pkg_flutter_utils.git
+      ref: v2.8
 
 
 dev_dependencies:
