@@ -1,4 +1,6 @@
 import 'package:crm_app/app/modules/home/home_controller.dart';
+import 'package:crm_app/app/modules/home/widgets/visita/visita_card.dart';
+import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -63,39 +65,56 @@ class _HomePageState extends State<HomePage> {
             );
           }
 
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.list_alt_rounded,
-                  size: 70,
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.3),
-                ),
-                const SizedBox(height: 16,),
-                Text(
-                  "Nenhuma visita registrada hoje neste dispositivo",
-                  style: TextStyle(
+          if (controller.visitas.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.list_alt_rounded,
+                    size: 70,
                     color: Theme
                         .of(context)
                         .colorScheme
-                        .onSurfaceVariant,
-                    fontSize: 14,
+                        .primary
+                        .withValues(alpha: 0.3),
                   ),
-                )
-              ],
-            ),
+                  const SizedBox(height: 16,),
+                  Text(
+                    "Nenhuma visita registrada hoje neste dispositivo",
+                    style: TextStyle(
+                      color: Theme
+                          .of(context)
+                          .colorScheme
+                          .onSurfaceVariant,
+                      fontSize: 14,
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+
+            padding: const EdgeInsets.all(16.0),
+            itemCount: controller.visitas.length,
+            itemBuilder: (context, index) {
+
+              final visita = controller.visitas[index];
+
+              return VisitaCard(visita: visita);
+            },
           );
+
         },
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed:(){
-            Modular.to.pushNamed('/visita/');
-          },
+        onPressed:() async {
+          await Modular.to.pushNamed('/visita/');
+
+          controller.load();
+        },
         child: const Icon(Icons.add),
       ),
 

@@ -35,6 +35,24 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  late final _$visitasAtom = Atom(
+    name: '_HomeControllerBase.visitas',
+    context: context,
+  );
+
+  @override
+  ObservableList<VisitaEntity> get visitas {
+    _$visitasAtom.reportRead();
+    return super.visitas;
+  }
+
+  @override
+  set visitas(ObservableList<VisitaEntity> value) {
+    _$visitasAtom.reportWrite(value, super.visitas, () {
+      super.visitas = value;
+    });
+  }
+
   late final _$loadAsyncAction = AsyncAction(
     '_HomeControllerBase.load',
     context: context,
@@ -45,9 +63,27 @@ mixin _$HomeController on _HomeControllerBase, Store {
     return _$loadAsyncAction.run(() => super.load());
   }
 
+  late final _$_HomeControllerBaseActionController = ActionController(
+    name: '_HomeControllerBase',
+    context: context,
+  );
+
+  @override
+  void addVisita(VisitaEntity visita) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.addVisita',
+    );
+    try {
+      return super.addVisita(visita);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
+visitas: ${visitas},
 loading: ${loading}
     ''';
   }

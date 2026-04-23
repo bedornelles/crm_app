@@ -45,6 +45,16 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     });
   }
 
+  late final _$salvarVisitaAsyncAction = AsyncAction(
+    '_VisitaControllerBase.salvarVisita',
+    context: context,
+  );
+
+  @override
+  Future<void> salvarVisita(VisitaEntity novaVisita) {
+    return _$salvarVisitaAsyncAction.run(() => super.salvarVisita(novaVisita));
+  }
+
   late final _$_VisitaControllerBaseActionController = ActionController(
     name: '_VisitaControllerBase',
     context: context,

@@ -1,4 +1,5 @@
 
+import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,16 @@ class _VisitaPageState extends State<VisitaPage> {
   final _cpfCnpjController = TextEditingController();
   // controller do campo de valor pago
   final _valorPagoController = TextEditingController();
+  final _nomeEmpresaController = TextEditingController();
+  //controller nome do contato
+  final _contatoController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _logradouroController = TextEditingController();
+  final _numeroController = TextEditingController();
+  final _cidadeController = TextEditingController();
+  final _complementoController = TextEditingController();
+  final _sistemaController = TextEditingController();
+  final _observacoesController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -104,12 +115,13 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _nomeEmpresaController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
                     validator: InputValidator.required,
                     decoration: const InputDecoration(
-                      hintText: 'Lancheria do centro'
+                        hintText: 'Lancheria do centro'
                     ),
                   ),
 
@@ -127,12 +139,13 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _contatoController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
                     validator: InputValidator.required,
                     decoration: const InputDecoration(
-                      hintText: 'João da Silva'
+                        hintText: 'João da Silva'
                     ),
                   ),
 
@@ -141,9 +154,9 @@ class _VisitaPageState extends State<VisitaPage> {
                   Text(
                     'CPF/CNPJ da empresa',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.secondary
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.secondary
                     ),
                   ),
 
@@ -160,7 +173,7 @@ class _VisitaPageState extends State<VisitaPage> {
                     ],
                     validator: InputValidator.required,
                     decoration: const InputDecoration(
-                      hintText: '00.000.000/0000-00'
+                        hintText: '00.000.000/0000-00'
                     ),
                   ),
 
@@ -169,15 +182,16 @@ class _VisitaPageState extends State<VisitaPage> {
                   Text(
                     'E-mail da empresa',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.secondary
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.secondary
                     ),
                   ),
 
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
@@ -201,9 +215,9 @@ class _VisitaPageState extends State<VisitaPage> {
                   Text(
                     'Telefone',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.secondary
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.secondary
                     ),
                   ),
 
@@ -241,6 +255,7 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _logradouroController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -264,8 +279,9 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _numeroController,
                     style: const TextStyle(
-                      fontWeight: FontWeight.w400
+                        fontWeight: FontWeight.w400
                     ),
                     validator: InputValidator.required,
                     decoration: const InputDecoration(
@@ -287,6 +303,7 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _cidadeController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -310,6 +327,7 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _complementoController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -332,6 +350,7 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _sistemaController,
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
                     ),
@@ -362,7 +381,7 @@ class _VisitaPageState extends State<VisitaPage> {
                     inputFormatters: [
                       // se o texto esta vazio passa null. se nao passa o texto. inserido pois o app quebra se o valor estiver vazio
                       InputMasked.currency(
-                          value: _valorPagoController.text.isEmpty ? null : _valorPagoController.text,
+                        value: _valorPagoController.text.isEmpty ? null : _valorPagoController.text,
                       ),
                     ],
                     decoration: const InputDecoration(
@@ -375,9 +394,9 @@ class _VisitaPageState extends State<VisitaPage> {
                   Text(
                     'Demonstrou interesse?',
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.secondary
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: theme.colorScheme.secondary
                     ),
                   ),
 
@@ -450,6 +469,7 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 8),
 
                   TextFormField(
+                    controller: _observacoesController,
                     maxLines: 4,
                     maxLength: 1500,
                     style: const TextStyle(
@@ -469,14 +489,40 @@ class _VisitaPageState extends State<VisitaPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: (){
+                    onPressed: () async {
                       //validação
                       bool estaValido = _formKey.currentState!.validate();
                       bool escolheuInteresse = controller.demonstrouInteresse != null;
                       if (estaValido && escolheuInteresse) {
-                        print('Tudo certo!');
+                        final visitaCriada = VisitaEntity(
+                          data: DateTime.now(),
+                          nomeEmpresa: _nomeEmpresaController.text,
+                          contato: _contatoController.text,
+                          cpfCnpj: _cpfCnpjController.text,
+                          email: _emailController.text,
+                          telefone: _telefoneController.text,
+                          logradouro: _logradouroController.text,
+                          numero: _numeroController.text,
+                          cidade: _cidadeController.text,
+                          complemento: _complementoController.text,
+                          sistemaAtual: _sistemaController.text,
+                          valorPago: _valorPagoController.text,
+                          demonstrouInteresse: controller.demonstrouInteresse!,
+                          observacoes: _observacoesController.text,
+
+                        );
+                        await controller.salvarVisita(visitaCriada);
                       } else{
                         print('tem erro no forumalairo');
+                      }
+                      if (!escolheuInteresse) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Informe se o cliente demonstrou interesse.'),
+                            backgroundColor: Colors.red,
+                            duration: Duration(seconds: 4),
+                          ),
+                        );
                       }
                     },
                     child: const Row(

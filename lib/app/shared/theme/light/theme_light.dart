@@ -13,6 +13,16 @@ class ThemeLight {
     colorScheme: colorScheme,
     fontFamily: 'PlusJakartaSans',
     scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+    //card
+    cardTheme: CardThemeData(
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.shade200),
+      ),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Color(0xFFFAFAFA),
       surfaceTintColor: Colors.transparent,
