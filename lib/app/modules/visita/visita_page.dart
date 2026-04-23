@@ -495,6 +495,7 @@ class _VisitaPageState extends State<VisitaPage> {
                       bool escolheuInteresse = controller.demonstrouInteresse != null;
                       if (estaValido && escolheuInteresse) {
                         final visitaCriada = VisitaEntity(
+                          statusSincronizacao: 'pending',
                           data: DateTime.now(),
                           nomeEmpresa: _nomeEmpresaController.text,
                           contato: _contatoController.text,

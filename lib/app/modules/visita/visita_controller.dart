@@ -41,7 +41,7 @@ abstract class _VisitaControllerBase with Store {
       //repositorio vai salvar no sqlite
       await _repository.salvarVisita(novaVisita);
       //true para avisar que salvou no bd
-      Modular.to.pop(true);
+      Modular.to.pop(novaVisita);
     } catch (e) {
       print("erro ao salvar: $e");
     }

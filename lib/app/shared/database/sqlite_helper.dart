@@ -34,6 +34,7 @@ class SqliteHelper {
 
     await db.execute('''
       CREATE TABLE visitas (
+      statusSincronizacao TEXT,
       id TEXT PRIMARY KEY,
       data TEXT,
       nomeEmpresa TEXT,

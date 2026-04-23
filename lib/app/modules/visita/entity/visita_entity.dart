@@ -16,6 +16,7 @@ class VisitaEntity {
   final String valorPago;
   final bool demonstrouInteresse;
   final String? observacoes;
+  final String statusSincronizacao;
 
   VisitaEntity({
     String? id,
@@ -33,6 +34,7 @@ class VisitaEntity {
     required this.valorPago,
     required this.demonstrouInteresse,
     this.observacoes,
+    required this.statusSincronizacao,
   }): id = id ?? Uuid().v4();
 
   Map<String, dynamic> toMap(){
@@ -52,6 +54,7 @@ class VisitaEntity {
       'valorPago': valorPago,
       'demonstrouInteresse' : demonstrouInteresse ? 1 : 0,
       'observacoes' : observacoes,
+      'statusSincronizacao': statusSincronizacao,
     };
   }
 
@@ -72,7 +75,7 @@ class VisitaEntity {
       valorPago: map['valorPago'],
       demonstrouInteresse: map['demonstrouInteresse'] == 1,
       observacoes: map['observacoes'],
-
+      statusSincronizacao: map['statusSincronizacao']
     );
   }
 }
