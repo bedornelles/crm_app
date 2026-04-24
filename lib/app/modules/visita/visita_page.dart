@@ -1,6 +1,7 @@
 
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:crm_app/app/shared/entity/base_entity.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -495,6 +496,7 @@ class _VisitaPageState extends State<VisitaPage> {
                       bool escolheuInteresse = controller.demonstrouInteresse != null;
                       if (estaValido && escolheuInteresse) {
                         final visitaCriada = VisitaEntity(
+                          base: BaseEntity.novo(),
                           statusSincronizacao: 'pending',
                           data: DateTime.now(),
                           nomeEmpresa: _nomeEmpresaController.text,

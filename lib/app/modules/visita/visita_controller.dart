@@ -1,21 +1,21 @@
+import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
-import 'package:crm_app/app/shared/repositories/visita_repository.dart';
+import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 
 part 'visita_controller.g.dart';
 
-// class VisitaController = _VisitaControllerBase with _$VisitaController;
 class VisitaController extends _VisitaControllerBase with _$VisitaController {
   // Agora o Modular consegue "enxergar" que ele exige um VisitaRepository!
-  VisitaController(VisitaRepository repository) : super(repository);
+  VisitaController(IVisitaService service) : super(service);
 }
 
 abstract class _VisitaControllerBase with Store {
   //variavel para guardar o repositorio
-  final VisitaRepository _repository;
+  final IVisitaService _service;
   //construtor que vai pedir o repositorio para o modular
-  _VisitaControllerBase(this._repository);
+  _VisitaControllerBase(this._service);
 
   //btn demonstrou interesse
   @observable
@@ -39,7 +39,7 @@ abstract class _VisitaControllerBase with Store {
   Future<void> salvarVisita(VisitaEntity novaVisita) async {
     try {
       //repositorio vai salvar no sqlite
-      await _repository.salvarVisita(novaVisita);
+      await _service.saveOrUpdate(novaVisita);
       //true para avisar que salvou no bd
       Modular.to.pop(novaVisita);
     } catch (e) {

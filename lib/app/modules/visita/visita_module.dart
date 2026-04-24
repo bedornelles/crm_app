@@ -1,13 +1,20 @@
+import 'package:crm_app/app/modules/visita/repositories/visita_repository.dart';
+import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
+import 'package:crm_app/app/modules/visita/services/VisitaService.dart';
+import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:crm_app/app/modules/visita/visita_page.dart';
-import 'package:crm_app/app/shared/repositories/visita_repository.dart';
 
 class VisitaModule extends Module {
 
   @override
   void binds (Injector i ) {
-    i.addLazySingleton(VisitaRepository.new);// sugestao a adição do chat
+    //repositorio
+    i.addLazySingleton<IVisitaRepository>(VisitaRepositoryLocal.new);
+    //servico
+    i.addLazySingleton<IVisitaService>(VisitaService.new);
+    //controller
     i.addLazySingleton(VisitaController.new);
   }
 

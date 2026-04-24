@@ -1,7 +1,9 @@
-import 'package:uuid/uuid.dart';
+import 'package:crm_app/app/shared/entity/base_entity.dart';
+import 'package:crm_app/app/shared/entity/base_entity_interface.dart';
 
-class VisitaEntity {
-  final String id;
+class VisitaEntity implements IBaseEntity{
+  @override
+  BaseEntity base; //herda o ID das propriedades base
   final DateTime data;
   final String nomeEmpresa;
   final String contato;
@@ -19,7 +21,7 @@ class VisitaEntity {
   final String statusSincronizacao;
 
   VisitaEntity({
-    String? id,
+    required this.base,
     required this.data,
     required this.nomeEmpresa,
     required this.contato,
@@ -35,11 +37,11 @@ class VisitaEntity {
     required this.demonstrouInteresse,
     this.observacoes,
     required this.statusSincronizacao,
-  }): id = id ?? Uuid().v4();
+  });
 
   Map<String, dynamic> toMap(){
     return{
-      'id' : id,
+      ...base.toMap(),
       'data' : data.toIso8601String(),
       'nomeEmpresa' : nomeEmpresa,
       'contato' : contato,
@@ -60,7 +62,7 @@ class VisitaEntity {
 
   factory VisitaEntity.fromMap(Map<String, dynamic> map) {
     return VisitaEntity(
-      id: map['id'],
+      base:  BaseEntity.fromMap(map),
       data: DateTime.parse(map['data']),
       nomeEmpresa: map['nomeEmpresa'],
       contato: map['contato'],
