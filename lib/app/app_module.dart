@@ -1,4 +1,5 @@
 import 'package:crm_app/app/modules/home/home_module.dart';
+import 'package:crm_app/app/modules/login/login_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'modules/visita/repositories/visita_repository.dart';
 import 'modules/visita/repositories/visita_repository_interface.dart';
@@ -11,7 +12,8 @@ class AppModule extends Module {
   }
   @override
   void routes(RouteManager r) {
-    r.module('/', module: HomeModule());
+    r.module('/', module: LoginModule());
+    r.module('/home', module: HomeModule());
     r.module('/visita', module: VisitaModule());
   }
 }
