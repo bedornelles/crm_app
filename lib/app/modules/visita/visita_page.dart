@@ -481,15 +481,6 @@ class _VisitaPageState extends State<VisitaPage> {
                   const SizedBox(height: 24),
 
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
                     onPressed: () async {
                       //validação
                       bool estaValido = _formKey.currentState!.validate();

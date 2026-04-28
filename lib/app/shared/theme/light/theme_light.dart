@@ -44,12 +44,50 @@ class ThemeLight {
         fontSize: 14,
       ),
     ),
-
+    ///
+    ///LEMBRETE: CONFERIR SE ESTA SENDO USADO EM ALGUM LUGAR///
+    ///
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: colorScheme.primary,
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 24,
+        ),
+
+        minimumSize: const Size(double.infinity, 50),
+
+        backgroundColor: colorScheme.primary,
+        foregroundColor: Colors.white,
+          elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    ),
+
+    filledButtonTheme: FilledButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 24,
+        ),
+
+        minimumSize: const Size(double.infinity, 50),
+
+        backgroundColor: colorScheme.primary,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
       ),
     ),
 
