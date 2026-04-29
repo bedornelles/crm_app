@@ -1,44 +1,75 @@
+import 'dart:convert';
+
 import 'package:crm_app/app/modules/login/services/login_service_interface.dart';
 import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 import 'package:crm_app/app/modules/usuario/entity/usuario_entity.dart';
 
+import '../../../shared/api/crm_api_interface.dart';
+import '../../../shared/cache/cache.dart';
+import '../../../shared/cache/cache_interface.dart';
+
 class LoginService implements ILoginService {
 
+  final ICache _cache;
+  final ICrmApi _api;
+  final IVisitaService _visitaService;
+
+  LoginService(this._cache, this._api, this._visitaService);
+
+  // Verifica se existe usuário logado no cache.
   @override
   bool isLogged() {
-    // Para o teste, vamos fingir que o usuário não está logado
-    // para forçar a tela de login a aparecer.
-    return false;
+    return _cache.getString(cacheUsuarioKey) != null;
   }
 
+  //realiza o login do usuario
   @override
   Future<UsuarioEntity> login(String username, String password) async {
-    // 1. Simula o tempo de resposta da internet (2 segundos de "loading")
-    await Future.delayed(const Duration(seconds: 2));
-
-    // 2. Regra mockada: Só aceita admin / 123
-    if (username == 'admin' && password == '123') {
-
-      // 3. Devolve um usuário fake usando aquele seu token real para não quebrar a decodificação!
-      return UsuarioEntity(
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJub21lIjoiU2Vsc28gUGFjaGVjbyIsImlkX3VzdWFyaW8iOiIwOGNhNjk1Yy04MjU0LTRhYmMtOTU0OC01ZGJjOWRiM2MwMjIiLCJyb2xlIjoiQ2VydmFudGVzQWRtaW4iLCJleHAiOjE3NzczMDQ1MzEsImlzcyI6IkNlcnZhbnRlcyBUZWNub2xvZ2lhIn0.1VoqEy5HsGMfUtJpqqUb8EiNqWnOPBC9vxIhH33Qsng",
-        refreshToken: "token_falso_para_teste",
-      );
-
-    } else {
-      // 4. Simula o erro da API caso erre a senha
-      throw Exception('Usuário ou senha inválidos. (Dica: use admin e 123)');
+    //chama a API real
+    final response = await _api.post(uri: '/auth/login', data: {
+      'login': username,
+      'senha': password,
+    });
+    if (response == null) {
+      throw Exception('Erro ao fazer login no servidor');
     }
+
+    final usuario = UsuarioEntity.fromJson(response);
+
+    // Salva o usuário (com o token) no cache local para não precisar logar de novo
+    await _cache.setString(cacheUsuarioKey, jsonEncode(response));
+
+    return usuario;
   }
 
+  //Renva o token de autenticaçao do usuario
   @override
   Future<UsuarioEntity> refreshToken(String refreshToken, int refreshAttempts) async {
-    throw UnimplementedError('Não precisamos testar o refresh agora');
+    final response = await _api.post(
+      uri: '/auth/refresh',
+      data: {
+              'refreshToken': refreshToken,
+      },
+      refreshAttempts: refreshAttempts
+    );
+
+    if (response == null) {
+      throw Exception('Erro ao atualizar token');
+    }
+
+    final usuario = UsuarioEntity.fromJson(response);
+
+    await _cache.setString(cacheUsuarioKey, jsonEncode(response));
+
+    return usuario;
   }
 
   @override
   Future<void> logout() async {
-    // Apenas simula o tempo de limpar o banco e sair
-    await Future.delayed(const Duration(seconds: 1));
+    // limpa o token do cache
+    await _cache.remove(cacheUsuarioKey);
+    //limpa o banco de dados de visitas
+    await _visitaService.limparTabelaDoBancoLocal();
   }
+
 }

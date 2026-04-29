@@ -9,7 +9,7 @@ import 'package:crm_app/app/modules/visita/visita_page.dart';
 class VisitaModule extends Module {
 
   @override
-  void binds (Injector i ) {
+  void exportedBinds (Injector i ) {
     //repositorio
     i.addLazySingleton<IVisitaRepository>(VisitaRepositoryLocal.new);
     //servico

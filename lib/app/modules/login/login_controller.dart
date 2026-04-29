@@ -28,11 +28,9 @@ abstract class _LoginControllerBase with Store {
     _mostrarSenha = !_mostrarSenha;
   }
 
-  // ATENÇÃO: Mudamos de 'email' para 'username'
   Future<void> login(String username, String password) async {
     try {
       _loading = true;
-      // Chama o nosso Service (que agora está com o 'dublê' mockado)
       await _loginService.login(username, password);
 
       // Se deu tudo certo (não lançou Exception), navega para as Visitas
