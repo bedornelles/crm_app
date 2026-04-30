@@ -95,7 +95,6 @@ class CrmApi implements ICrmApi{
     } on DioException catch (e) {
       // Opa, deu um erro de rede! Vamos ver se é problema de Token vencido.
       if (_isTokenExpirado(e)) {
-
         // Se já tentou renovar menos de 3 vezes, tenta de novo.
         if (refreshAttempts < _maxTokenRefreshAttempts) {
           await _tokenExpirado(refreshAttempts); // Chama a função que renova o token

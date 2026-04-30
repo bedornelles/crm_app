@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/home/widgets/visita/visita_card.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
@@ -5,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+import 'package:crm_app/app/shared/cache/cache_interface.dart';
+import 'package:crm_app/app/shared/api/crm_api_interface.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage ({super.key});
@@ -117,7 +122,6 @@ class _HomePageState extends State<HomePage> {
         },
         child: const Icon(Icons.add),
       ),
-
     );
   }
 }

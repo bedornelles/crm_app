@@ -3,6 +3,7 @@ import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
 import 'package:crm_app/app/shared/repositories/base_repository.dart';
 import 'package:crm_app/app/shared/repositories/table_repository_local.dart';
+import 'package:crm_app/app/shared/database/database_local.dart';
 
 class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implements IVisitaRepository {
 
@@ -82,6 +83,34 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
   @override
   void validate(VisitaEntity entity) {
     // Regras de validação antes de inserir no banco, se necessário
+  }
+
+  @override
+  Future<List<VisitaEntity>> getAllNaoSincronizadas () async {
+    final db = await DatabaseLocal().getDb();
+    final List<Map<String, dynamic>> result = await db.query(
+      getTableName,
+      where: 'statusSincronizado = ?',
+      whereArgs: ['PENDENTE'],
+    );
+    return result.map((e) => fromMap(e)).toList();
+  }
+
+  @override
+  Future<void> marcarComoSincronizada(String id) async {
+    final db = await DatabaseLocal().getDb();
+    await db.update(
+      getTableName,
+      {'statusSincronizacao': 'SINCRONIZADO'},
+      where: '$getIdColumnName = ?',
+      whereArgs: [id],
+    );
+  }
+
+  @override
+  Future<void> limparTabelaDoBancoLocal() async {
+    final db = await DatabaseLocal().getDb();
+    await db.delete(getTableName);
   }
 
   @override
