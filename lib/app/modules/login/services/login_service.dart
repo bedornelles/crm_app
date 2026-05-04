@@ -25,7 +25,7 @@ class LoginService implements ILoginService {
   //realiza o login do usuario
   @override
   Future<UsuarioEntity> login(String username, String password) async {
-    //chama a API real
+    //chama a API e ve se as credenciais estao certas
     final response = await _api.post(uri: '/auth/login', data: {
       'login': username,
       'senha': password,
@@ -33,6 +33,12 @@ class LoginService implements ILoginService {
     if (response == null) {
       throw Exception('Erro ao fazer login no servidor');
     }
+    //após sucesso no login limpa o banco local
+    await _visitaService.limparTabelaDoBancoLocal();
+    print('Limpando visitas antigas para o novo login');
+
+    //baixa visitas e guarda no banco local
+    await _visitaService.buscarVisitasDaApiESalvarLocal();
 
     final usuario = UsuarioEntity.fromJson(response);
 

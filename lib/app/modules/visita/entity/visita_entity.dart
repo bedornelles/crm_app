@@ -1,5 +1,6 @@
 import 'package:crm_app/app/shared/entity/base_entity.dart';
 import 'package:crm_app/app/shared/entity/base_entity_interface.dart';
+import 'package:flutter/cupertino.dart';
 
 class VisitaEntity implements IBaseEntity{
   @override
@@ -82,6 +83,7 @@ class VisitaEntity implements IBaseEntity{
   }
 
   //alterando formato para conversar com a API
+
   Map<String, dynamic> toApiMap(String idUsuarioLogado) {
     final map = {
       "id": base.id,
@@ -110,8 +112,35 @@ class VisitaEntity implements IBaseEntity{
     };
 
     map.removeWhere((key, value) => value == null);
-
     return map;
   }
+
+  factory VisitaEntity.fromApiMap(Map<String, dynamic> map){
+    final mapaLocal = {
+      'id': map['id'],
+      'dataHoraCriado': map['dataHoraCriada'],
+      'dataHoraUltimaAlteracao': map['dataHoraAlterada'],
+      'dataHoraDeletado': map['dataHoraDeletada'],
+
+      'data': map['dataVisita'],
+      'nomeEmpresa': map['nomeEmpresa'],
+      'contato': map['nomeContatoEmpresa'],
+      'cpfCnpj': map['cpfCnpjEmpresa'],
+      'email': map['emailEmpresa'],
+      'telefone': map['telefoneEmpresa'],
+      'logradouro': map['logradouroEmpresa'],
+      'numero': map['numeroEmpresa'].toString(),
+      'cidade': map['cidadeEmpresa'],
+      'complemento': map['complementoEmpresa'],
+      'sistemaAtual': map['sistemaAtual'],
+      'valorPago': map['valorPago'].toString(),
+      'demonstrouInteresse': map['interessado'] == true ? 1 : 0,
+      'observacoes': map['observacao'],
+
+      'statusSincronizacao': '1',
+    };
+    return VisitaEntity.fromMap(mapaLocal);
+  }
+
 }
 

@@ -18,9 +18,29 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
   @override
   Future<List<VisitaEntity>> getByApi(int limit, int offset) async {
     final response = await _api.getAll(
-        uri: '/visita/create',
+        uri: '/visita',
         queryParameters:{'limit': limit, 'offset': offset});
-    return response.map((json) => VisitaEntity.fromMap(json)).toList();
+    return response.map((json) => VisitaEntity.fromApiMap(json)).toList();
+  }
+
+  @override
+  Future<void> buscarVisitasDaApiESalvarLocal() async {
+    try {
+      //busca vivistas da api
+      print('Buscando visitas da api');
+      final visitasDaApi = await getByApi(100, 0);
+
+      //salva visita no banco local
+      for (var visita in visitasDaApi) {
+        //salva local
+        await super.saveOrUpdate(visita);
+        //marca como sincornizada
+        await repository.marcarComoSincronizada(visita.base.id);
+      }
+      print('${visitasDaApi.length} visitas baixadas e salvas no banco');
+    }catch (e) {
+      print ('erro ao sincornizar visias na api $e');
+    }
   }
 
   @override
