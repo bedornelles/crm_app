@@ -39,7 +39,9 @@ abstract class _VisitaControllerBase with Store {
   Future<void> salvarVisita(VisitaEntity novaVisita) async {
     try {
       //repositorio vai salvar no sqlite
-      await _service.saveOrUpdate(novaVisita);
+      // await _service.saveOrUpdate(novaVisita);
+      await _service.salvarEEnviar(novaVisita);
+
       //true para avisar que salvou no bd
       Modular.to.pop(novaVisita);
     } catch (e) {

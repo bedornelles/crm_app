@@ -80,5 +80,38 @@ class VisitaEntity implements IBaseEntity{
       statusSincronizacao: map['statusSincronizacao']
     );
   }
+
+  //alterando formato para conversar com a API
+  Map<String, dynamic> toApiMap(String idUsuarioLogado) {
+    final map = {
+      "id": base.id,
+      "dataHoraCriada": base.dataHoraCriado?.toUtc().toIso8601String(),
+      "dataHoraAlterada": base.dataHoraUltimaAlteracao?.toUtc().toIso8601String(),
+      "dataHoraDeletada": base.dataHoraDeletado?.toUtc().toIso8601String(),
+      "dataVisita": data.toIso8601String().split('T')[0],
+      "nomeEmpresa": nomeEmpresa,
+      "nomeContatoEmpresa": contato,
+      "emailEmpresa": email,
+      "cpfCnpjEmpresa": cpfCnpj.replaceAll(RegExp(r'[^0-9]'), ''),
+      "telefoneEmpresa": telefone.replaceAll(RegExp(r'[^0-9]'), ''),
+      "sistemaAtual": sistemaAtual,
+      "valorPago": double.tryParse(valorPago.replaceAll('.', '').replaceAll(',', '.')) ?? 0.0,
+      "interessado": demonstrouInteresse,
+      "observacao": observacoes,
+      "logradouroEmpresa": logradouro,
+      "numeroEmpresa": numero.toString(),
+      "cidadeEmpresa": cidade,
+      "complementoEmpresa": complemento,
+      "statusSincronizacao": 0,
+      "identificadorEmpresa": 0,
+      "localizacao": "",
+      "erroSincronizacao": "",
+      "idUsuario": idUsuarioLogado,
+    };
+
+    map.removeWhere((key, value) => value == null);
+
+    return map;
+  }
 }
 

@@ -90,7 +90,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     final db = await DatabaseLocal().getDb();
     final List<Map<String, dynamic>> result = await db.query(
       getTableName,
-      where: 'statusSincronizado = ?',
+      where: 'statusSincronizacao = ?',
       whereArgs: ['PENDENTE'],
     );
     return result.map((e) => fromMap(e)).toList();
