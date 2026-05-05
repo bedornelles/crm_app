@@ -33,13 +33,19 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: const Text(
-              'LT',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        leading: GestureDetector(
+          onTap: () {
+            mostrarMenuPerfil(context, controller); // Chama o menu inferior aqui!
+          },
+          // O Padding e o CircleAvatar ficam dentro dele
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Text(
+                'LT',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
@@ -124,4 +130,96 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void mostrarMenuPerfil(BuildContext context, HomeController controller) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24))
+      ),
+      builder: (BuildContext context) {
+        return Padding (
+          padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              const CircleAvatar(
+                radius: 32,
+                backgroundColor: Color(0xFFD84315),
+                child: Text(
+                  'LT',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              const Text(
+                'Luciano Teste',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              InkWell(
+                onTap: () {
+                  // Primeiro fecha o Bottom Sheet
+                  Navigator.pop(context);
+                  // Depois chama a função de logout no Controller
+                  controller.desconectar();
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red.shade100),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Desconectar',
+                        style: TextStyle(
+                          color: Colors.red.shade700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Icon(
+                        Icons.exit_to_app_rounded, // Ícone de saída
+                        color: Colors.red.shade700,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            ],
+          )
+        );
+      }
+    );
+  }
+
 }

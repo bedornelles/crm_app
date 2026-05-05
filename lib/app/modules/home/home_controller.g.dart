@@ -63,6 +63,16 @@ mixin _$HomeController on _HomeControllerBase, Store {
     return _$loadAsyncAction.run(() => super.load());
   }
 
+  late final _$desconectarAsyncAction = AsyncAction(
+    '_HomeControllerBase.desconectar',
+    context: context,
+  );
+
+  @override
+  Future<void> desconectar() {
+    return _$desconectarAsyncAction.run(() => super.desconectar());
+  }
+
   late final _$_HomeControllerBaseActionController = ActionController(
     name: '_HomeControllerBase',
     context: context,

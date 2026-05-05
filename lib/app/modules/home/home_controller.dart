@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 import 'package:crm_app/app/shared/cache/cache.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 part 'home_controller.g.dart';
 
@@ -37,6 +38,26 @@ abstract class _HomeControllerBase with Store {
   @action
   void addVisita(VisitaEntity visita) {
     visitas.add(visita);
+  }
+
+  @action
+  Future<void> desconectar() async {
+    try {
+      print('iniciando o logout');
+
+      //limpa o banco local
+      await _service.limparTabelaDoBancoLocal();
+
+      //limpar o cache
+      await _cache.remove(cacheUsuarioKey);
+
+      //redireciona e destroi a home
+      Modular.to.navigate('/');
+
+      print('logou concluido');
+    } catch (e) {
+      print('erro ao deslogar: $e');
+    }
   }
 }
 
