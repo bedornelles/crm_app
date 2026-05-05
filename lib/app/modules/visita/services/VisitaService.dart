@@ -17,15 +17,41 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
 
   @override
   Future<List<VisitaEntity>> getByApi(int limit, int offset) async {
+    //buscando o ususario que esta logado no cache
+    final jsonUsuario = _cache.getString(cacheUsuarioKey);
+    print('1json do cache: $jsonUsuario');
+
+    if (jsonUsuario == null) {
+      throw Exception('usuario nao encontrado no cache para realziar busca');
+    }
+
+    final mapUsuario = jsonDecode(jsonUsuario);
+    final usuarioLogado = UsuarioEntity.fromJson(mapUsuario);
+
+    print('2 id exraido do usuario ${usuarioLogado.id}');
+    final String idLogado = usuarioLogado.id;
+
+    //envia o idusuario como um parametro no filtro
+    print('3 chamando api na rota');
     final response = await _api.getAll(
-        uri: '/visita',
-        queryParameters:{'limit': limit, 'offset': offset});
-    return response.map((json) => VisitaEntity.fromApiMap(json)).toList();
+        uri: '/visita/usuario/$idLogado',
+    );
+    print('id logado $idLogado');
+    print('4. Tipo de dados recebido da API: ${response.runtimeType}');
+    print('5. Resposta da API: $response');
+
+    return response.map((json) {
+      print('6. Convertendo visita: $json');
+      return VisitaEntity.fromApiMap(json);
+    }).toList();
   }
 
   @override
   Future<void> buscarVisitasDaApiESalvarLocal() async {
     try {
+      //limpar o banco de dados antes do GET
+      print('limoando visitas antigas para o novo login');
+      await limparTabelaDoBancoLocal();
       //busca vivistas da api
       print('Buscando visitas da api');
       final visitasDaApi = await getByApi(100, 0);
@@ -83,6 +109,7 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
         print(payload);
         print('=======');
 
+        ///caminho
         await _api.post(uri: '/visita/create', data: payload);
 
         //se API responder sucesso, atualiza o banco local
