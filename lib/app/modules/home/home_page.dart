@@ -132,9 +132,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void mostrarMenuPerfil(BuildContext context, HomeController controller) {
-    showModalBottomSheet(
+      showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Color(0xFFFAFAFA),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24))
       ),
@@ -155,9 +156,9 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 24),
 
-              const CircleAvatar(
-                radius: 32,
-                backgroundColor: Color(0xFFD84315),
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: Theme.of(context).primaryColor,
                 child: Text(
                   'LT',
                   style: TextStyle(
@@ -192,7 +193,8 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red.shade100),
+                    color:  Color(0xFFFFFF),
+                    border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -201,20 +203,19 @@ class _HomePageState extends State<HomePage> {
                       Text(
                         'Desconectar',
                         style: TextStyle(
-                          color: Colors.red.shade700,
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Icon(
                         Icons.exit_to_app_rounded, // Ícone de saída
-                        color: Colors.red.shade700,
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                       ),
                     ],
                   ),
                 ),
               ),
-
             ],
           )
         );
