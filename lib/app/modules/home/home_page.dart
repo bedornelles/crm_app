@@ -33,23 +33,26 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () {
-            mostrarMenuPerfil(context, controller); // Chama o menu inferior aqui!
-          },
-          // O Padding e o CircleAvatar ficam dentro dele
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Text(
-                'LT',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
+          leading: Observer(
+            builder: (_) {
+              return GestureDetector(
+                onTap: () {
+                  mostrarMenuPerfil(context, controller);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Text(
+                      controller.iniciaisUsuario, // Agora o Observer vai conseguir atualizar isso!
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-        ),
-        title: const Text('Visitas'),
+        title: const Text('Visita'),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_month_rounded),
@@ -60,7 +63,6 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: (){
-
             },
           ),
         ],
@@ -160,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                 radius: 24,
                 backgroundColor: Theme.of(context).primaryColor,
                 child: Text(
-                  'LT',
+                  controller.iniciaisUsuario,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -171,8 +173,8 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 12),
 
-              const Text(
-                'Luciano Teste',
+              Text(
+                controller.nomeUsuario,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

@@ -53,14 +53,40 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
-  late final _$loadAsyncAction = AsyncAction(
-    '_HomeControllerBase.load',
+  late final _$nomeUsuarioAtom = Atom(
+    name: '_HomeControllerBase.nomeUsuario',
     context: context,
   );
 
   @override
-  Future<void> load() {
-    return _$loadAsyncAction.run(() => super.load());
+  String get nomeUsuario {
+    _$nomeUsuarioAtom.reportRead();
+    return super.nomeUsuario;
+  }
+
+  @override
+  set nomeUsuario(String value) {
+    _$nomeUsuarioAtom.reportWrite(value, super.nomeUsuario, () {
+      super.nomeUsuario = value;
+    });
+  }
+
+  late final _$iniciaisUsuarioAtom = Atom(
+    name: '_HomeControllerBase.iniciaisUsuario',
+    context: context,
+  );
+
+  @override
+  String get iniciaisUsuario {
+    _$iniciaisUsuarioAtom.reportRead();
+    return super.iniciaisUsuario;
+  }
+
+  @override
+  set iniciaisUsuario(String value) {
+    _$iniciaisUsuarioAtom.reportWrite(value, super.iniciaisUsuario, () {
+      super.iniciaisUsuario = value;
+    });
   }
 
   late final _$desconectarAsyncAction = AsyncAction(
@@ -71,6 +97,28 @@ mixin _$HomeController on _HomeControllerBase, Store {
   @override
   Future<void> desconectar() {
     return _$desconectarAsyncAction.run(() => super.desconectar());
+  }
+
+  late final _$carregarDadosUsuarioAsyncAction = AsyncAction(
+    '_HomeControllerBase.carregarDadosUsuario',
+    context: context,
+  );
+
+  @override
+  Future<void> carregarDadosUsuario() {
+    return _$carregarDadosUsuarioAsyncAction.run(
+      () => super.carregarDadosUsuario(),
+    );
+  }
+
+  late final _$loadAsyncAction = AsyncAction(
+    '_HomeControllerBase.load',
+    context: context,
+  );
+
+  @override
+  Future<void> load() {
+    return _$loadAsyncAction.run(() => super.load());
   }
 
   late final _$_HomeControllerBaseActionController = ActionController(
@@ -94,6 +142,8 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 visitas: ${visitas},
+nomeUsuario: ${nomeUsuario},
+iniciaisUsuario: ${iniciaisUsuario},
 loading: ${loading}
     ''';
   }
