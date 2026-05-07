@@ -46,28 +46,28 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
     }).toList();
   }
 
-  @override
-  Future<void> buscarVisitasDaApiESalvarLocal() async {
-    try {
-      //limpar o banco de dados antes do GET
-      print('limoando visitas antigas para o novo login');
-      await limparTabelaDoBancoLocal();
-      //busca vivistas da api
-      print('Buscando visitas da api');
-      final visitasDaApi = await getByApi(100, 0);
-
-      //salva visita no banco local
-      for (var visita in visitasDaApi) {
-        //salva local
-        await super.saveOrUpdate(visita);
-        //marca como sincornizada
-        await repository.marcarComoSincronizada(visita.base.id);
-      }
-      print('${visitasDaApi.length} visitas baixadas e salvas no banco');
-    }catch (e) {
-      print ('erro ao sincornizar visias na api $e');
-    }
-  }
+  // @override
+  // Future<void> buscarVisitasDaApiESalvarLocal() async {
+  //   try {
+  //     //limpar o banco de dados antes do GET
+  //     print('limoando visitas antigas para o novo login');
+  //     await limparTabelaDoBancoLocal();
+  //     //busca vivistas da api
+  //     print('Buscando visitas da api');
+  //     final visitasDaApi = await getByApi(100, 0);
+  //
+  //     //salva visita no banco local
+  //     for (var visita in visitasDaApi) {
+  //       //salva local
+  //       await super.saveOrUpdate(visita);
+  //       //marca como sincornizada
+  //       await repository.marcarComoSincronizada(visita.base.id);
+  //     }
+  //     print('${visitasDaApi.length} visitas baixadas e salvas no banco');
+  //   }catch (e) {
+  //     print ('erro ao sincornizar visias na api $e');
+  //   }
+  // }
 
   @override
   Future<List<VisitaEntity>> getAllNaoSincronizadas() async {
@@ -110,7 +110,7 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
         print('=======');
 
         ///caminho
-        await _api.post(uri: '/visita/create', data: payload);
+        await _api.post(uri: '/visita', data: payload);
 
         //se API responder sucesso, atualiza o banco local
         await repository.marcarComoSincronizada(visita.base.id);
@@ -124,5 +124,10 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
       //erro no sqlite
       throw Exception('Erro ao salvar visita no banco local: $e');
     }
+  }
+
+  @override
+  Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario) async{
+    return await repository.getVisitasPorUsuario(idUsuario);
   }
 }

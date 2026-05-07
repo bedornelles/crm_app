@@ -5,4 +5,5 @@ abstract class IVisitaRepository implements IRepository<VisitaEntity> {
   Future<List<VisitaEntity>> getAllNaoSincronizadas();
   Future<void> marcarComoSincronizada(String id);
   Future<void> limparTabelaDoBancoLocal();
+  Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario);
 }

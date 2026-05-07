@@ -1,3 +1,4 @@
+import 'package:crm_app/app/shared/repositories/repository_interface.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
@@ -33,6 +34,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
         valorPago TEXT NOT NULL,
         demonstrouInteresse INTEGER NOT NULL DEFAULT 0,
         observacoes TEXT,
+        idUsuario TEXT NOT NULL,
         statusSincronizacao TEXT NOT NULL
       )
     ''');
@@ -54,6 +56,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     valorPago: e['valorPago'],
     demonstrouInteresse: (e['demonstrouInteresse'] ?? 0) == 1,
     observacoes: e['observacoes'],
+    idUsuario: e['idUsuario'],
     statusSincronizacao: e['statusSincronizacao'],
   );
 
@@ -77,12 +80,24 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     'valorPago': entity.valorPago,
     'demonstrouInteresse': entity.demonstrouInteresse ? 1 : 0,
     'observacoes': entity.observacoes,
+    'idUsuario': entity.idUsuario,
     'statusSincronizacao': entity.statusSincronizacao,
   };
 
   @override
   void validate(VisitaEntity entity) {
     // Regras de validação antes de inserir no banco, se necessário
+  }
+
+  @override
+  Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario) async {
+    final db = await DatabaseLocal().getDb();
+    final List<Map<String, dynamic>> result = await db.query(
+      getTableName,
+      where: 'idUsuario = ?',
+      whereArgs: [idUsuario],
+    );
+    return result.map((e) => fromMap(e)).toList();
   }
 
   @override

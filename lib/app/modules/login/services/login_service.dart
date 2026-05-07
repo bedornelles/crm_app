@@ -34,15 +34,14 @@ class LoginService implements ILoginService {
       throw Exception('Erro ao fazer login no servidor');
     }
     //após sucesso no login limpa o banco local
-    await _visitaService.limparTabelaDoBancoLocal();
-    print('Limpando visitas antigas para o novo login');
+
 
     final usuario = UsuarioEntity.fromJson(response);
     // Salva o usuário (com o token) no cache local para não precisar logar de novo
     await _cache.setString(cacheUsuarioKey, jsonEncode(response));
 
-    //baixa visitas e guarda no banco local
-    await _visitaService.buscarVisitasDaApiESalvarLocal();
+    // baixa visitas e guarda no banco local
+    // await _visitaService.buscarVisitasDaApiESalvarLocal();
 
     return usuario;
   }

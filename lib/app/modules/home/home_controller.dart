@@ -26,16 +26,8 @@ abstract class _HomeControllerBase with Store {
   @observable
   ObservableList<VisitaEntity> visitas = ObservableList<VisitaEntity>();
 
-  // @action
-  // Future <void> load() async {
-  //   try {
-  //     _loading = true;
-  //     final lista = await _service.getAll();
-  //     visitas = ObservableList.of(lista);
-  //   }finally{
-  //     _loading = false;
-  //   }
-  // }
+  @observable
+  String idUsuarioLogado = '';
 
   @action
   void addVisita(VisitaEntity visita) {
@@ -47,8 +39,8 @@ abstract class _HomeControllerBase with Store {
     try {
       print('iniciando o logout');
 
-      //limpa o banco local
-      await _service.limparTabelaDoBancoLocal();
+      // //limpa o banco local
+      // await _service.limparTabelaDoBancoLocal();
 
       //limpar o cache
       await _cache.remove(cacheUsuarioKey);
@@ -100,17 +92,20 @@ abstract class _HomeControllerBase with Store {
             // Troque o 'name' abaixo pela chave correta que aparecer no print acima!
             nomeUsuario = payloadMap['nome'] ?? 'Usuário';
 
-            List<String> nomes = nomeUsuario.trim().split(' ');
-            if (nomes.length > 1) {
-              iniciaisUsuario = (nomes.first[0] + nomes.last[0]).toUpperCase();
-            } else {
-              iniciaisUsuario = nomes.first[0].toUpperCase();
-            }
+            //extrai o id do usuario do token
+            idUsuarioLogado = payloadMap['id_usuario'] ?? '';
 
+            List<String> nomes = nomeUsuario.trim().split(' ');
+            if (nomes.isNotEmpty && nomes.first.isNotEmpty) {
+              if (nomes.length > 1) {
+                iniciaisUsuario = (nomes.first[0] + nomes.last[0]).toUpperCase();
+              } else {
+                iniciaisUsuario = nomes.first[0].toUpperCase();
+              }
+
+            }
           }
         }
-
-
       }
     } catch (e) {
       print('Erro ao carregae as iniciais do usuario: $e');
@@ -121,10 +116,22 @@ abstract class _HomeControllerBase with Store {
     try {
       _loading = true;
 
-      await Future.wait([
-        carregarDadosUsuario(),
-        _service.getAll().then((lista) => visitas = ObservableList.of(lista)),
-      ]);
+      // 1. Primeiro, carregamos os dados do usuário (Nome, Iniciais e ID) do cache/token.
+      // Precisamos esperar isso terminar para ter o 'idUsuarioLogado' preenchido.
+      await carregarDadosUsuario();
+
+      // 2. Agora que temos o ID, chamamos o novo método filtrado.
+      if (idUsuarioLogado.isNotEmpty) {
+        final lista = await _service.getVisitasPorUsuario(idUsuarioLogado);
+        visitas = ObservableList.of(lista);
+      } else {
+        // Caso não encontre o ID (ex: erro no token), limpamos a lista
+        visitas = ObservableList<VisitaEntity>();
+        print('Aviso: Nenhum ID de usuário encontrado para filtrar as visitas.');
+      }
+
+    } catch (e) {
+      print('Erro ao carregar dados da Home: $e');
     } finally {
       _loading = false;
     }

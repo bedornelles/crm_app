@@ -20,6 +20,7 @@ class VisitaEntity implements IBaseEntity{
   final bool demonstrouInteresse;
   final String? observacoes;
   final String statusSincronizacao;
+  final String idUsuario;
 
   VisitaEntity({
     required this.base,
@@ -38,6 +39,7 @@ class VisitaEntity implements IBaseEntity{
     required this.demonstrouInteresse,
     this.observacoes,
     required this.statusSincronizacao,
+    required this.idUsuario,
   });
 
   Map<String, dynamic> toMap(){
@@ -58,6 +60,7 @@ class VisitaEntity implements IBaseEntity{
       'demonstrouInteresse' : demonstrouInteresse ? 1 : 0,
       'observacoes' : observacoes,
       'statusSincronizacao': statusSincronizacao,
+      'idUsuario': idUsuario,
     };
   }
 
@@ -78,7 +81,8 @@ class VisitaEntity implements IBaseEntity{
       valorPago: map['valorPago'],
       demonstrouInteresse: map['demonstrouInteresse'] == 1,
       observacoes: map['observacoes'],
-      statusSincronizacao: map['statusSincronizacao']
+      statusSincronizacao: map['statusSincronizacao'],
+      idUsuario: map['idUsuario'] ?? '',
     );
   }
 
@@ -108,7 +112,7 @@ class VisitaEntity implements IBaseEntity{
       "identificadorEmpresa": 0,
       "localizacao": "",
       "erroSincronizacao": "",
-      "idUsuario": idUsuarioLogado,
+      "idUsuario": idUsuario,
     };
 
     map.removeWhere((key, value) => value == null);
@@ -138,6 +142,8 @@ class VisitaEntity implements IBaseEntity{
       'observacoes': map['observacao'] ??'',
 
       'statusSincronizacao': '1',
+
+      'idUsuario': map['idUsuario'] ?? '',
     };
     return VisitaEntity.fromMap(mapaLocal);
   }

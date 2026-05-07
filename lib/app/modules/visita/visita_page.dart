@@ -41,6 +41,7 @@ class _VisitaPageState extends State<VisitaPage> {
   final _sistemaController = TextEditingController();
   final _observacoesController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -485,6 +486,7 @@ class _VisitaPageState extends State<VisitaPage> {
                       bool estaValido = _formKey.currentState!.validate();
                       bool escolheuInteresse = controller.demonstrouInteresse != null;
                       if (estaValido && escolheuInteresse) {
+                        final String idLogado = await controller.getIdUsuarioLogado();
                         final visitaCriada = VisitaEntity(
                           base: BaseEntity.novo(),
                           statusSincronizacao: 'pending',
@@ -502,9 +504,11 @@ class _VisitaPageState extends State<VisitaPage> {
                           valorPago: _valorPagoController.text,
                           demonstrouInteresse: controller.demonstrouInteresse!,
                           observacoes: _observacoesController.text,
+                          idUsuario: idLogado,
 
                         );
                         await controller.salvarVisita(visitaCriada);
+                        // Modular.to.pop();
                       } else{
                         print('tem erro no forumalairo');
                       }

@@ -7,5 +7,6 @@ abstract class IVisitaService implements IService<VisitaEntity> {
   Future<List<VisitaEntity>> getByApi(int limit, int offset);
   Future<List<VisitaEntity>> getAllNaoSincronizadas();
   Future<void> salvarEEnviar(VisitaEntity visita);
-  Future<void> buscarVisitasDaApiESalvarLocal();
+  Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario);
+  // Future<void> buscarVisitasDaApiESalvarLocal();
 }
