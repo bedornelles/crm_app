@@ -72,12 +72,24 @@ class CrmApi implements ICrmApi{
     required JsonMap data, // Os dados que você quer salvar (ex: email e senha)
     int refreshAttempts = 0,
   }) async {
-    return _request<JsonMap?>(
-          () async {
-        final response = await _dio.post(uri, data: data);
-        // Transforma a resposta do servidor de volta num Mapa.
+    return _request<JsonMap?>(() async {
+      final response = await _dio.post(uri, data: data);
+      print('DEBUG API: Tipo real da resposta -> ${response.data.runtimeType}');
+      print('DEBUG API: Conteúdo real da resposta -> ${response.data}');
+
+      // O erro acontece na linha abaixo se response.data não for um Map
+      if (response.data == null) return null;
+
+      // Se a API mandar uma String, o código abaixo quebra.
+      // Vamos mudar para uma forma mais segura:
+      if (response.data is Map) {
         return JsonMap.from(response.data);
-      },
+      } else {
+        // Se não for Map (ex: for String ou List), retornamos um mapa vazio ou tratamos
+        print('Aviso: A API não retornou um Map. Retornando objeto vazio.');
+        return {};
+      }
+    },
       refreshAttempts,
     );
   }

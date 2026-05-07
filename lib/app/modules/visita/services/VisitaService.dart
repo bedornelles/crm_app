@@ -103,7 +103,7 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
         String idUsuarioLogado = usuarioLogado.id;
 
         //passa o ID para o payload
-        final payload = visita.toApiMap(idUsuarioLogado);
+        final payload = visita.toApiMap();
 
         print('=== dados enviados a api ===');
         print(payload);

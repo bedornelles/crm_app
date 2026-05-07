@@ -184,37 +184,40 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 40),
 
-              InkWell(
-                onTap: () {
-                  // Primeiro fecha o Bottom Sheet
-                  Navigator.pop(context);
-                  // Depois chama a função de logout no Controller
-                  controller.desconectar();
-                },
+              Material(
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  decoration: BoxDecoration(
-                    color:  Color(0xFFFFFF),
-                    border: Border.all(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Desconectar',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                child: InkWell(
+                  onTap: () {
+                    // Primeiro fecha o Bottom Sheet
+                    Navigator.pop(context);
+                    // Depois chama a função de logout no Controller
+                    controller.desconectar();
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Desconectar',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      Icon(
-                        Icons.exit_to_app_rounded, // Ícone de saída
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                      ),
-                    ],
+                        Icon(
+                          Icons.exit_to_app_rounded, // Ícone de saída
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

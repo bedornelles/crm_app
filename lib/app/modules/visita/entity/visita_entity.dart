@@ -88,12 +88,8 @@ class VisitaEntity implements IBaseEntity{
 
   //alterando formato para conversar com a API
 
-  Map<String, dynamic> toApiMap(String idUsuarioLogado) {
+  Map<String, dynamic> toApiMap() {
     final map = {
-      "id": base.id,
-      "dataHoraCriada": base.dataHoraCriado?.toUtc().toIso8601String(),
-      "dataHoraAlterada": base.dataHoraUltimaAlteracao?.toUtc().toIso8601String(),
-      "dataHoraDeletada": base.dataHoraDeletado?.toUtc().toIso8601String(),
       "dataVisita": data.toIso8601String().split('T')[0],
       "nomeEmpresa": nomeEmpresa,
       "nomeContatoEmpresa": contato,
@@ -109,10 +105,9 @@ class VisitaEntity implements IBaseEntity{
       "cidadeEmpresa": cidade,
       "complementoEmpresa": complemento,
       "statusSincronizacao": 0,
-      "identificadorEmpresa": 0,
+      "identificadorEmpresa": null,
       "localizacao": "",
       "erroSincronizacao": "",
-      "idUsuario": idUsuario,
     };
 
     map.removeWhere((key, value) => value == null);
