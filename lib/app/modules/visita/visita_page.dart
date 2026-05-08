@@ -51,9 +51,38 @@ class _VisitaPageState extends State<VisitaPage> {
       appBar: AppBar(
         title: const Text('Visita'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: (){},
+          PopupMenuButton<String>(
+            onSelected: (String result) async {
+              if (result == 'identificar_id'){
+                await Modular.to.pushNamed('visita/identificar');
+              }
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            color: Colors.white,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              PopupMenuItem<String>(
+                value: 'identificar_id',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit_rounded,
+                      color: Theme.of(context).colorScheme.secondary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'Identificar empresa pelo ID',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                )
+              )
+            ]
           ),
         ],
       ),
