@@ -88,8 +88,6 @@ abstract class _HomeControllerBase with Store {
             // chaves exatas que o back-end colocou dentro do Token
             print('Conteúdo de dentro do Token: $payloadMap');
 
-            // 5. Tenta pegar o nome. Geralmente fica em 'name', 'sub', 'unique_name' ou 'username'
-            // Troque o 'name' abaixo pela chave correta que aparecer no print acima!
             nomeUsuario = payloadMap['nome'] ?? 'Usuário';
 
             //extrai o id do usuario do token
@@ -116,16 +114,16 @@ abstract class _HomeControllerBase with Store {
     try {
       _loading = true;
 
-      // 1. Primeiro, carregamos os dados do usuário (Nome, Iniciais e ID) do cache/token.
-      // Precisamos esperar isso terminar para ter o 'idUsuarioLogado' preenchido.
+      // 1. Primeiro, carrega os dados do usuário (Nome, Iniciais e ID) do cache/token.
+      // Precisa esperar isso terminar para ter o 'idUsuarioLogado' preenchido.
       await carregarDadosUsuario();
 
-      // 2. Agora que temos o ID, chamamos o novo método filtrado.
+      // 2. Agora que tem o ID, chama o novo metodo filtrado.
       if (idUsuarioLogado.isNotEmpty) {
         final lista = await _service.getVisitasPorUsuario(idUsuarioLogado);
         visitas = ObservableList.of(lista);
       } else {
-        // Caso não encontre o ID (ex: erro no token), limpamos a lista
+        // Caso não encontre o ID (ex: erro no token), limpa a lista
         visitas = ObservableList<VisitaEntity>();
         print('Aviso: Nenhum ID de usuário encontrado para filtrar as visitas.');
       }

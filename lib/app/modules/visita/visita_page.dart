@@ -54,7 +54,7 @@ class _VisitaPageState extends State<VisitaPage> {
           PopupMenuButton<String>(
             onSelected: (String result) async {
               if (result == 'identificar_id'){
-                await Modular.to.pushNamed('visita/identificar');
+                await Modular.to.pushNamed('/visita/identificarId');
               }
             },
             shape: RoundedRectangleBorder(

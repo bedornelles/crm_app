@@ -38,7 +38,7 @@ class VisitaCard extends StatelessWidget{
               const SizedBox(height: 8),
 
               Text(
-                visita.nomeEmpresa,
+                visita.tituloExibicao,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,

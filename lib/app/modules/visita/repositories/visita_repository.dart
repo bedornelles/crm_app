@@ -35,6 +35,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
         demonstrouInteresse INTEGER NOT NULL DEFAULT 0,
         observacoes TEXT,
         idUsuario TEXT NOT NULL,
+        identificadorEmpresa INTEGER,
         statusSincronizacao TEXT NOT NULL
       )
     ''');
@@ -57,6 +58,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     demonstrouInteresse: (e['demonstrouInteresse'] ?? 0) == 1,
     observacoes: e['observacoes'],
     idUsuario: e['idUsuario'],
+    identificadorEmpresa: e['identificadorEmpresa'],
     statusSincronizacao: e['statusSincronizacao'],
   );
 
@@ -81,6 +83,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     'demonstrouInteresse': entity.demonstrouInteresse ? 1 : 0,
     'observacoes': entity.observacoes,
     'idUsuario': entity.idUsuario,
+    'identificadorEmpresa': entity.identificadorEmpresa,
     'statusSincronizacao': entity.statusSincronizacao,
   };
 

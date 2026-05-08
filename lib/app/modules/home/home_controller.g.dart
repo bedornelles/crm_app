@@ -53,6 +53,24 @@ mixin _$HomeController on _HomeControllerBase, Store {
     });
   }
 
+  late final _$idUsuarioLogadoAtom = Atom(
+    name: '_HomeControllerBase.idUsuarioLogado',
+    context: context,
+  );
+
+  @override
+  String get idUsuarioLogado {
+    _$idUsuarioLogadoAtom.reportRead();
+    return super.idUsuarioLogado;
+  }
+
+  @override
+  set idUsuarioLogado(String value) {
+    _$idUsuarioLogadoAtom.reportWrite(value, super.idUsuarioLogado, () {
+      super.idUsuarioLogado = value;
+    });
+  }
+
   late final _$nomeUsuarioAtom = Atom(
     name: '_HomeControllerBase.nomeUsuario',
     context: context,
@@ -142,6 +160,7 @@ mixin _$HomeController on _HomeControllerBase, Store {
   String toString() {
     return '''
 visitas: ${visitas},
+idUsuarioLogado: ${idUsuarioLogado},
 nomeUsuario: ${nomeUsuario},
 iniciaisUsuario: ${iniciaisUsuario},
 loading: ${loading}

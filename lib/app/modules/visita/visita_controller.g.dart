@@ -55,6 +55,18 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     return _$salvarVisitaAsyncAction.run(() => super.salvarVisita(novaVisita));
   }
 
+  late final _$getIdUsuarioLogadoAsyncAction = AsyncAction(
+    '_VisitaControllerBase.getIdUsuarioLogado',
+    context: context,
+  );
+
+  @override
+  Future<String> getIdUsuarioLogado() {
+    return _$getIdUsuarioLogadoAsyncAction.run(
+      () => super.getIdUsuarioLogado(),
+    );
+  }
+
   late final _$_VisitaControllerBaseActionController = ActionController(
     name: '_VisitaControllerBase',
     context: context,

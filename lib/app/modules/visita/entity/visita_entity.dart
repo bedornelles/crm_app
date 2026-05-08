@@ -21,6 +21,16 @@ class VisitaEntity implements IBaseEntity{
   final String? observacoes;
   final String statusSincronizacao;
   final String idUsuario;
+  final int? identificadorEmpresa;
+
+  String get tituloExibicao {
+    if (nomeEmpresa.isNotEmpty) {
+      return nomeEmpresa;
+    } else if (identificadorEmpresa != null) {
+      return 'Empresa ID: $identificadorEmpresa';
+    }
+    return 'Nova Empresa (sem nome)';
+  }
 
   VisitaEntity({
     required this.base,
@@ -40,6 +50,7 @@ class VisitaEntity implements IBaseEntity{
     this.observacoes,
     required this.statusSincronizacao,
     required this.idUsuario,
+    this.identificadorEmpresa,
   });
 
   Map<String, dynamic> toMap(){
@@ -61,6 +72,7 @@ class VisitaEntity implements IBaseEntity{
       'observacoes' : observacoes,
       'statusSincronizacao': statusSincronizacao,
       'idUsuario': idUsuario,
+      'identificadorEmpresa': identificadorEmpresa,
     };
   }
 
@@ -83,6 +95,7 @@ class VisitaEntity implements IBaseEntity{
       observacoes: map['observacoes'],
       statusSincronizacao: map['statusSincronizacao'],
       idUsuario: map['idUsuario'] ?? '',
+      identificadorEmpresa: map['identificadorEmpresa'],
     );
   }
 
@@ -105,7 +118,7 @@ class VisitaEntity implements IBaseEntity{
       "cidadeEmpresa": cidade,
       "complementoEmpresa": complemento,
       "statusSincronizacao": 0,
-      "identificadorEmpresa": null,
+      "identificadorEmpresa": identificadorEmpresa,
       "localizacao": "",
       "erroSincronizacao": "",
     };
