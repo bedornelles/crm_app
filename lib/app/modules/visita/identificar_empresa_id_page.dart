@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:pkg_flutter_utils/validators.dart';
 import 'identificar_empresa_id_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:crm_app/app/modules/home/home_controller.dart';
 
 class IdentificarEmpresaIdPage extends StatefulWidget {
   const IdentificarEmpresaIdPage({super.key});
@@ -100,10 +101,19 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
 
   Future<void> _salvar() async {
     if (_formKey.currentState!.validate()) {
-      final String idLogado = await visitaController.getIdUsuarioLogado();
-      await controller.salvarVisitaId(idLogado);
-      Modular.to.navigate('/home');
+      try {
+        final String idLogado = await visitaController.getIdUsuarioLogado();
+
+        await controller.salvarVisitaId(idLogado);
+
+        final homeController = Modular.get<HomeController>();
+        await homeController.load();
+
+      }catch(e) {
+        print('erro mostrar visita do id $e');
+      }finally {
+        Modular.to.navigate('/home/');
+      }
     }
   }
-
 }
