@@ -1,5 +1,5 @@
 import 'package:crm_app/app/shared/entity/base_entity_interface.dart';
-import 'package:crm_app/app/shared/repositories/repository_interface.dart';
+import 'package:crm_app/app/shared/repository/repository_interface.dart';
 import 'package:crm_app/app/shared/services/base_service_interface.dart';
 
 // Serviço base genérico para operações de entidades.
