@@ -62,6 +62,9 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
       e['status_sincronizacao'] ?? 'PENDENTE',
     ),
     idUsuario: e['id_usuario'],
+    identificadorEmpresa: e['identificador_empresa'] != null
+        ? int.tryParse(e['identificador_empresa'].toString())
+        : null,
   );
 
   @override

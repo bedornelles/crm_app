@@ -92,6 +92,53 @@ mixin _$IdentificarEmpresaIdController
     return _$salvarAsyncAction.run(() => super.salvar(idUsuario));
   }
 
+  late final _$_IdentificarEmpresaIdControllerBaseActionController =
+      ActionController(
+        name: '_IdentificarEmpresaIdControllerBase',
+        context: context,
+      );
+
+  @override
+  void setIdEmpresa(String valor) {
+    final _$actionInfo = _$_IdentificarEmpresaIdControllerBaseActionController
+        .startAction(name: '_IdentificarEmpresaIdControllerBase.setIdEmpresa');
+    try {
+      return super.setIdEmpresa(valor);
+    } finally {
+      _$_IdentificarEmpresaIdControllerBaseActionController.endAction(
+        _$actionInfo,
+      );
+    }
+  }
+
+  @override
+  void setContato(String valor) {
+    final _$actionInfo = _$_IdentificarEmpresaIdControllerBaseActionController
+        .startAction(name: '_IdentificarEmpresaIdControllerBase.setContato');
+    try {
+      return super.setContato(valor);
+    } finally {
+      _$_IdentificarEmpresaIdControllerBaseActionController.endAction(
+        _$actionInfo,
+      );
+    }
+  }
+
+  @override
+  void setObservacoes(String valor) {
+    final _$actionInfo = _$_IdentificarEmpresaIdControllerBaseActionController
+        .startAction(
+          name: '_IdentificarEmpresaIdControllerBase.setObservacoes',
+        );
+    try {
+      return super.setObservacoes(valor);
+    } finally {
+      _$_IdentificarEmpresaIdControllerBaseActionController.endAction(
+        _$actionInfo,
+      );
+    }
+  }
+
   @override
   String toString() {
     return '''

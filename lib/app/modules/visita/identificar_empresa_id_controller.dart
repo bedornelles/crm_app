@@ -24,10 +24,13 @@ abstract class _IdentificarEmpresaIdControllerBase with Store{
 
   @observable
   String contato = '';
-
+  @action
+  void setContato(String valor) => contato = valor;
 
   @observable
   String observacoes = '';
+  @action
+  void setObservacoes(String valor) => observacoes = valor;
 
   @action
   Future<VisitaEntity?> salvar(String idUsuario) async {

@@ -39,7 +39,7 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
               TextFormField(
                 keyboardType: TextInputType.number,
                 validator: InputValidator.required,
-                onChanged: (value) => controller.idEmpresa = value,
+                onChanged: controller.setIdEmpresa,
               ),
 
               const SizedBox(height: 16),
@@ -47,7 +47,7 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
               _buildLabel(theme, 'Contato na empresa'),
               TextFormField(
                 validator: InputValidator.required,
-                onChanged: (value) => controller.contato = value,
+                onChanged: controller.setContato,
               ),
 
               const SizedBox(height: 16),
@@ -57,7 +57,7 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
                 validator: InputValidator.required,
                 maxLines: 4,
                 maxLength: 1500,
-                onChanged: (value) => controller.observacoes = value,
+                onChanged: controller.setObservacoes,
               ),
 
               const SizedBox(height: 32),

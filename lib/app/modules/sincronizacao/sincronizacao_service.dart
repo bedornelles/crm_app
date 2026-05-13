@@ -105,7 +105,6 @@ class SincronizacaoService implements Disposable {
     };
 
     // remove campos nulos
-    payload.removeWhere((key, value) => value == null);
 
     return payload;
 
