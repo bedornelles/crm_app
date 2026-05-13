@@ -1,3 +1,4 @@
+import 'package:crm_app/app/modules/visita/enum/status_sincronizacao.dart';
 import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 import 'package:crm_app/app/shared/entity/base_entity.dart';
 import 'package:mobx/mobx.dart';
@@ -13,45 +14,53 @@ abstract class _IdentificarEmpresaIdControllerBase with Store{
   _IdentificarEmpresaIdControllerBase(this._visitaService);
 
   @observable
-  bool loading = false;
+  bool saving = false;
 
   @observable
   String idEmpresa = '';
+  @action
+  void setIdEmpresa(String valor) => idEmpresa = valor;
+
 
   @observable
   String contato = '';
+
 
   @observable
   String observacoes = '';
 
   @action
-  Future<void> salvarVisitaId(String idUsuarioLogado) async {
-    loading = true;
+  Future<VisitaEntity?> salvar(String idUsuario) async {
+
+    if (saving) return null;
+    saving = true;
+
     try {
-      final visita = VisitaEntity(
+      final entity = VisitaEntity(
         base: BaseEntity.novo(),
-        statusSincronizacao: 'pending',
-        data: DateTime.now(),
+        statusSincronizacao: StatusSincronizacao.pendente,
+        dataVisita: DateTime.now(),
         identificadorEmpresa: int.tryParse(idEmpresa),
         nomeEmpresa: '',
-        contato: contato,
+        nomeContatoEmpresa: contato,
         observacoes: observacoes,
-        idUsuario: idUsuarioLogado,
+        idUsuario: idUsuario,
         demonstrouInteresse: true,
-        cpfCnpj: '',
-        email: '',
-        telefone: '',
-        logradouro: '',
-        numero: '',
-        cidade: '',
-        complemento: '',
+        cpfCnpjEmpresa: '',
+        emailEmpresa: '',
+        telefoneEmpresa: '',
+        logradouroEmpresa: '',
+        numeroEmpresa: '',
+        cidadeEmpresa: '',
+        complementoEmpresa: '',
         sistemaAtual: '',
         valorPago: '',
       );
 
-      await _visitaService.salvarEEnviar(visita);
+      await _visitaService.saveOrUpdate(entity);
+      return entity;
     }finally {
-      loading = false;
+      saving = false;
     }
   }
 

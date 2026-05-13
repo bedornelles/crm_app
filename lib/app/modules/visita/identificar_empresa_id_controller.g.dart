@@ -10,21 +10,21 @@ part of 'identificar_empresa_id_controller.dart';
 
 mixin _$IdentificarEmpresaIdController
     on _IdentificarEmpresaIdControllerBase, Store {
-  late final _$loadingAtom = Atom(
-    name: '_IdentificarEmpresaIdControllerBase.loading',
+  late final _$savingAtom = Atom(
+    name: '_IdentificarEmpresaIdControllerBase.saving',
     context: context,
   );
 
   @override
-  bool get loading {
-    _$loadingAtom.reportRead();
-    return super.loading;
+  bool get saving {
+    _$savingAtom.reportRead();
+    return super.saving;
   }
 
   @override
-  set loading(bool value) {
-    _$loadingAtom.reportWrite(value, super.loading, () {
-      super.loading = value;
+  set saving(bool value) {
+    _$savingAtom.reportWrite(value, super.saving, () {
+      super.saving = value;
     });
   }
 
@@ -82,22 +82,20 @@ mixin _$IdentificarEmpresaIdController
     });
   }
 
-  late final _$salvarVisitaIdAsyncAction = AsyncAction(
-    '_IdentificarEmpresaIdControllerBase.salvarVisitaId',
+  late final _$salvarAsyncAction = AsyncAction(
+    '_IdentificarEmpresaIdControllerBase.salvar',
     context: context,
   );
 
   @override
-  Future<void> salvarVisitaId(String idUsuarioLogado) {
-    return _$salvarVisitaIdAsyncAction.run(
-      () => super.salvarVisitaId(idUsuarioLogado),
-    );
+  Future<VisitaEntity?> salvar(String idUsuario) {
+    return _$salvarAsyncAction.run(() => super.salvar(idUsuario));
   }
 
   @override
   String toString() {
     return '''
-loading: ${loading},
+saving: ${saving},
 idEmpresa: ${idEmpresa},
 contato: ${contato},
 observacoes: ${observacoes}

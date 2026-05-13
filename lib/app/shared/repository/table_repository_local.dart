@@ -4,8 +4,8 @@ import 'package:pkg_flutter_utils/extensions.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:crm_app/app/shared/database/database_local.dart';
 import 'package:crm_app/app/shared/entity/base_entity_interface.dart';
-import 'package:crm_app/app/shared/repositories/base_repository.dart';
-import 'package:crm_app/app/shared/repositories/repository_interface.dart';
+import 'package:crm_app/app/shared/repository/base_repository.dart';
+import 'package:crm_app/app/shared/repository/repository_interface.dart';
 
 
 /// Classe abstrata que implementa um repositório local de tabela.

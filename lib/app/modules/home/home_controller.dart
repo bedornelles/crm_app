@@ -39,9 +39,6 @@ abstract class _HomeControllerBase with Store {
     try {
       print('iniciando o logout');
 
-      // //limpa o banco local
-      // await _service.limparTabelaDoBancoLocal();
-
       //limpar o cache
       await _cache.remove(cacheUsuarioKey);
 

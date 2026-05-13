@@ -156,9 +156,9 @@ class CrmApi implements ICrmApi{
         // Se a API não mandou uma mensagem amigável, mostra o código (ex: Erro HTTP 500)
         throw Exception('Erro HTTP $statusCode: ${e.response?.statusMessage}');
       case DioExceptionType.unknown:
-        throw Exception('Erro desconhecido: ${e.message}');
+        throw Exception('Erro desconhecido: ${e.message} | tipo: ${e.type} | erro: ${e.error} | response: ${e.response}');
       default:
-        throw Exception(e.message ?? 'Erro inesperado.');
+        throw Exception('Default: ${e.message} | tipo: ${e.type} | erro: ${e.error}');
     }
   }
 

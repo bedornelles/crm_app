@@ -26,7 +26,7 @@ class BaseEntity {
   });
 
   /// Cria uma nova instância de [BaseEntity] com um novo UUID.
-  factory BaseEntity.novo() => BaseEntity(id: const Uuid().v4()); // Mantive v4 que gera IDs mais aleatórios e seguros!
+  factory BaseEntity.novo() => BaseEntity(id: const Uuid().v4());
 
   /// Cria uma instância de [BaseEntity] a partir de um mapa.
   factory BaseEntity.fromMap(Map<String, dynamic> map) {

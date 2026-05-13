@@ -1,7 +1,6 @@
 
-import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
+import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
-import 'package:crm_app/app/shared/entity/base_entity.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -21,7 +20,6 @@ class VisitaPage extends StatefulWidget{
 
 class _VisitaPageState extends State<VisitaPage> {
   final controller = Modular.get<VisitaController>();
-
   final _formKey = GlobalKey<FormState>();
 
   //controler do campo de telefone
@@ -41,6 +39,12 @@ class _VisitaPageState extends State<VisitaPage> {
   final _sistemaController = TextEditingController();
   final _observacoesController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    final homeController = Modular.get<HomeController>();
+    controller.init(homeController.idUsuarioLogado);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +130,7 @@ class _VisitaPageState extends State<VisitaPage> {
                       //verifica se o user seleionou alguma coisa
                       if (novaData != null) {
                         //envia para controller guardar Mobx
-                        controller.setDataDaVisita(novaData);
+                        controller.visita.dataVisita = novaData;
                       }
                     }
                   ),
@@ -441,10 +445,10 @@ class _VisitaPageState extends State<VisitaPage> {
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical:14),
-                                backgroundColor: controller.demonstrouInteresse == true
+                                backgroundColor: controller.visita.demonstrouInteresse == true
                                     ?theme.colorScheme.primary
                                     :Colors.white,
-                                foregroundColor: controller.demonstrouInteresse == true
+                                foregroundColor: controller.visita.demonstrouInteresse == true
                                     ? Colors.white
                                     : theme.colorScheme.secondary,
                                 elevation: 0,
@@ -453,7 +457,7 @@ class _VisitaPageState extends State<VisitaPage> {
                                 ),
                               ),
 
-                              onPressed: () => controller.setDemonstrouInteresse(true),
+                              onPressed: () => controller.visita.demonstrouInteresse = true,
                               icon: const Icon(Icons.thumb_up_alt_outlined, size: 20),
                               label: const Text ('Sim', style: TextStyle(fontSize: 15)),
                             ),
@@ -465,10 +469,10 @@ class _VisitaPageState extends State<VisitaPage> {
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(vertical: 14),
-                                backgroundColor: controller.demonstrouInteresse == false
+                                backgroundColor: controller.visita.demonstrouInteresse == false
                                     ? theme.colorScheme.primary
                                     : Colors.white,
-                                foregroundColor: controller.demonstrouInteresse == false
+                                foregroundColor: controller.visita.demonstrouInteresse == false
                                     ? Colors.white
                                     : theme.colorScheme.secondary,
                                 elevation: 0,
@@ -476,7 +480,7 @@ class _VisitaPageState extends State<VisitaPage> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              onPressed: () => controller.setDemonstrouInteresse(false),
+                              onPressed: () => controller.visita.demonstrouInteresse = false,
                               icon: const Icon(Icons.thumb_down_alt_outlined, size: 20),
                               label: const Text ('Não', style: TextStyle(fontSize: 15)),
                             ),
@@ -511,46 +515,49 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   ElevatedButton(
                     onPressed: () async {
-                      //validação
-                      bool estaValido = _formKey.currentState!.validate();
-                      bool escolheuInteresse = controller.demonstrouInteresse != null;
-                      if (estaValido && escolheuInteresse) {
-                        final String idLogado = await controller.getIdUsuarioLogado();
-                        final visitaCriada = VisitaEntity(
-                          base: BaseEntity.novo(),
-                          statusSincronizacao: 'pending',
-                          data: DateTime.now(),
-                          nomeEmpresa: _nomeEmpresaController.text,
-                          contato: _contatoController.text,
-                          cpfCnpj: _cpfCnpjController.text,
-                          email: _emailController.text,
-                          telefone: _telefoneController.text,
-                          logradouro: _logradouroController.text,
-                          numero: _numeroController.text,
-                          cidade: _cidadeController.text,
-                          complemento: _complementoController.text,
-                          sistemaAtual: _sistemaController.text,
-                          valorPago: _valorPagoController.text,
-                          demonstrouInteresse: controller.demonstrouInteresse!,
-                          observacoes: _observacoesController.text,
-                          idUsuario: idLogado,
 
-                        );
-                        await controller.salvarVisita(visitaCriada);
-                        // Modular.to.pop();
-                      } else{
-                        print('tem erro no forumalairo');
-                      }
+                      bool estaValido = _formKey.currentState!.validate();
+                      bool escolheuInteresse = controller.visita.demonstrouInteresse != null;
+
                       if (!escolheuInteresse) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Informe se o cliente demonstrou interesse.'),
+                            content: Text(
+                                'Informe se o cliente demonstrou interesse.'),
                             backgroundColor: Colors.red,
                             duration: Duration(seconds: 4),
                           ),
                         );
+                        return;
                       }
-                    },
+
+                      //validação
+                      if (estaValido && escolheuInteresse) {
+                        controller.visita.nomeEmpresa = _nomeEmpresaController.text;
+                        controller.visita.nomeContatoEmpresa = _contatoController.text;
+                        controller.visita.cpfCnpjEmpresa = _cpfCnpjController.text;
+                        controller.visita.emailEmpresa = _emailController.text;
+                        controller.visita.telefoneEmpresa = _telefoneController.text;
+                        controller.visita.logradouroEmpresa = _logradouroController.text;
+                        controller.visita.numeroEmpresa = _numeroController.text;
+                        controller.visita.cidadeEmpresa = _cidadeController.text;
+                        controller.visita.complementoEmpresa = _complementoController.text;
+                        controller.visita.sistemaAtual = _sistemaController.text;
+                        controller.visita.valorPago = _valorPagoController.text;
+                        controller.visita.observacoes = _observacoesController.text;
+
+                        final homeController = Modular.get<HomeController>();
+                        final visita = await controller.salvar();
+
+                        if (visita != null) {
+                          await homeController.load();
+                          Modular.to.pop(visita);
+                        }
+                      } else{
+                        print('tem erro no forumalairo');
+                      }
+                      },
+
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

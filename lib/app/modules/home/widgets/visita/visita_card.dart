@@ -14,7 +14,7 @@ class VisitaCard extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dataFormatada = DateFormat('dd/MM/yyyy HH:mm').format(visita.data);
+    final dataFormatada = DateFormat('dd/MM/yyyy HH:mm').format(visita.dataVisita);
 
     return Card (
       margin: const EdgeInsets.only(bottom: 12),
@@ -48,7 +48,7 @@ class VisitaCard extends StatelessWidget{
               const SizedBox(height: 4),
 
               Text(
-                visita.contato,
+                visita.nomeContatoEmpresa,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,

@@ -9,62 +9,50 @@ part of 'visita_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$VisitaController on _VisitaControllerBase, Store {
-  late final _$demonstrouInteresseAtom = Atom(
-    name: '_VisitaControllerBase.demonstrouInteresse',
+  late final _$savingAtom = Atom(
+    name: '_VisitaControllerBase.saving',
     context: context,
   );
 
   @override
-  bool? get demonstrouInteresse {
-    _$demonstrouInteresseAtom.reportRead();
-    return super.demonstrouInteresse;
+  bool get saving {
+    _$savingAtom.reportRead();
+    return super.saving;
   }
 
   @override
-  set demonstrouInteresse(bool? value) {
-    _$demonstrouInteresseAtom.reportWrite(value, super.demonstrouInteresse, () {
-      super.demonstrouInteresse = value;
+  set saving(bool value) {
+    _$savingAtom.reportWrite(value, super.saving, () {
+      super.saving = value;
     });
   }
 
-  late final _$dataDaVisitaAtom = Atom(
-    name: '_VisitaControllerBase.dataDaVisita',
+  late final _$visitaAtom = Atom(
+    name: '_VisitaControllerBase.visita',
     context: context,
   );
 
   @override
-  DateTime get dataDaVisita {
-    _$dataDaVisitaAtom.reportRead();
-    return super.dataDaVisita;
+  VisitaStore get visita {
+    _$visitaAtom.reportRead();
+    return super.visita;
   }
 
   @override
-  set dataDaVisita(DateTime value) {
-    _$dataDaVisitaAtom.reportWrite(value, super.dataDaVisita, () {
-      super.dataDaVisita = value;
+  set visita(VisitaStore value) {
+    _$visitaAtom.reportWrite(value, super.visita, () {
+      super.visita = value;
     });
   }
 
-  late final _$salvarVisitaAsyncAction = AsyncAction(
-    '_VisitaControllerBase.salvarVisita',
+  late final _$salvarAsyncAction = AsyncAction(
+    '_VisitaControllerBase.salvar',
     context: context,
   );
 
   @override
-  Future<void> salvarVisita(VisitaEntity novaVisita) {
-    return _$salvarVisitaAsyncAction.run(() => super.salvarVisita(novaVisita));
-  }
-
-  late final _$getIdUsuarioLogadoAsyncAction = AsyncAction(
-    '_VisitaControllerBase.getIdUsuarioLogado',
-    context: context,
-  );
-
-  @override
-  Future<String> getIdUsuarioLogado() {
-    return _$getIdUsuarioLogadoAsyncAction.run(
-      () => super.getIdUsuarioLogado(),
-    );
+  Future<VisitaEntity?> salvar() {
+    return _$salvarAsyncAction.run(() => super.salvar());
   }
 
   late final _$_VisitaControllerBaseActionController = ActionController(
@@ -73,24 +61,12 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
   );
 
   @override
-  void setDemonstrouInteresse(bool valor) {
+  void init(String idUsuario) {
     final _$actionInfo = _$_VisitaControllerBaseActionController.startAction(
-      name: '_VisitaControllerBase.setDemonstrouInteresse',
+      name: '_VisitaControllerBase.init',
     );
     try {
-      return super.setDemonstrouInteresse(valor);
-    } finally {
-      _$_VisitaControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setDataDaVisita(DateTime valor) {
-    final _$actionInfo = _$_VisitaControllerBaseActionController.startAction(
-      name: '_VisitaControllerBase.setDataDaVisita',
-    );
-    try {
-      return super.setDataDaVisita(valor);
+      return super.init(idUsuario);
     } finally {
       _$_VisitaControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -99,8 +75,8 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
   @override
   String toString() {
     return '''
-demonstrouInteresse: ${demonstrouInteresse},
-dataDaVisita: ${dataDaVisita}
+saving: ${saving},
+visita: ${visita}
     ''';
   }
 }

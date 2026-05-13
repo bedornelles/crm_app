@@ -64,8 +64,8 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
 
               Observer(
                   builder: (_) => ElevatedButton(
-                      onPressed: controller.loading ? null : _salvar,
-                      child: controller.loading
+                      onPressed: controller.saving ? null : _salvar,
+                      child: controller.saving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2,))
                           : const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,11 +102,11 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
   Future<void> _salvar() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final String idLogado = await visitaController.getIdUsuarioLogado();
-
-        await controller.salvarVisitaId(idLogado);
-
         final homeController = Modular.get<HomeController>();
+        final String idUsuario = homeController.idUsuarioLogado;
+
+        await controller.salvar(idUsuario);
+
         await homeController.load();
 
       }catch(e) {

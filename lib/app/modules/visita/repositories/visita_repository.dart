@@ -1,10 +1,11 @@
-import 'package:crm_app/app/shared/repositories/repository_interface.dart';
+
 import 'package:sqflite/sqflite.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
-import 'package:crm_app/app/shared/repositories/base_repository.dart';
-import 'package:crm_app/app/shared/repositories/table_repository_local.dart';
+import 'package:crm_app/app/shared/repository/base_repository.dart';
+import 'package:crm_app/app/shared/repository/table_repository_local.dart';
 import 'package:crm_app/app/shared/database/database_local.dart';
+import 'package:crm_app/app/modules/visita/enum/status_sincronizacao.dart';
 
 class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implements IVisitaRepository {
 
@@ -17,49 +18,50 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     batch.execute('''
       CREATE TABLE IF NOT EXISTS $getTableName (
         $getIdColumnName TEXT PRIMARY KEY,
-        ${BaseRepositoryLocal.dataHoraCriado} TEXT,
-        ${BaseRepositoryLocal.dataHoraUltimaAlteracao} TEXT,
-        ${BaseRepositoryLocal.dataHoraDeletado} TEXT,
-        data TEXT NOT NULL,
-        nomeEmpresa TEXT NOT NULL,
-        contato TEXT NOT NULL,
-        cpfCnpj TEXT NOT NULL,
-        email TEXT NOT NULL,
-        telefone TEXT NOT NULL,
-        logradouro TEXT NOT NULL,
-        numero TEXT NOT NULL,
-        cidade TEXT NOT NULL,
-        complemento TEXT,
-        sistemaAtual TEXT,
-        valorPago TEXT NOT NULL,
-        demonstrouInteresse INTEGER NOT NULL DEFAULT 0,
-        observacoes TEXT,
-        idUsuario TEXT NOT NULL,
-        identificadorEmpresa INTEGER,
-        statusSincronizacao TEXT NOT NULL
+      ${BaseRepositoryLocal.dataHoraCriado} TEXT,
+      ${BaseRepositoryLocal.dataHoraUltimaAlteracao} TEXT,
+      ${BaseRepositoryLocal.dataHoraDeletado} TEXT,
+      data_visita TEXT NOT NULL,
+      nome_empresa TEXT NOT NULL,
+      nome_contato_empresa TEXT NOT NULL,
+      cpf_cnpj_empresa TEXT,
+      email_empresa TEXT,
+      telefone_empresa TEXT,
+      logradouro_empresa TEXT NOT NULL,
+      numero_empresa TEXT NOT NULL,
+      cidade_empresa TEXT NOT NULL,
+      complemento_empresa TEXT,
+      sistema_atual TEXT,
+      valor_pago TEXT NOT NULL,
+      demonstrou_interesse INTEGER NOT NULL DEFAULT 0,
+      observacoes TEXT,
+      id_usuario TEXT NOT NULL,
+      identificador_empresa INTEGER,
+      status_sincronizacao TEXT NOT NULL
       )
     ''');
   }
   @override
   VisitaEntity fromMap(Map<String, dynamic> e) => VisitaEntity(
     base: baseFromMap(e), // Função do TableRepositoryLocal que monta a BaseEntity com ID e Datas
-    data: DateTime.parse(e['data']),
-    nomeEmpresa: e['nomeEmpresa'],
-    contato: e['contato'],
-    cpfCnpj: e['cpfCnpj'],
-    email: e['email'],
-    telefone: e['telefone'],
-    logradouro: e['logradouro'],
-    numero: e['numero'],
-    cidade: e['cidade'],
-    complemento: e['complemento'],
-    sistemaAtual: e['sistemaAtual'],
-    valorPago: e['valorPago'],
-    demonstrouInteresse: (e['demonstrouInteresse'] ?? 0) == 1,
+    dataVisita: DateTime.parse(e['data_visita']),
+    nomeEmpresa: e['nome_empresa'] ?? '',
+    nomeContatoEmpresa: e['nome_contato_empresa'] ?? '',
+    cpfCnpjEmpresa: e['cpf_cnpj_empresa'],
+    emailEmpresa: e['email_empresa'],
+    telefoneEmpresa: e['telefone_empresa'],
+    logradouroEmpresa: e['logradouro_empresa'] ?? '',
+    numeroEmpresa: e['numero_empresa'] ?? '',
+    cidadeEmpresa: e['cidade_empresa'] ?? '',
+    complementoEmpresa: e['complemento_empresa'],
+    sistemaAtual: e['sistema_atual'],
+    valorPago: e['valor_pago'] ?? '',
+    demonstrouInteresse: (e['demonstrou_interesse'] ?? 0) == 1,
     observacoes: e['observacoes'],
-    idUsuario: e['idUsuario'],
-    identificadorEmpresa: e['identificadorEmpresa'],
-    statusSincronizacao: e['statusSincronizacao'],
+    statusSincronizacao: StatusSincronizacao.fromValor(
+      e['status_sincronizacao'] ?? 'PENDENTE',
+    ),
+    idUsuario: e['id_usuario'],
   );
 
   @override
@@ -68,23 +70,23 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     BaseRepositoryLocal.dataHoraCriado: entity.base.dataHoraCriado?.toIso8601String(),
     BaseRepositoryLocal.dataHoraUltimaAlteracao: entity.base.dataHoraUltimaAlteracao?.toIso8601String(),
     BaseRepositoryLocal.dataHoraDeletado: entity.base.dataHoraDeletado?.toIso8601String(),
-    'data': entity.data.toIso8601String(),
-    'nomeEmpresa': entity.nomeEmpresa,
-    'contato': entity.contato,
-    'cpfCnpj': entity.cpfCnpj,
-    'email': entity.email,
-    'telefone': entity.telefone,
-    'logradouro': entity.logradouro,
-    'numero': entity.numero,
-    'cidade': entity.cidade,
-    'complemento': entity.complemento,
-    'sistemaAtual': entity.sistemaAtual,
-    'valorPago': entity.valorPago,
-    'demonstrouInteresse': entity.demonstrouInteresse ? 1 : 0,
+    'data_visita': entity.dataVisita.toIso8601String(),
+    'nome_empresa': entity.nomeEmpresa,
+    'nome_contato_empresa': entity.nomeContatoEmpresa,
+    'cpf_cnpj_empresa': entity.cpfCnpjEmpresa,
+    'email_empresa': entity.emailEmpresa,
+    'telefone_empresa': entity.telefoneEmpresa,
+    'logradouro_empresa': entity.logradouroEmpresa,
+    'numero_empresa': entity.numeroEmpresa,
+    'cidade_empresa': entity.cidadeEmpresa,
+    'complemento_empresa': entity.complementoEmpresa,
+    'sistema_atual': entity.sistemaAtual,
+    'valor_pago': entity.valorPago,
+    'demonstrou_interesse': entity.demonstrouInteresse ? 1 : 0,
     'observacoes': entity.observacoes,
-    'idUsuario': entity.idUsuario,
-    'identificadorEmpresa': entity.identificadorEmpresa,
-    'statusSincronizacao': entity.statusSincronizacao,
+    'id_usuario': entity.idUsuario,
+    'identificador_empresa': entity.identificadorEmpresa,
+    'status_sincronizacao': entity.statusSincronizacao.valor,
   };
 
   @override
@@ -94,24 +96,19 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
 
   @override
   Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario) async {
-    final db = await DatabaseLocal().getDb();
-    final List<Map<String, dynamic>> result = await db.query(
-      getTableName,
-      where: 'idUsuario = ?',
+    return getFull(
+      where: 'id_usuario = ?',
       whereArgs: [idUsuario],
+      orderBy: 'data_visita DESC'
     );
-    return result.map((e) => fromMap(e)).toList();
   }
 
   @override
   Future<List<VisitaEntity>> getAllNaoSincronizadas () async {
-    final db = await DatabaseLocal().getDb();
-    final List<Map<String, dynamic>> result = await db.query(
-      getTableName,
-      where: 'statusSincronizacao = ?',
-      whereArgs: ['PENDENTE'],
+    return getFull(
+      where: 'status_sincronizacao = ?',
+      whereArgs: [StatusSincronizacao.pendente.valor],
     );
-    return result.map((e) => fromMap(e)).toList();
   }
 
   @override
@@ -119,16 +116,10 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     final db = await DatabaseLocal().getDb();
     await db.update(
       getTableName,
-      {'statusSincronizacao': 'SINCRONIZADO'},
+      {'status_sincronizacao': StatusSincronizacao.sincronizado.valor},
       where: '$getIdColumnName = ?',
       whereArgs: [id],
     );
-  }
-
-  @override
-  Future<void> limparTabelaDoBancoLocal() async {
-    final db = await DatabaseLocal().getDb();
-    await db.delete(getTableName);
   }
 
   @override
