@@ -8,7 +8,7 @@ enum StatusSincronizacao {
   String get valor {
     switch (this) {
       case StatusSincronizacao.pendente:
-        return 'PENDENE';
+        return 'PENDENTE';
       case StatusSincronizacao.sincronizado:
         return 'SINCRONIZADO';
       case StatusSincronizacao.erro:
@@ -17,13 +17,13 @@ enum StatusSincronizacao {
   }
 
   //converte a string para enum
-  static StatusSincronizacao fromValor(String valor) {
+  static StatusSincronizacao fromValor(String? valor) {
+    if (valor == null) return StatusSincronizacao.pendente;
     switch (valor.toUpperCase()) {
       case 'SINCRONIZADO':
         return StatusSincronizacao.sincronizado;
       case 'ERRO' :
         return StatusSincronizacao.erro;
-
         default:
           return StatusSincronizacao.pendente;
     }

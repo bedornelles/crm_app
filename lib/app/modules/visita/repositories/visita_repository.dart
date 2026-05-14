@@ -37,7 +37,8 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
       observacoes TEXT,
       id_usuario TEXT NOT NULL,
       identificador_empresa INTEGER,
-      status_sincronizacao TEXT NOT NULL
+      status_sincronizacao TEXT NOT NULL,
+      erro_sincronizacao TEXT
       )
     ''');
   }
@@ -61,6 +62,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     statusSincronizacao: StatusSincronizacao.fromValor(
       e['status_sincronizacao'] ?? 'PENDENTE',
     ),
+    erroSincronizacao: e['erro_sincronizacao'],
     idUsuario: e['id_usuario'],
     identificadorEmpresa: e['identificador_empresa'] != null
         ? int.tryParse(e['identificador_empresa'].toString())
@@ -90,6 +92,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     'id_usuario': entity.idUsuario,
     'identificador_empresa': entity.identificadorEmpresa,
     'status_sincronizacao': entity.statusSincronizacao.valor,
+    'erro_sincronizacao': entity.erroSincronizacao,
   };
 
   @override
@@ -122,6 +125,20 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
       {'status_sincronizacao': StatusSincronizacao.sincronizado.valor},
       where: '$getIdColumnName = ?',
       whereArgs: [id],
+    );
+  }
+
+  @override
+  Future<void> marcarComoErro(String id, String mensagemErro) async {
+    final db = await DatabaseLocal().getDb();
+    await db.update(
+      getTableName,
+      {
+        'status_sincronizacao': StatusSincronizacao.erro.valor,
+        'erro_sincronizacao': mensagemErro,
+      },
+      where: '$getIdColumnName = ?',
+        whereArgs: [id],
     );
   }
 

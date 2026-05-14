@@ -23,6 +23,7 @@ class VisitaEntity implements IBaseEntity{
   bool demonstrouInteresse;
   String? observacoes;
   StatusSincronizacao statusSincronizacao;
+  String? erroSincronizacao;
   String idUsuario;
 
 
@@ -53,6 +54,7 @@ class VisitaEntity implements IBaseEntity{
     required this.demonstrouInteresse,
     this.observacoes,
     required this.statusSincronizacao,
+    this.erroSincronizacao,
     required this.idUsuario,
   });
 
@@ -75,6 +77,7 @@ class VisitaEntity implements IBaseEntity{
       'demonstrou_interesse': demonstrouInteresse ? 1 : 0,
       'observacoes': observacoes,
       'status_sincronizacao': statusSincronizacao.valor,
+      'erro_sincronizacao': erroSincronizacao,
       'id_usuario': idUsuario,
     };
   }
@@ -98,6 +101,7 @@ class VisitaEntity implements IBaseEntity{
       demonstrouInteresse: map['demonstrou_interesse'] == 1,
       observacoes: map['observacoes'],
       statusSincronizacao: StatusSincronizacao.fromValor(map['status_sincronizacao'] ?? 'PENDENTE'),
+      erroSincronizacao: map['erro_sincronizacao'],
       idUsuario: map['id_usuario'] ?? '',
     );
   }

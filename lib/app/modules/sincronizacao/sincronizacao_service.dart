@@ -63,16 +63,24 @@ class SincronizacaoService implements Disposable {
   Future<void> _enviarVisita(VisitaEntity visita) async {
     try {
       final payload = _montarPayload(visita);
+      print('DEBUG: Enviando visita da empresa: ${payload['nomeEmpresa']} | ID: ${payload['identificadorEmpresa']}');
 
-      await _api.post(uri: '/api/v1/visita', data: payload);
+      final res = await _api.post(uri: '/api/v1/visita', data: payload);
 
-      //sucesso - atualiza o status no banco lcoal
-      await _visitaRepository.marcarComoSincronizada(visita.base.id);
+      if (res != null && res ['success'] == true) {
+        //sucesso - atualiza o status no banco lcoal
+        await _visitaRepository.marcarComoSincronizada(visita.base.id);
+        print('Sincronização OK: ${res['message']}');
 
-      print('Visita ${visita.base.id} sincronizaza com sucesso');
+      }else{
+        //erro da api success:false
+        final erroMsg = res?['detail'] ?? res?['message'] ?? 'erro desconhecido na api';
+        await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
+      }
+
     } catch (e) {
-      //falhou - mantem pendente e tenta no proximo ciclo
-      print ('err ao sincronizar visita ${visita.base.id}: $e');
+      final erroMsg = 'Falha na comunicação: ${e.toString()}';
+      await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
     }
   }
   Map<String, dynamic> _montarPayload(VisitaEntity visita) {
