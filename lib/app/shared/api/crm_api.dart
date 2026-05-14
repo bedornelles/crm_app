@@ -69,7 +69,7 @@ class CrmApi implements ICrmApi{
   @override
   Future<JsonMap?> post({
     required String uri,
-    required JsonMap data, // Os dados que você quer salvar (ex: email e senha)
+    required JsonMap data,
     int refreshAttempts = 0,
   }) async {
     return _request<JsonMap?>(() async {
@@ -81,11 +81,9 @@ class CrmApi implements ICrmApi{
       if (response.data == null) return null;
 
       // Se a API mandar uma String, o código abaixo quebra.
-      // Vamos mudar para uma forma mais segura:
       if (response.data is Map) {
         return JsonMap.from(response.data);
       } else {
-        // Se não for Map (ex: for String ou List), retornamos um mapa vazio ou tratamos
         print('Aviso: A API não retornou um Map. Retornando objeto vazio.');
         return {};
       }
@@ -105,7 +103,7 @@ class CrmApi implements ICrmApi{
       // Tenta fazer a requisição de fato...
       return await action();
     } on DioException catch (e) {
-      // Opa, deu um erro de rede! Vamos ver se é problema de Token vencido.
+      // erro de rede! Vamos ver se é problema de Token vencido.
       if (_isTokenExpirado(e)) {
         // Se já tentou renovar menos de 3 vezes, tenta de novo.
         if (refreshAttempts < _maxTokenRefreshAttempts) {
@@ -162,7 +160,7 @@ class CrmApi implements ICrmApi{
     }
   }
 
-  // Função chamada quando a API avisa que o token atual venceu.
+  // função chamada quando a API avisa que o token atual venceu.
   Future<void> _tokenExpirado(int refreshAttempts) async {
     try {
       // Pega a "senha de emergência" (refreshToken) salva no cache.
@@ -175,8 +173,8 @@ class CrmApi implements ICrmApi{
     }
   }
 
-  // Verifica se o erro foi de Autorização (Status 401 - Não Autorizado)
-  // E se o usuário tem um refreshToken guardado para tentarmos salvá-lo.
+  // verifica se o erro foi de Autorização (Status 401 - Não Autorizado)
+  // e se o usuário tem um refreshToken guardado para tentarmos salvá-lo.
   bool _isTokenExpirado(DioException e) {
     return e.response?.statusCode == 401 && _cache.getUsuario(cacheUsuarioKey)?.refreshToken != null;
   }
