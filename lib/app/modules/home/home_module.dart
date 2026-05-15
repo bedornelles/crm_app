@@ -1,3 +1,4 @@
+import 'package:crm_app/app/app_module.dart';
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/home/home_page.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';

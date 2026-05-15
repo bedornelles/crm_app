@@ -112,8 +112,11 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
   @override
   Future<List<VisitaEntity>> getAllNaoSincronizadas () async {
     return getFull(
-      where: 'status_sincronizacao = ?',
-      whereArgs: [StatusSincronizacao.pendente.valor],
+      where: 'status_sincronizacao = ? OR status_sincronizacao = ?',
+      whereArgs: [
+        StatusSincronizacao.pendente.valor,
+        StatusSincronizacao.erro.valor,
+      ],
     );
   }
 

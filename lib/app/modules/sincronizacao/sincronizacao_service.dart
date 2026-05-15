@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/repositories/visita_repository_interface.dart';
@@ -11,6 +12,7 @@ class SincronizacaoService implements Disposable {
   final IVisitaRepository _visitaRepository;
   final ICrmApi _api;
   final ICache _cache;
+  VoidCallback? onSincronizacaoConcluida;
 
   Timer? _timer;
   bool _sincronizando = false;
@@ -52,9 +54,11 @@ class SincronizacaoService implements Disposable {
       for (final visita in pendentes) {
         await _enviarVisita(visita);
       }
+      onSincronizacaoConcluida?.call();
     } catch (e) {
       print ('erro na sincronização: $e');
-    } finally {
+    }
+    finally {
       //libera mesmo se der erro
       _sincronizando = false;
     }

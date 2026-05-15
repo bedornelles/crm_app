@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
@@ -6,6 +7,7 @@ import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
 import 'package:crm_app/app/shared/cache/cache.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:crm_app/app/app_controller.dart';
 
 part 'home_controller.g.dart';
 
@@ -15,7 +17,19 @@ abstract class _HomeControllerBase with Store {
   final IVisitaService _service;
   final ICache _cache;
 
-  _HomeControllerBase(this._service, this._cache);
+  StreamSubscription? _sincronizacaoSubscription;
+
+  _HomeControllerBase(this._service, this._cache) {
+    _sincronizacaoSubscription = Modular.get<AppController>()
+        .sincronizacaoStream
+        .listen((_) {
+      load();
+    });
+  }
+
+  void disposar(){
+    _sincronizacaoSubscription?.cancel();
+  }
 
   @observable
   bool _loading = false;
