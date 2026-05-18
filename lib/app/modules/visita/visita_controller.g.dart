@@ -55,6 +55,28 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     return _$salvarAsyncAction.run(() => super.salvar());
   }
 
+  late final _$deveExibirPermissaoLocalizacaoAsyncAction = AsyncAction(
+    '_VisitaControllerBase.deveExibirPermissaoLocalizacao',
+    context: context,
+  );
+
+  @override
+  Future<bool> deveExibirPermissaoLocalizacao() {
+    return _$deveExibirPermissaoLocalizacaoAsyncAction.run(
+      () => super.deveExibirPermissaoLocalizacao(),
+    );
+  }
+
+  late final _$obterLocalizacaoAsyncAction = AsyncAction(
+    '_VisitaControllerBase.obterLocalizacao',
+    context: context,
+  );
+
+  @override
+  Future<void> obterLocalizacao() {
+    return _$obterLocalizacaoAsyncAction.run(() => super.obterLocalizacao());
+  }
+
   late final _$_VisitaControllerBaseActionController = ActionController(
     name: '_VisitaControllerBase',
     context: context,

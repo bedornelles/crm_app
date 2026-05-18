@@ -29,6 +29,7 @@ class SincronizacaoService implements Disposable {
     );
   }
 
+
   //para o polling
   void parar() {
     _timer?.cancel();
@@ -112,8 +113,7 @@ class SincronizacaoService implements Disposable {
       'cidadeEmpresa': visita.cidadeEmpresa,
       'complementoEmpresa': visita.complementoEmpresa,
       'identificadorEmpresa': visita.identificadorEmpresa,
-      'localizacao': '',
-      'erroSincronizacao': '',
+      'localizacao': visita.localizacao ?? '',
     };
 
     // remove campos nulos

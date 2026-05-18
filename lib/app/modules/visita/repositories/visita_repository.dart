@@ -38,6 +38,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
       id_usuario TEXT NOT NULL,
       identificador_empresa INTEGER,
       status_sincronizacao TEXT NOT NULL,
+      localizacao TEXT,
       erro_sincronizacao TEXT
       )
     ''');
@@ -63,6 +64,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
       e['status_sincronizacao'] ?? 'PENDENTE',
     ),
     erroSincronizacao: e['erro_sincronizacao'],
+    localizacao: e['localizacao'],
     idUsuario: e['id_usuario'],
     identificadorEmpresa: e['identificador_empresa'] != null
         ? int.tryParse(e['identificador_empresa'].toString())
@@ -93,6 +95,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     'identificador_empresa': entity.identificadorEmpresa,
     'status_sincronizacao': entity.statusSincronizacao.valor,
     'erro_sincronizacao': entity.erroSincronizacao,
+    'localizacao': entity.localizacao,
   };
 
   @override

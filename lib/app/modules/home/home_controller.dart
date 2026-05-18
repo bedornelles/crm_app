@@ -27,7 +27,7 @@ abstract class _HomeControllerBase with Store {
     });
   }
 
-  void disposar(){
+  void dispose(){
     _sincronizacaoSubscription?.cancel();
   }
 
@@ -145,5 +145,6 @@ abstract class _HomeControllerBase with Store {
       _loading = false;
     }
   }
+
 }
 

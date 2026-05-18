@@ -16,6 +16,7 @@ class AppModule extends Module {
     SincronizacaoModule(),
   ];
 
+
   @override
   void binds(Injector i){
     i.addSingleton(AppController.new);

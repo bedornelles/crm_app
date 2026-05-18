@@ -56,3 +56,6 @@ class Cache implements ICache {
 
 // Chave padrão utilizada para armazenar o usuário logado no cache.
 const String cacheUsuarioKey = 'usuario';
+
+// permissao de localizacao
+const String cachePermissaoLocalizacaoKey = 'permissao_localizacao_solicitada';

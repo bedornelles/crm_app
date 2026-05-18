@@ -334,6 +334,24 @@ mixin _$VisitaStore on _VisitaStoreBase, Store {
     });
   }
 
+  late final _$localizacaoAtom = Atom(
+    name: '_VisitaStoreBase.localizacao',
+    context: context,
+  );
+
+  @override
+  String? get localizacao {
+    _$localizacaoAtom.reportRead();
+    return super.localizacao;
+  }
+
+  @override
+  set localizacao(String? value) {
+    _$localizacaoAtom.reportWrite(value, super.localizacao, () {
+      super.localizacao = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
@@ -354,7 +372,8 @@ valorPago: ${valorPago},
 demonstrouInteresse: ${demonstrouInteresse},
 observacoes: ${observacoes},
 statusSincronizacao: ${statusSincronizacao},
-idUsuario: ${idUsuario}
+idUsuario: ${idUsuario},
+localizacao: ${localizacao}
     ''';
   }
 }

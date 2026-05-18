@@ -2,14 +2,11 @@ import 'dart:convert';
 
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/home/widgets/visita/visita_card.dart';
-import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-
-import 'package:crm_app/app/shared/cache/cache_interface.dart';
-import 'package:crm_app/app/shared/api/crm_api_interface.dart';
+import 'package:crm_app/app/modules/visita/visita_controller.dart';
 
 class HomePage extends StatefulWidget{
   const HomePage ({super.key});
@@ -27,6 +24,13 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     //tela abre e chama o metodo carregar fados
     controller.load();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final visitaController = Modular.get<VisitaController>();
+      final deveExibir = await visitaController.deveExibirPermissaoLocalizacao();
+      if (deveExibir) {
+        _mostrarModalPermissaoLocalizacao(context);
+      }
+    });
   }
 
   @override
@@ -227,5 +231,76 @@ class _HomePageState extends State<HomePage> {
       }
     );
   }
+
+  void _mostrarModalPermissaoLocalizacao(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.location_on_outlined,
+                    size: 36,
+                    color: Colors.red.shade300,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Sua localização',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Precisamos acessar sua localização para registrar automaticamente suas visitas no sistema.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, height: 1.5),
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () async {
+                  // fecha o modal primeiro
+                  Navigator.of(ctx).pop();
+                  // depois dispara o popup nativo do sistema
+                  final visitaController = Modular.get<VisitaController>();
+                  await visitaController.obterLocalizacao();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Text(
+                  'Continuar',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Sua localização é armazenada com segurança e usada apenas para cadastro de visitas.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12, height: 1.5),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 
 }
