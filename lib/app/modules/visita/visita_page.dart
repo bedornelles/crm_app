@@ -1,4 +1,5 @@
 
+import 'dart:math';
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:date_field/date_field.dart';
@@ -18,18 +19,15 @@ class VisitaPage extends StatefulWidget{
   State<VisitaPage> createState() => _VisitaPageState();
 }
 
-class _VisitaPageState extends State<VisitaPage> {
+class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
+
   final controller = Modular.get<VisitaController>();
   final _formKey = GlobalKey<FormState>();
 
-  //controler do campo de telefone
   final _telefoneController = TextEditingController();
-  //controller do campo de cfp/cnpj
   final _cpfCnpjController = TextEditingController();
-  // controller do campo de valor pago
   final _valorPagoController = TextEditingController();
   final _nomeEmpresaController = TextEditingController();
-  //controller nome do contato
   final _contatoController = TextEditingController();
   final _emailController = TextEditingController();
   final _logradouroController = TextEditingController();
@@ -39,11 +37,69 @@ class _VisitaPageState extends State<VisitaPage> {
   final _sistemaController = TextEditingController();
   final _observacoesController = TextEditingController();
 
+  // controla o scroll da tela
+  final _scrollController = ScrollController();
+
+  // mostra a posição exata do campo para scrollar ate ele
+  final _nomeEmpresaKey = GlobalKey();
+  final _contatoKey = GlobalKey();
+  final _logradouroKey = GlobalKey();
+  final _numeroKey = GlobalKey();
+  final _cidadeKey = GlobalKey();
+  final _interesseKey = GlobalKey();
+
+  //controlador da animação "shake"
+  late AnimationController _shakeNomeEmpresa;
+  late AnimationController _shakeContato;
+  late AnimationController _shakeLogradouro;
+  late AnimationController _shakeNumero;
+  late AnimationController _shakeCidade;
+  late AnimationController _shakeInteresse;
+
+
   @override
   void initState() {
     super.initState();
     final homeController = Modular.get<HomeController>();
     controller.init(homeController.idUsuarioLogado);
+
+    _shakeNomeEmpresa = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeContato = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeLogradouro = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeNumero = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeCidade = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeInteresse = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+  }
+
+  @override
+  void dispose() {
+    _shakeNomeEmpresa.dispose();
+    _shakeContato.dispose();
+    _shakeLogradouro.dispose();
+    _shakeNumero.dispose();
+    _shakeCidade.dispose();
+    _scrollController.dispose();
+    _shakeInteresse.dispose();
+    super.dispose();
+  }
+
+  //recebe o controller da animazacao e a key do campo, dispara o shake e rola ate o campo
+  Future<void> _shakeEScrollar(AnimationController shakeController, GlobalKey fieldKey) async {
+    if (!mounted) return;
+
+    final fieldContext = fieldKey.currentContext;
+    if (fieldContext != null) {
+      await Scrollable.ensureVisible(
+        fieldContext,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignment: 0.3,
+      );
+    }
+
+    if (!mounted) return;
+
+    shakeController.forward(from: 0);
   }
 
   @override
@@ -92,6 +148,7 @@ class _VisitaPageState extends State<VisitaPage> {
       ),
 
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -148,14 +205,21 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _nomeEmpresaController,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                    validator: InputValidator.required,
-                    decoration: const InputDecoration(
-                        hintText: 'Lancheria do centro'
+
+                  KeyedSubtree(
+                    key: _nomeEmpresaKey,
+                    child: _buildShakeField(
+                      animationController: _shakeNomeEmpresa,
+                      child: TextFormField(
+                        controller: _nomeEmpresaController,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: InputValidator.required,
+                        decoration: const InputDecoration(
+                            hintText: 'Lancheria do centro'
+                        ),
+                      ),
                     ),
                   ),
 
@@ -172,16 +236,22 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _contatoController,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
+                    KeyedSubtree(
+                      key: _contatoKey,
+                      child: _buildShakeField(
+                        animationController: _shakeContato,
+                        child: TextFormField(
+                        controller: _contatoController,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: InputValidator.required,
+                        decoration: const InputDecoration(
+                            hintText: 'João da Silva'
+                          ),
+                        ),
+                      ),
                     ),
-                    validator: InputValidator.required,
-                    decoration: const InputDecoration(
-                        hintText: 'João da Silva'
-                    ),
-                  ),
 
                   const SizedBox(height: 16),
 
@@ -205,7 +275,6 @@ class _VisitaPageState extends State<VisitaPage> {
                     inputFormatters: [
                       InputMasked.cnpjCpf(value: _cpfCnpjController.text),
                     ],
-                    validator: InputValidator.required,
                     decoration: const InputDecoration(
                         hintText: '00.000.000/0000-00'
                     ),
@@ -234,9 +303,6 @@ class _VisitaPageState extends State<VisitaPage> {
                       hintText: 'emailEmpresa@example.com',
                     ),
                     validator: (value){
-                      final erroVazio = InputValidator.required(value);
-                      if (erroVazio != null) return erroVazio;
-
                       final emailValido = EmailValidator.validate(value);
                       if(!emailValido) return 'Digite um E-mail válido';
 
@@ -269,7 +335,6 @@ class _VisitaPageState extends State<VisitaPage> {
                       InputMasked.fone(value: _telefoneController.text),
                     ],
                     //aplicando a valuidação
-                    validator: InputValidator.required,
                     decoration: const InputDecoration(
                         hintText: '(51) 9 9999-990099'
                     ),
@@ -288,14 +353,20 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _logradouroController,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                    validator: InputValidator.required,
-                    decoration: const InputDecoration(
-                      hintText: 'Av Barão do Rio Branco, centro',
+                  KeyedSubtree(
+                    key: _logradouroKey,
+                    child: _buildShakeField(
+                      animationController: _shakeLogradouro,
+                      child: TextFormField(
+                        controller: _logradouroController,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: InputValidator.required,
+                        decoration: const InputDecoration(
+                          hintText: 'Av Barão do Rio Branco, centro',
+                        ),
+                      ),
                     ),
                   ),
 
@@ -312,14 +383,20 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _numeroController,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w400
-                    ),
-                    validator: InputValidator.required,
-                    decoration: const InputDecoration(
-                      hintText: '1234',
+                  KeyedSubtree(
+                    key: _numeroKey,
+                    child: _buildShakeField(
+                      animationController: _shakeNumero,
+                      child: TextFormField(
+                        controller: _numeroController,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400
+                        ),
+                        validator: InputValidator.required,
+                        decoration: const InputDecoration(
+                          hintText: '1234',
+                        ),
+                      ),
                     ),
                   ),
 
@@ -336,14 +413,20 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _cidadeController,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                    validator: InputValidator.required,
-                    decoration: const InputDecoration(
-                      hintText: 'São Paulo/SP',
+                  KeyedSubtree(
+                    key: _cidadeKey,
+                    child: _buildShakeField(
+                      animationController: _shakeCidade,
+                      child: TextFormField(
+                        controller: _cidadeController,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                        ),
+                        validator: InputValidator.required,
+                        decoration: const InputDecoration(
+                          hintText: 'São Paulo/SP',
+                        ),
+                      ),
                     ),
                   ),
 
@@ -436,59 +519,66 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   const SizedBox(height: 8),
 
-                  Observer(
-                    builder: (_){
-                      return Row(
-                        children: [
+                  KeyedSubtree(
+                    key: _interesseKey,
+                    child: _buildShakeField(
+                      animationController: _shakeInteresse,
+                      child: Observer(
+                      builder: (_){
+                        return Row(
+                          children: [
 
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical:14),
-                                backgroundColor: controller.visita.demonstrouInteresse == true
-                                    ?theme.colorScheme.primary
-                                    :Colors.white,
-                                foregroundColor: controller.visita.demonstrouInteresse == true
-                                    ? Colors.white
-                                    : theme.colorScheme.secondary,
-                                elevation: 0,
-                                shape:RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical:14),
+                                  backgroundColor: controller.visita.demonstrouInteresse == true
+                                      ?theme.colorScheme.primary
+                                      :Colors.white,
+                                  foregroundColor: controller.visita.demonstrouInteresse == true
+                                      ? Colors.white
+                                      : theme.colorScheme.secondary,
+                                  elevation: 0,
+                                  shape:RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
+
+                                onPressed: () => controller.visita.demonstrouInteresse = true,
+                                icon: const Icon(Icons.thumb_up_alt_outlined, size: 20),
+                                label: const Text ('Sim', style: TextStyle(fontSize: 15)),
                               ),
-
-                              onPressed: () => controller.visita.demonstrouInteresse = true,
-                              icon: const Icon(Icons.thumb_up_alt_outlined, size: 20),
-                              label: const Text ('Sim', style: TextStyle(fontSize: 15)),
                             ),
-                          ),
 
-                          const SizedBox(width: 16),
+                            const SizedBox(width: 16),
 
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                backgroundColor: controller.visita.demonstrouInteresse == false
-                                    ? theme.colorScheme.primary
-                                    : Colors.white,
-                                foregroundColor: controller.visita.demonstrouInteresse == false
-                                    ? Colors.white
-                                    : theme.colorScheme.secondary,
-                                elevation: 0,
-                                shape:RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  backgroundColor: controller.visita.demonstrouInteresse == false
+                                      ? theme.colorScheme.primary
+                                      : Colors.white,
+                                  foregroundColor: controller.visita.demonstrouInteresse == false
+                                      ? Colors.white
+                                      : theme.colorScheme.secondary,
+                                  elevation: 0,
+                                  shape:RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
+                                onPressed: () => controller.visita.demonstrouInteresse = false,
+                                icon: const Icon(Icons.thumb_down_alt_outlined, size: 20),
+                                label: const Text ('Não', style: TextStyle(fontSize: 15)),
                               ),
-                              onPressed: () => controller.visita.demonstrouInteresse = false,
-                              icon: const Icon(Icons.thumb_down_alt_outlined, size: 20),
-                              label: const Text ('Não', style: TextStyle(fontSize: 15)),
                             ),
-                          ),
-                        ],
-                      );
-                    },
+                          ],
+                        );
+                      },
+                    )
+                    ),
                   ),
+
                   const SizedBox(width: 16),
 
                   Text(
@@ -515,21 +605,8 @@ class _VisitaPageState extends State<VisitaPage> {
 
                   ElevatedButton(
                     onPressed: () async {
-
                       bool estaValido = _formKey.currentState!.validate();
                       bool escolheuInteresse = controller.visita.demonstrouInteresse != null;
-
-                      if (!escolheuInteresse) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                                'Informe se o cliente demonstrou interesse.'),
-                            backgroundColor: Colors.red,
-                            duration: Duration(seconds: 4),
-                          ),
-                        );
-                        return;
-                      }
 
                       //validação
                       if (estaValido && escolheuInteresse) {
@@ -553,10 +630,40 @@ class _VisitaPageState extends State<VisitaPage> {
                           await homeController.load();
                           Modular.to.pop(visita);
                         }
-                      } else{
-                        print('tem erro no forumalairo');
+                      } else {
+                        // coleta todos os campos vazios em ordem
+                        final camposVazios = <({AnimationController shake, GlobalKey key})>[];
+
+                        if (_nomeEmpresaController.text.isEmpty) {
+                          camposVazios.add((shake: _shakeNomeEmpresa, key: _nomeEmpresaKey));
+                        }
+                        if (_contatoController.text.isEmpty) {
+                          camposVazios.add((shake: _shakeContato, key: _contatoKey));
+                        }
+                        if (_logradouroController.text.isEmpty) {
+                          camposVazios.add((shake: _shakeLogradouro, key: _logradouroKey));
+                        }
+                        if (_numeroController.text.isEmpty) {
+                          camposVazios.add((shake: _shakeNumero, key: _numeroKey));
+                        }
+                        if (_cidadeController.text.isEmpty) {
+                          camposVazios.add((shake: _shakeCidade, key: _cidadeKey));
+                        }
+                        if (!escolheuInteresse) {
+                          camposVazios.add((shake: _shakeInteresse, key: _interesseKey));
+                        }
+
+                        if (camposVazios.isNotEmpty) {
+                          // rola até o primeiro campo vazio
+                          await _shakeEScrollar(
+                              camposVazios.first.shake, camposVazios.first.key);
+                          // dispara shake em todos os outros campos vazios
+                          for (final campo in camposVazios.skip(1)) {
+                            campo.shake.forward(from: 0);
+                          }
+                        }
                       }
-                      },
+                    },
 
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -574,7 +681,23 @@ class _VisitaPageState extends State<VisitaPage> {
           ),
         ),
       ),
+    );
+  }
 
+  Widget _buildShakeField({
+    required AnimationController animationController,
+    required Widget child,
+  }) {
+    return AnimatedBuilder(
+        animation: animationController,
+        builder: (context, child){
+          final offset = sin(animationController.value * pi * 6) * 8;
+          return Transform.translate(
+            offset: Offset(offset, 0),
+            child: child,
+          );
+        },
+      child: child,
     );
   }
 }
