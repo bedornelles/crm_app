@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -13,12 +15,31 @@ class IdentificarEmpresaIdPage extends StatefulWidget {
   State<IdentificarEmpresaIdPage> createState() => _IdentificarEmpresaIdPageState();
 }
 
-class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
+class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> with TickerProviderStateMixin{
   final controller = Modular.get<IdentificarEmpresaIdController>();
   //puxa a função getIdUsuarioLogado da visitacontroller
   final visitaController = Modular.get<VisitaController>();
   //para validar os formularios
   final _formKey = GlobalKey<FormState>();
+  final _idKey = GlobalKey();
+  final _contatoKey = GlobalKey();
+
+  late AnimationController _shakeId;
+  late AnimationController _shakeContato;
+
+  @override
+  void initState() {
+    super.initState();
+    _shakeId = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeContato = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+  }
+
+  @override
+  void dispose() {
+    _shakeId.dispose();
+    _shakeContato.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +57,38 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildLabel(theme, 'ID'),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                validator: InputValidator.required,
-                onChanged: controller.setIdEmpresa,
+
+              KeyedSubtree(
+                key: _idKey,
+                child: _buildShakeField(
+                  animationController: _shakeId,
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    validator: InputValidator.required,
+                    onChanged: controller.setIdEmpresa,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 16),
 
               _buildLabel(theme, 'Contato na empresa'),
-              TextFormField(
-                validator: InputValidator.required,
-                onChanged: controller.setContato,
+
+              KeyedSubtree(
+                key: _contatoKey,
+                child: _buildShakeField(
+                  animationController: _shakeContato,
+                  child: TextFormField(
+                    validator: InputValidator.required,
+                    onChanged: controller.setContato,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 16),
 
               _buildLabel(theme, 'Observações'),
               TextFormField(
-                validator: InputValidator.required,
                 maxLines: 4,
                 maxLength: 1500,
                 onChanged: controller.setObservacoes,
@@ -114,6 +148,30 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> {
       }finally {
         Modular.to.navigate('/home/');
       }
+    } else {
+      if (controller.idEmpresa.isEmpty) {
+        _shakeId.forward(from: 0);
+      }
+      if (controller.contato.isEmpty) {
+        _shakeContato.forward(from: 0);
+      }
     }
+  }
+
+  Widget _buildShakeField({
+    required AnimationController animationController,
+    required Widget child,
+}) {
+    return AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child) {
+        final offset = sin(animationController.value * pi * 6) * 8;
+        return Transform.translate(
+          offset: Offset(offset, 0),
+          child: child,
+        );
+      },
+      child: child,
+    );
   }
 }
