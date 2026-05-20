@@ -47,6 +47,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
   final _numeroKey = GlobalKey();
   final _cidadeKey = GlobalKey();
   final _interesseKey = GlobalKey();
+  final _cpfCnpjKey = GlobalKey();
 
   final Set<String> _camposComErro = {};
 
@@ -57,6 +58,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
   late AnimationController _shakeNumero;
   late AnimationController _shakeCidade;
   late AnimationController _shakeInteresse;
+  late AnimationController _shakeCpfCnpj;
 
 
   @override
@@ -71,6 +73,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
     _shakeNumero = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _shakeCidade = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _shakeInteresse = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    _shakeCpfCnpj = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
   }
 
   @override
@@ -82,6 +85,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
     _shakeCidade.dispose();
     _scrollController.dispose();
     _shakeInteresse.dispose();
+    _shakeCpfCnpj.dispose();
     super.dispose();
   }
 
@@ -290,17 +294,39 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
                   const SizedBox(height: 8),
 
-                  TextFormField(
-                    controller: _cpfCnpjController, //controller conectada
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                    ),
-                    keyboardType: TextInputType.number,//puxa o teclado numerico, mas nao bloqueia a opção de colar texto ou digitar eltras em um teclado fisico
-                    inputFormatters: [
-                      InputMasked.cnpjCpf(value: _cpfCnpjController.text),
-                    ],
-                    decoration: const InputDecoration(
-                        hintText: '00.000.000/0000-00'
+
+                  KeyedSubtree(
+                    key: _cpfCnpjKey,
+                    child: _buildShakeField(
+                      animationController: _shakeCpfCnpj,
+                      child:TextFormField(
+                          controller: _cpfCnpjController, //controller conectada
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                          ),
+                          keyboardType: TextInputType.number,//puxa o teclado numerico, mas nao bloqueia a opção de colar texto ou digitar eltras em um teclado fisico
+                          inputFormatters: [
+                            InputMasked.cnpjCpf(value: _cpfCnpjController.text),
+                          ],
+                          onChanged: (_) {
+                            // remove o erro de borda quando o usuário digita
+                            if (_camposComErro.contains('cpfCnpj')) {
+                              setState(() => _camposComErro.remove('cpfCnpj'));
+                            }
+                          },
+                          validator: (value) => InputValidator(
+                            [CnpjCpfValidator()],
+                          ).validate(value),
+                          decoration: InputDecoration(
+                              hintText: '00.000.000/0000-00',
+                              border: _camposComErro.contains('cpfCnpj')
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                          )
+                              : null,
+                          ),
+                      ),
                     ),
                   ),
 
@@ -704,6 +730,10 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                         }
                       } else {
 
+                        final cpfCnpjInvalido = InputValidator(
+                          [CnpjCpfValidator()],
+                        ).validate(_cpfCnpjController.text) != null;
+
                         // marca os campos vazios com erro para pintar a borda
                         setState(() {
                           if (_nomeEmpresaController.text.isEmpty) {
@@ -724,7 +754,12 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           if (!escolheuInteresse) {
                             _camposComErro.add('interesse');
                           }
+                          if (cpfCnpjInvalido) {
+                            _camposComErro.add('cpfCnpj');
+                          }
                         });
+
+
 
                         // coleta todos os campos vazios em ordem
                         final camposVazios = <({AnimationController shake, GlobalKey key})>[];
@@ -746,6 +781,9 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                         }
                         if (!escolheuInteresse) {
                           camposVazios.add((shake: _shakeInteresse, key: _interesseKey));
+                        }
+                        if (cpfCnpjInvalido) {
+                          camposVazios.add((shake: _shakeCpfCnpj, key: _cpfCnpjKey));
                         }
 
                         if (camposVazios.isNotEmpty) {
