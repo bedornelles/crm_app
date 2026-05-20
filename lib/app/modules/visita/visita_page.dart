@@ -48,6 +48,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
   final _cidadeKey = GlobalKey();
   final _interesseKey = GlobalKey();
 
+  final Set<String> _camposComErro = {};
+
   //controlador da animação "shake"
   late AnimationController _shakeNomeEmpresa;
   late AnimationController _shakeContato;
@@ -216,8 +218,19 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           fontWeight: FontWeight.w400,
                         ),
                         validator: InputValidator.required,
-                        decoration: const InputDecoration(
-                            hintText: 'Lancheria do centro'
+                        onChanged: (_) {
+                          if (_camposComErro.contains('nomeEmpresa')) {
+                            setState(() => _camposComErro.remove('nomeEmpresa'));
+                          }
+                        },
+                        decoration: InputDecoration(
+                            hintText: 'Lancheria do centro',
+                          border: _camposComErro.contains('nomeEmpresa')
+                            ? OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                              )
+                              :null,
                         ),
                       ),
                     ),
@@ -246,8 +259,19 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           fontWeight: FontWeight.w400,
                         ),
                         validator: InputValidator.required,
-                        decoration: const InputDecoration(
-                            hintText: 'João da Silva'
+                          onChanged: (_) {
+                            if (_camposComErro.contains('contato')) {
+                              setState(() => _camposComErro.remove('contato'));
+                            }
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'João da Silva',
+                            border: _camposComErro.contains('contato')
+                                ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                            )
+                                : null,
                           ),
                         ),
                       ),
@@ -363,8 +387,19 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           fontWeight: FontWeight.w400,
                         ),
                         validator: InputValidator.required,
-                        decoration: const InputDecoration(
+                        onChanged: (_) {
+                          if (_camposComErro.contains('logradouro')) {
+                            setState(() => _camposComErro.remove('logradouro'));
+                          }
+                        },
+                        decoration: InputDecoration(
                           hintText: 'Av Barão do Rio Branco, centro',
+                          border: _camposComErro.contains('logradouro')
+                            ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                          )
+                              : null,
                         ),
                       ),
                     ),
@@ -393,8 +428,19 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                             fontWeight: FontWeight.w400
                         ),
                         validator: InputValidator.required,
-                        decoration: const InputDecoration(
+                        onChanged: (_) {
+                          if (_camposComErro.contains('numero')) {
+                            setState(() => _camposComErro.remove('numero'));
+                          }
+                        },
+                        decoration: InputDecoration(
                           hintText: '1234',
+                          border: _camposComErro.contains('numero')
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                              )
+                              : null,
                         ),
                       ),
                     ),
@@ -423,8 +469,19 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           fontWeight: FontWeight.w400,
                         ),
                         validator: InputValidator.required,
-                        decoration: const InputDecoration(
+                        onChanged: (_) {
+                          if (_camposComErro.contains('cidade')) {
+                            setState(() => _camposComErro.remove('cidade'));
+                          }
+                        },
+                        decoration: InputDecoration(
                           hintText: 'São Paulo/SP',
+                          border: _camposComErro.contains('cidade')
+                              ? OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                          )
+                              : null,
                         ),
                       ),
                     ),
@@ -523,37 +580,43 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                     key: _interesseKey,
                     child: _buildShakeField(
                       animationController: _shakeInteresse,
-                      child: Observer(
-                      builder: (_){
-                        return Row(
-                          children: [
-
-                            Expanded(
-                              child: ElevatedButton.icon(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Observer(
+                              builder: (_) => ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical:14),
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
                                   backgroundColor: controller.visita.demonstrouInteresse == true
-                                      ?theme.colorScheme.primary
-                                      :Colors.white,
+                                      ? theme.colorScheme.primary
+                                      : Colors.white,
                                   foregroundColor: controller.visita.demonstrouInteresse == true
                                       ? Colors.white
                                       : theme.colorScheme.secondary,
                                   elevation: 0,
-                                  shape:RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
+                                    // borda vermelha individual no botão Sim
+                                    side: _camposComErro.contains('interesse')
+                                        ? BorderSide(color: Colors.red.shade600, width: 1.5)
+                                        : BorderSide.none,
                                   ),
                                 ),
-
-                                onPressed: () => controller.visita.demonstrouInteresse = true,
+                                onPressed: () {
+                                  controller.visita.demonstrouInteresse = true;
+                                  if (_camposComErro.contains('interesse')) {
+                                    setState(() => _camposComErro.remove('interesse'));
+                                  }
+                                },
                                 icon: const Icon(Icons.thumb_up_alt_outlined, size: 20),
-                                label: const Text ('Sim', style: TextStyle(fontSize: 15)),
+                                label: const Text('Sim', style: TextStyle(fontSize: 15)),
                               ),
                             ),
-
-                            const SizedBox(width: 16),
-
-                            Expanded(
-                              child: ElevatedButton.icon(
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Observer(
+                              builder: (_) => ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(vertical: 14),
                                   backgroundColor: controller.visita.demonstrouInteresse == false
@@ -563,20 +626,29 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                                       ? Colors.white
                                       : theme.colorScheme.secondary,
                                   elevation: 0,
-                                  shape:RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
+                                    // borda vermelha individual no botão Não
+                                    side: _camposComErro.contains('interesse')
+                                        ? BorderSide(color: Colors.red.shade600, width: 1.5)
+                                        : BorderSide.none,
                                   ),
                                 ),
-                                onPressed: () => controller.visita.demonstrouInteresse = false,
+                                onPressed: () {
+                                  controller.visita.demonstrouInteresse = false;
+                                  if (_camposComErro.contains('interesse')) {
+                                    setState(() => _camposComErro.remove('interesse'));
+                                  }
+                                },
                                 icon: const Icon(Icons.thumb_down_alt_outlined, size: 20),
-                                label: const Text ('Não', style: TextStyle(fontSize: 15)),
+                                label: const Text('Não', style: TextStyle(fontSize: 15)),
                               ),
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                        ],
+                      ),
                     )
-                    ),
+
                   ),
 
                   const SizedBox(width: 16),
@@ -631,6 +703,29 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           Modular.to.pop(visita);
                         }
                       } else {
+
+                        // marca os campos vazios com erro para pintar a borda
+                        setState(() {
+                          if (_nomeEmpresaController.text.isEmpty) {
+                            _camposComErro.add('nomeEmpresa');
+                          }
+                          if (_contatoController.text.isEmpty) {
+                            _camposComErro.add('contato');
+                          }
+                          if (_logradouroController.text.isEmpty) {
+                            _camposComErro.add('logradouro');
+                          }
+                          if (_numeroController.text.isEmpty) {
+                            _camposComErro.add('numero');
+                          }
+                          if (_cidadeController.text.isEmpty) {
+                            _camposComErro.add('cidade');
+                          }
+                          if (!escolheuInteresse) {
+                            _camposComErro.add('interesse');
+                          }
+                        });
+
                         // coleta todos os campos vazios em ordem
                         final camposVazios = <({AnimationController shake, GlobalKey key})>[];
 

@@ -23,6 +23,7 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
   final _formKey = GlobalKey<FormState>();
   final _idKey = GlobalKey();
   final _contatoKey = GlobalKey();
+  final Set<String> _camposComErro = {};
 
   late AnimationController _shakeId;
   late AnimationController _shakeContato;
@@ -65,7 +66,20 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
                   child: TextFormField(
                     keyboardType: TextInputType.number,
                     validator: InputValidator.required,
-                    onChanged: controller.setIdEmpresa,
+                    onChanged: (value) {
+                      controller.setIdEmpresa(value);
+                      if (_camposComErro.contains('id')) {
+                        setState(() => _camposComErro.remove('id'));
+                      }
+                    },
+                    decoration: InputDecoration(
+                      border: _camposComErro.contains('id')
+                          ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                      )
+                          : null,
+                    ),
                   ),
                 ),
               ),
@@ -80,7 +94,20 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
                   animationController: _shakeContato,
                   child: TextFormField(
                     validator: InputValidator.required,
-                    onChanged: controller.setContato,
+                    onChanged: (value) {
+                      controller.setContato(value);
+                      if (_camposComErro.contains('contato')) {
+                        setState(() => _camposComErro.remove('contato'));
+                      }
+                    },
+                    decoration: InputDecoration(
+                      border: _camposComErro.contains('contato')
+                          ? OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                      )
+                          : null,
+                    ),
                   ),
                 ),
               ),
@@ -149,6 +176,16 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
         Modular.to.navigate('/home/');
       }
     } else {
+
+      setState(() {
+        if (controller.idEmpresa.isEmpty) {
+          _camposComErro.add('id');
+        }
+        if (controller.contato.isEmpty) {
+          _camposComErro.add('contato');
+        }
+      });
+
       if (controller.idEmpresa.isEmpty) {
         _shakeId.forward(from: 0);
       }
