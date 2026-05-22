@@ -18,6 +18,7 @@ abstract class _HomeControllerBase with Store {
   final ICache _cache;
 
   StreamSubscription? _sincronizacaoSubscription;
+  Timer? _debounceTimer;
 
   _HomeControllerBase(this._service, this._cache) {
     _sincronizacaoSubscription = Modular.get<AppController>()
@@ -28,6 +29,7 @@ abstract class _HomeControllerBase with Store {
   }
 
   void dispose(){
+    _debounceTimer?.cancel();
     _sincronizacaoSubscription?.cancel();
   }
 
@@ -43,9 +45,45 @@ abstract class _HomeControllerBase with Store {
   @observable
   String idUsuarioLogado = '';
 
+  @observable
+  bool pesquisando = false;
+
+  @observable
+  String termoPesquisa = '';
+
   @action
   void addVisita(VisitaEntity visita) {
     visitas.add(visita);
+  }
+
+  @action
+  void iniciarPesquisa() {
+    pesquisando = true;
+  }
+
+  @action
+  void encerrarPesquisa() {
+    pesquisando = false;
+    termoPesquisa = '';
+  }
+
+  @action
+  void atualizarPesquisa(String termo) {
+    _debounceTimer?.cancel();
+
+    _debounceTimer = Timer(const Duration(milliseconds: 300),(){
+      termoPesquisa = termo;
+    });
+  }
+
+  @computed
+  List<VisitaEntity> get visitasFiltradas {
+    if (termoPesquisa.isEmpty) return visitas;
+    final termo = termoPesquisa.toLowerCase();
+    return visitas.where((v) =>
+      v.nomeEmpresa.toLowerCase().contains(termo) ||
+          v.nomeContatoEmpresa.toLowerCase().contains(termo)
+    ).toList();
   }
 
   @action

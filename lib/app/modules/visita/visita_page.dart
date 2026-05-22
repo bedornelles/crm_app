@@ -759,8 +759,6 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           }
                         });
 
-
-
                         // coleta todos os campos vazios em ordem
                         final camposVazios = <({AnimationController shake, GlobalKey key})>[];
 

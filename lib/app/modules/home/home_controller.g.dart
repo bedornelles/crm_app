@@ -16,6 +16,14 @@ mixin _$HomeController on _HomeControllerBase, Store {
     () => super.loading,
     name: '_HomeControllerBase.loading',
   )).value;
+  Computed<List<VisitaEntity>>? _$visitasFiltradasComputed;
+
+  @override
+  List<VisitaEntity> get visitasFiltradas =>
+      (_$visitasFiltradasComputed ??= Computed<List<VisitaEntity>>(
+        () => super.visitasFiltradas,
+        name: '_HomeControllerBase.visitasFiltradas',
+      )).value;
 
   late final _$_loadingAtom = Atom(
     name: '_HomeControllerBase._loading',
@@ -68,6 +76,42 @@ mixin _$HomeController on _HomeControllerBase, Store {
   set idUsuarioLogado(String value) {
     _$idUsuarioLogadoAtom.reportWrite(value, super.idUsuarioLogado, () {
       super.idUsuarioLogado = value;
+    });
+  }
+
+  late final _$pesquisandoAtom = Atom(
+    name: '_HomeControllerBase.pesquisando',
+    context: context,
+  );
+
+  @override
+  bool get pesquisando {
+    _$pesquisandoAtom.reportRead();
+    return super.pesquisando;
+  }
+
+  @override
+  set pesquisando(bool value) {
+    _$pesquisandoAtom.reportWrite(value, super.pesquisando, () {
+      super.pesquisando = value;
+    });
+  }
+
+  late final _$termoPesquisaAtom = Atom(
+    name: '_HomeControllerBase.termoPesquisa',
+    context: context,
+  );
+
+  @override
+  String get termoPesquisa {
+    _$termoPesquisaAtom.reportRead();
+    return super.termoPesquisa;
+  }
+
+  @override
+  set termoPesquisa(String value) {
+    _$termoPesquisaAtom.reportWrite(value, super.termoPesquisa, () {
+      super.termoPesquisa = value;
     });
   }
 
@@ -157,13 +201,52 @@ mixin _$HomeController on _HomeControllerBase, Store {
   }
 
   @override
+  void iniciarPesquisa() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.iniciarPesquisa',
+    );
+    try {
+      return super.iniciarPesquisa();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void encerrarPesquisa() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.encerrarPesquisa',
+    );
+    try {
+      return super.encerrarPesquisa();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void atualizarPesquisa(String termo) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.atualizarPesquisa',
+    );
+    try {
+      return super.atualizarPesquisa(termo);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 visitas: ${visitas},
 idUsuarioLogado: ${idUsuarioLogado},
+pesquisando: ${pesquisando},
+termoPesquisa: ${termoPesquisa},
 nomeUsuario: ${nomeUsuario},
 iniciaisUsuario: ${iniciaisUsuario},
-loading: ${loading}
+loading: ${loading},
+visitasFiltradas: ${visitasFiltradas}
     ''';
   }
 }

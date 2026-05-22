@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget{
 class _HomePageState extends State<HomePage> {
   //modular procura o controller que registrei no module
   final controller = Modular.get<HomeController>();
+  final _pesquisaController = TextEditingController();
 
   @override
   void initState(){
@@ -34,11 +35,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose(){
+    _pesquisaController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           leading: Observer(
             builder: (_) {
+              if (controller.pesquisando) return const SizedBox.shrink();
               return GestureDetector(
                 onTap: () {
                   mostrarMenuPerfil(context, controller);
@@ -56,17 +64,51 @@ class _HomePageState extends State<HomePage> {
               );
             },
           ),
-        title: const Text('Visita'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.calendar_month_rounded),
-            onPressed: (){
 
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: (){
+
+        title: Observer(
+          builder: (_) {
+            // quando pesquisando, mostra o campo de texto no lugar do título
+            if (controller.pesquisando) {
+              return TextField(
+                controller: _pesquisaController,
+                autofocus: true, // abre o teclado automaticamente
+                decoration: const InputDecoration(
+                  hintText: 'Digite para buscar...',
+                  border: InputBorder.none, // sem borda para ficar clean na AppBar
+                ),
+                onChanged: controller.atualizarPesquisa,
+              );
+            }
+            return const Text('Visitas');
+          },
+        ),
+        actions: [
+          Observer(
+            builder: (_) {
+              if (controller.pesquisando) {
+                // quando pesquisando, mostra o X para fechar
+                return IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    _pesquisaController.clear();
+                    controller.encerrarPesquisa();
+                  },
+                );
+              }
+              // estado normal: mostra calendário e lupa
+              return Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.calendar_month_rounded),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: controller.iniciarPesquisa,
+                  ),
+                ],
+              );
             },
           ),
         ],
@@ -82,13 +124,14 @@ class _HomePageState extends State<HomePage> {
             );
           }
 
-          if (controller.visitas.isEmpty) {
+          if (controller.visitasFiltradas.isEmpty) {
+            final ehResultadoDePesquisa = controller.pesquisando && controller.visitas.isNotEmpty;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.list_alt_rounded,
+                    ehResultadoDePesquisa ? Icons.filter_alt_outlined : Icons.list_alt_rounded,
                     size: 70,
                     color: Theme
                         .of(context)
@@ -98,7 +141,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 16,),
                   Text(
-                    "Nenhuma visita registrada hoje neste dispositivo",
+                    ehResultadoDePesquisa
+                      ? "Nenhuma visita encontrada com este filtro atribuído."
+                      : "Nenhuma visita registrada hoje neste dispositivo.",
                     style: TextStyle(
                       color: Theme
                           .of(context)
@@ -115,10 +160,11 @@ class _HomePageState extends State<HomePage> {
           return ListView.builder(
 
             padding: const EdgeInsets.all(16.0),
-            itemCount: controller.visitas.length,
+
+            itemCount: controller.visitasFiltradas.length,
             itemBuilder: (context, index) {
 
-              final visita = controller.visitas[index];
+              final visita = controller.visitasFiltradas[index];
 
               return VisitaCard(visita: visita);
             },
@@ -126,13 +172,19 @@ class _HomePageState extends State<HomePage> {
 
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed:() async {
-          await Modular.to.pushNamed('/visita/');
 
-          controller.load();
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Observer(
+        builder: (_){
+          if (controller.pesquisando) return const SizedBox.shrink();
+
+            return FloatingActionButton(
+              onPressed:() async {
+                await Modular.to.pushNamed('/visita/');
+                controller.load();
+              },
+              child: const Icon(Icons.add),
+            );
+          },
       ),
     );
   }
