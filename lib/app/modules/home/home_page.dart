@@ -44,43 +44,58 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: Observer(
-            builder: (_) {
-              if (controller.pesquisando) return const SizedBox.shrink();
-              return GestureDetector(
-                onTap: () {
-                  mostrarMenuPerfil(context, controller);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Text(
-                      controller.iniciaisUsuario, // Agora o Observer vai conseguir atualizar isso!
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
+        titleSpacing: 0,
+        leading: Observer(
+          builder: (_) {
+            if (controller.pesquisando) return const SizedBox.shrink();
+            return GestureDetector(
+              onTap: () {
+                mostrarMenuPerfil(context, controller);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Text(
+                    controller.iniciaisUsuario,
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
+        ),
 
 
         title: Observer(
           builder: (_) {
             // quando pesquisando, mostra o campo de texto no lugar do título
             if (controller.pesquisando) {
-              return TextField(
-                controller: _pesquisaController,
-                autofocus: true, // abre o teclado automaticamente
-                decoration: const InputDecoration(
-                  hintText: 'Digite para buscar...',
-                  border: InputBorder.none, // sem borda para ficar clean na AppBar
+              return Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: SizedBox(
+                  height: 44,
+                  child: TextField(
+                    controller: _pesquisaController,
+                    autofocus: true, // abre o teclado automaticamente
+                    decoration: InputDecoration(
+                      hintText: 'Digite para buscar...',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16.0),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    onChanged: controller.atualizarPesquisa,
+                  ),
                 ),
-                onChanged: controller.atualizarPesquisa,
               );
             }
-            return const Text('Visitas');
+            return const Padding(
+              padding: EdgeInsets.only(left: 8.0),
+              child: Text('Visitas'),
+            );
           },
         ),
         actions: [
@@ -142,8 +157,8 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 16,),
                   Text(
                     ehResultadoDePesquisa
-                      ? "Nenhuma visita encontrada com este filtro atribuído."
-                      : "Nenhuma visita registrada hoje neste dispositivo.",
+                        ? "Nenhuma visita encontrada com este filtro atribuído."
+                        : "Nenhuma visita registrada hoje neste dispositivo.",
                     style: TextStyle(
                       color: Theme
                           .of(context)
@@ -177,110 +192,110 @@ class _HomePageState extends State<HomePage> {
         builder: (_){
           if (controller.pesquisando) return const SizedBox.shrink();
 
-            return FloatingActionButton(
-              onPressed:() async {
-                await Modular.to.pushNamed('/visita/');
-                controller.load();
-              },
-              child: const Icon(Icons.add),
-            );
-          },
+          return FloatingActionButton(
+            onPressed:() async {
+              await Modular.to.pushNamed('/visita/');
+              controller.load();
+            },
+            child: const Icon(Icons.add),
+          );
+        },
       ),
     );
   }
 
   void mostrarMenuPerfil(BuildContext context, HomeController controller) {
-      showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Color(0xFFFAFAFA),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24))
-      ),
-      builder: (BuildContext context) {
-        return Padding (
-          padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              CircleAvatar(
-                radius: 24,
-                backgroundColor: Theme.of(context).primaryColor,
-                child: Text(
-                  controller.iniciaisUsuario,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                controller.nomeUsuario,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                child: InkWell(
-                  onTap: () {
-                    // Primeiro fecha o Bottom Sheet
-                    Navigator.pop(context);
-                    // Depois chama a função de logout no Controller
-                    controller.desconectar();
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Color(0xFFFAFAFA),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24))
+        ),
+        builder: (BuildContext context) {
+          return Padding (
+              padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Desconectar',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Icon(
-                          Icons.exit_to_app_rounded, // Ícone de saída
-                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
-                        ),
-                      ],
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ),
-              ),
-            ],
-          )
-        );
-      }
+
+                  const SizedBox(height: 24),
+
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Theme.of(context).primaryColor,
+                    child: Text(
+                      controller.iniciaisUsuario,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  Text(
+                    controller.nomeUsuario,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  Material(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    child: InkWell(
+                      onTap: () {
+                        // Primeiro fecha o Bottom Sheet
+                        Navigator.pop(context);
+                        // Depois chama a função de logout no Controller
+                        controller.desconectar();
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Desconectar',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Icon(
+                              Icons.exit_to_app_rounded, // Ícone de saída
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          );
+        }
     );
   }
 
