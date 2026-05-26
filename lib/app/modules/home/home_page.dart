@@ -8,22 +8,20 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 
-class HomePage extends StatefulWidget{
-  const HomePage ({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  //modular procura o controller que registrei no module
   final controller = Modular.get<HomeController>();
   final _pesquisaController = TextEditingController();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    //tela abre e chama o metodo carregar fados
     controller.load();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final visitaController = Modular.get<VisitaController>();
@@ -35,84 +33,66 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _pesquisaController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        leading: Observer(
-          builder: (_) {
-            if (controller.pesquisando) return const SizedBox.shrink();
-            return GestureDetector(
-              onTap: () {
-                mostrarMenuPerfil(context, controller);
-              },
+    return Observer(
+      builder: (_) {
+        return Scaffold(
+          appBar: AppBar(
+            titleSpacing: 0,
+            leadingWidth: controller.pesquisando ? 0 : 80,
+            leading: controller.pesquisando
+                ? const SizedBox.shrink()
+                : GestureDetector(
+              onTap: () => mostrarMenuPerfil(context, controller),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   child: Text(
                     controller.iniciaisUsuario,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            );
-          },
-        ),
-
-
-        title: Observer(
-          builder: (_) {
-            // quando pesquisando, mostra o campo de texto no lugar do título
-            if (controller.pesquisando) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: SizedBox(
-                  height: 44,
-                  child: TextField(
-                    controller: _pesquisaController,
-                    autofocus: true, // abre o teclado automaticamente
-                    decoration: InputDecoration(
-                      hintText: 'Digite para buscar...',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                    onChanged: controller.atualizarPesquisa,
+            ),
+            title: controller.pesquisando
+                ? Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 8.0),
+              child: SizedBox(
+                height: 48, // ← era 44, aumentei para ficar mais grosso
+                child: TextField(
+                  controller: _pesquisaController,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Digite para buscar...',
                   ),
+                  onChanged: controller.atualizarPesquisa,
                 ),
-              );
-            }
-            return const Padding(
+              ),
+            )
+                : const Padding(
               padding: EdgeInsets.only(left: 8.0),
               child: Text('Visitas'),
-            );
-          },
-        ),
-        actions: [
-          Observer(
-            builder: (_) {
-              if (controller.pesquisando) {
-                // quando pesquisando, mostra o X para fechar
-                return IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    _pesquisaController.clear();
-                    controller.encerrarPesquisa();
-                  },
-                );
-              }
-              // estado normal: mostra calendário e lupa
-              return Row(
+            ),
+            actions: [
+              controller.pesquisando
+                  ? IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  _pesquisaController.clear();
+                  controller.encerrarPesquisa();
+                },
+              )
+                  : Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.calendar_month_rounded),
@@ -123,84 +103,71 @@ class _HomePageState extends State<HomePage> {
                     onPressed: controller.iniciarPesquisa,
                   ),
                 ],
+              ),
+            ],
+          ),
+          body: Observer(
+            builder: (_) {
+              if (controller.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (controller.visitasFiltradas.isEmpty) {
+                final ehResultadoDePesquisa =
+                    controller.pesquisando && controller.visitas.isNotEmpty;
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        ehResultadoDePesquisa
+                            ? Icons.filter_alt_outlined
+                            : Icons.list_alt_rounded,
+                        size: 70,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.3),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        ehResultadoDePesquisa
+                            ? "Nenhuma visita encontrada com este filtro atribuído."
+                            : "Nenhuma visita registrada hoje neste dispositivo.",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: controller.visitasFiltradas.length,
+                itemBuilder: (context, index) {
+                  final visita = controller.visitasFiltradas[index];
+                  return VisitaCard(visita: visita);
+                },
               );
             },
           ),
-        ],
-      ),
-
-      //observer vai invelopar o que precsa ser reativo
-      //sempre q o controller.loading mudar o observer roda o codigo novamente
-      body: Observer(
-        builder: (_) {
-          if (controller.loading) {
-            return const Center(
-                child: CircularProgressIndicator()
-            );
-          }
-
-          if (controller.visitasFiltradas.isEmpty) {
-            final ehResultadoDePesquisa = controller.pesquisando && controller.visitas.isNotEmpty;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    ehResultadoDePesquisa ? Icons.filter_alt_outlined : Icons.list_alt_rounded,
-                    size: 70,
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary
-                        .withValues(alpha: 0.3),
-                  ),
-                  const SizedBox(height: 16,),
-                  Text(
-                    ehResultadoDePesquisa
-                        ? "Nenhuma visita encontrada com este filtro atribuído."
-                        : "Nenhuma visita registrada hoje neste dispositivo.",
-                    style: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                      fontSize: 14,
-                    ),
-                  )
-                ],
-              ),
-            );
-          }
-
-          return ListView.builder(
-
-            padding: const EdgeInsets.all(16.0),
-
-            itemCount: controller.visitasFiltradas.length,
-            itemBuilder: (context, index) {
-
-              final visita = controller.visitasFiltradas[index];
-
-              return VisitaCard(visita: visita);
+          floatingActionButton: Observer(
+            builder: (_) {
+              if (controller.pesquisando) return const SizedBox.shrink();
+              return FloatingActionButton(
+                onPressed: () async {
+                  await Modular.to.pushNamed('/visita/');
+                  controller.load();
+                },
+                child: const Icon(Icons.add),
+              );
             },
-          );
-
-        },
-      ),
-
-      floatingActionButton: Observer(
-        builder: (_){
-          if (controller.pesquisando) return const SizedBox.shrink();
-
-          return FloatingActionButton(
-            onPressed:() async {
-              await Modular.to.pushNamed('/visita/');
-              controller.load();
-            },
-            child: const Icon(Icons.add),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
