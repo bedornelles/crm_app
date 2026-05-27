@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:crm_app/app/modules/home/home_controller.dart';
+import 'package:crm_app/app/modules/home/widgets/visita/filtro_data_bottom_sheet.dart';
 import 'package:crm_app/app/modules/home/widgets/visita/visita_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:crm_app/app/modules/visita/enum/filtro_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -96,7 +98,17 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.calendar_month_rounded),
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        ),
+                        builder: (_) => const FiltroDataBottomSheet(),
+                      );
+                    },
                   ),
                   IconButton(
                     icon: const Icon(Icons.search),
@@ -111,60 +123,35 @@ class _HomePageState extends State<HomePage> {
               if (controller.loading) {
                 return const Center(child: CircularProgressIndicator());
               }
+              return Column(
+                children: [
+                  if (controller.filtroDataAtivo)
+                    _BannerFiltroAtivo(controller: controller),
 
-              if (controller.visitasFiltradas.isEmpty) {
-                final ehResultadoDePesquisa =
-                    controller.pesquisando && controller.visitas.isNotEmpty;
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        ehResultadoDePesquisa
-                            ? Icons.filter_alt_outlined
-                            : Icons.list_alt_rounded,
-                        size: 70,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.3),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        ehResultadoDePesquisa
-                            ? "Nenhuma visita encontrada com este filtro atribuído."
-                            : "Nenhuma visita registrada hoje neste dispositivo.",
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 14,
+                  Expanded(
+                    child: controller.visitasFiltradas.isEmpty
+                        ? _EstadoVazio(controller: controller)
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16.0),
+                            itemCount: controller.visitasFiltradas.length,
+                            itemBuilder: (context, index) {
+                              final visita = controller.visitasFiltradas[index];
+                              return VisitaCard(visita: visita);
+                            },
                         ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
-              }
-
-              return ListView.builder(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: controller.visitasFiltradas.length,
-                itemBuilder: (context, index) {
-                  final visita = controller.visitasFiltradas[index];
-                  return VisitaCard(visita: visita);
-                },
-              );
+              },
+            ),
+          floatingActionButton: controller.pesquisando
+              ? const SizedBox.shrink()
+              : FloatingActionButton(
+            onPressed: () async {
+              await Modular.to.pushNamed('/visita/');
+              controller.load();
             },
-          ),
-          floatingActionButton: Observer(
-            builder: (_) {
-              if (controller.pesquisando) return const SizedBox.shrink();
-              return FloatingActionButton(
-                onPressed: () async {
-                  await Modular.to.pushNamed('/visita/');
-                  controller.load();
-                },
-                child: const Icon(Icons.add),
-              );
-            },
+            child: const Icon(Icons.add),
           ),
         );
       },
@@ -335,6 +322,109 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
 
+class _BannerFiltroAtivo extends StatelessWidget {
+  final HomeController controller;
 
+  const _BannerFiltroAtivo({required this.controller});
+
+  String get _textoBanner {
+    if (controller.filtroData == FiltroData.ontem) {
+      return 'Filtrando visitas de ontem';
+    }
+    if (controller.filtroData == FiltroData.personalisado &&
+        controller.dataInicio != null &&
+        controller.dataFim != null) {
+      final ini = controller.dataInicio!;
+      final fim = controller.dataFim!;
+      return 'Filtrando do dia ${ini.day}/${ini.month} até ${fim.day}/${fim.month}';
+    }
+    return 'Filtro ativo';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            _textoBanner,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          GestureDetector(
+            onTap: controller.limparFiltroData,
+            child: Icon(
+              Icons.close,
+              size: 18,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EstadoVazio extends StatelessWidget {
+  final HomeController controller;
+
+  const _EstadoVazio({required this.controller});
+
+  String get _mensagem {
+    if (controller.pesquisando && controller.visitas.isNotEmpty) {
+      return 'Nenhuma visita encontrada com este filtro atribuído.';
+    }
+    if (controller.filtroDataAtivo) {
+      return 'Nenhuma visita encontrada com este filtro atribuído.';
+    }
+    return 'Nenhuma visita registrada hoje neste dispositivo.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            controller.filtroDataAtivo || controller.pesquisando
+                ? Icons.filter_alt_outlined
+                : Icons.list_alt_rounded,
+            size: 70,
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            _mensagem,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 14,
+            ),
+          ),
+          if (controller.filtroDataAtivo) ...[
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: ElevatedButton(
+                onPressed: controller.limparFiltroData,
+                child: const Text('Experimente um filtro diferente'),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }

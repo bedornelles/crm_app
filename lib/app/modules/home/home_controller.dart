@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crm_app/app/modules/visita/enum/filtro_data.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:mobx/mobx.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
@@ -76,15 +77,67 @@ abstract class _HomeControllerBase with Store {
     });
   }
 
+  @observable
+  FiltroData filtroData = FiltroData.hoje; //padrao
+
+  @observable
+  DateTime? dataInicio;
+
+  @observable
+  DateTime? dataFim;
+
+  @action
+  void aplicarFiltroData(FiltroData filtro, {DateTime? inicio, DateTime? fim}) {
+    filtroData = filtro;
+    dataInicio = inicio;
+    dataFim = fim;
+  }
+
+  @action
+  void limparFiltroData() {
+    filtroData = FiltroData.hoje;
+    dataInicio = null;
+    dataFim = null;
+  }
+
+
   @computed
   List<VisitaEntity> get visitasFiltradas {
-    if (termoPesquisa.isEmpty) return visitas;
+    final agora = DateTime.now();
+    final hoje = DateTime(agora.year, agora.month,agora.day);
+    final ontem = hoje.subtract(const Duration(days: 1));
+
+    // 1. filtra por data
+    final filtradosPorData = visitas.where((v) {
+      final diaVisita = DateTime(
+        v.dataVisita.year,
+        v.dataVisita.month,
+        v.dataVisita.day,
+      );
+
+      switch (filtroData) {
+        case FiltroData.hoje:
+          return diaVisita == hoje;
+        case FiltroData.ontem:
+          return diaVisita == ontem;
+        case FiltroData.personalisado:
+          if (dataInicio == null || dataFim == null) return false;
+          final inicio = DateTime(dataInicio!.year, dataInicio!.month, dataInicio!.day);
+          final fim = DateTime(dataFim!.year, dataFim!.month, dataFim!.day);
+          return !diaVisita.isBefore(inicio) && !diaVisita.isAfter(fim);
+      }
+    }).toList();
+
+    if (termoPesquisa.isEmpty) return filtradosPorData;
     final termo = termoPesquisa.toLowerCase();
-    return visitas.where((v) =>
-      v.nomeEmpresa.toLowerCase().contains(termo) ||
-          v.nomeContatoEmpresa.toLowerCase().contains(termo)
+    return filtradosPorData.where((v) =>
+    v.nomeEmpresa.toLowerCase().contains(termo) ||
+        v.nomeContatoEmpresa.toLowerCase().contains(termo)
     ).toList();
   }
+
+  @computed
+  bool get filtroDataAtivo => filtroData != FiltroData.hoje;
 
   @action
   Future<void> desconectar() async {

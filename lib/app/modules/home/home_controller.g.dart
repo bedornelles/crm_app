@@ -24,6 +24,13 @@ mixin _$HomeController on _HomeControllerBase, Store {
         () => super.visitasFiltradas,
         name: '_HomeControllerBase.visitasFiltradas',
       )).value;
+  Computed<bool>? _$filtroDataAtivoComputed;
+
+  @override
+  bool get filtroDataAtivo => (_$filtroDataAtivoComputed ??= Computed<bool>(
+    () => super.filtroDataAtivo,
+    name: '_HomeControllerBase.filtroDataAtivo',
+  )).value;
 
   late final _$_loadingAtom = Atom(
     name: '_HomeControllerBase._loading',
@@ -112,6 +119,60 @@ mixin _$HomeController on _HomeControllerBase, Store {
   set termoPesquisa(String value) {
     _$termoPesquisaAtom.reportWrite(value, super.termoPesquisa, () {
       super.termoPesquisa = value;
+    });
+  }
+
+  late final _$filtroDataAtom = Atom(
+    name: '_HomeControllerBase.filtroData',
+    context: context,
+  );
+
+  @override
+  FiltroData get filtroData {
+    _$filtroDataAtom.reportRead();
+    return super.filtroData;
+  }
+
+  @override
+  set filtroData(FiltroData value) {
+    _$filtroDataAtom.reportWrite(value, super.filtroData, () {
+      super.filtroData = value;
+    });
+  }
+
+  late final _$dataInicioAtom = Atom(
+    name: '_HomeControllerBase.dataInicio',
+    context: context,
+  );
+
+  @override
+  DateTime? get dataInicio {
+    _$dataInicioAtom.reportRead();
+    return super.dataInicio;
+  }
+
+  @override
+  set dataInicio(DateTime? value) {
+    _$dataInicioAtom.reportWrite(value, super.dataInicio, () {
+      super.dataInicio = value;
+    });
+  }
+
+  late final _$dataFimAtom = Atom(
+    name: '_HomeControllerBase.dataFim',
+    context: context,
+  );
+
+  @override
+  DateTime? get dataFim {
+    _$dataFimAtom.reportRead();
+    return super.dataFim;
+  }
+
+  @override
+  set dataFim(DateTime? value) {
+    _$dataFimAtom.reportWrite(value, super.dataFim, () {
+      super.dataFim = value;
     });
   }
 
@@ -237,16 +298,44 @@ mixin _$HomeController on _HomeControllerBase, Store {
   }
 
   @override
+  void aplicarFiltroData(FiltroData filtro, {DateTime? inicio, DateTime? fim}) {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.aplicarFiltroData',
+    );
+    try {
+      return super.aplicarFiltroData(filtro, inicio: inicio, fim: fim);
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void limparFiltroData() {
+    final _$actionInfo = _$_HomeControllerBaseActionController.startAction(
+      name: '_HomeControllerBase.limparFiltroData',
+    );
+    try {
+      return super.limparFiltroData();
+    } finally {
+      _$_HomeControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 visitas: ${visitas},
 idUsuarioLogado: ${idUsuarioLogado},
 pesquisando: ${pesquisando},
 termoPesquisa: ${termoPesquisa},
+filtroData: ${filtroData},
+dataInicio: ${dataInicio},
+dataFim: ${dataFim},
 nomeUsuario: ${nomeUsuario},
 iniciaisUsuario: ${iniciaisUsuario},
 loading: ${loading},
-visitasFiltradas: ${visitasFiltradas}
+visitasFiltradas: ${visitasFiltradas},
+filtroDataAtivo: ${filtroDataAtivo}
     ''';
   }
 }

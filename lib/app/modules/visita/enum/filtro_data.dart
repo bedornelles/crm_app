@@ -1,0 +1,1 @@
+enum FiltroData { hoje, ontem, personalisado }
