@@ -96,11 +96,12 @@ class _FiltroDataBottomSheetState extends State<FiltroDataBottomSheet> {
               );
 
               if (resultado != null) {
-                setState(() {
-                  _selecaoAtual = FiltroData.personalisado;
-                  _dataInicio = resultado['inicio'];
-                  _dataFim = resultado['fim'];
-                });
+                controller.aplicarFiltroData(
+                  FiltroData.personalisado,
+                  inicio: resultado['inicio'],
+                  fim: resultado['fim'],
+                );
+                Navigator.pop(context);
               }
             },
           ),
