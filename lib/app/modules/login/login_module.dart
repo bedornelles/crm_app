@@ -6,12 +6,16 @@ import 'package:crm_app/app/modules/login/login_page.dart';
 import 'package:crm_app/app/modules/login/services/login_service_interface.dart';
 import 'package:crm_app/app/modules/login/services/login_service.dart';
 
+import '../../shared/cache/cache_interface.dart';
+
 class LoginModule extends Module{
+  final ICache _cache;
+  LoginModule(this._cache);
 
   @override
   List<Module> get imports => [
-    CacheModule(),
-    ApiModule(),
+    CacheModule(_cache),
+    ApiModule(_cache),
   ];
 
   @override

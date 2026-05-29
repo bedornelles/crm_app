@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:crm_app/app/shared/cache/cache.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:dio/dio.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../modules/login/services/login_service_interface.dart';
+import '../../modules/usuario/entity/usuario_entity.dart';
 import 'crm_api_interface.dart';
 import 'package:crm_app/app/shared/api/urls.dart';
 
@@ -13,17 +16,14 @@ typedef JsonMap = Map<String, dynamic>;
 
 class CrmApi implements ICrmApi{
 
-  //o app vai tentar renovar o token no maximo 3 vzs seguidas se der erro
   static const int _maxTokenRefreshAttempts = 3;
-
-  //pega a variavel do urls.dart com o caminho da api
   static String get _baseUrl => '$crmApiUrl';
 
-  //pede para o modular entregar a ferramenta do cache SharedPreferences
-  final ICache _cache = Modular.get<ICache>();
+  final ICache _cache;
 
-  //configura a ferramneta dio que faz as requisições http.
-  //toda vex que for fazer uma chamada o get busca o token mais atualizado do cache
+  CrmApi(this._cache);
+
+  //Dio faz as requisicoes http
   Dio get _dio {
     //busca o usuario salvo no celular e pega o token dele se houver
     final token = _cache.getUsuario(cacheUsuarioKey)?.token;
@@ -31,7 +31,6 @@ class CrmApi implements ICrmApi{
     return Dio(
       BaseOptions(
         baseUrl: _baseUrl,
-        //setado limite de 18 segundos para conectar/enviar/receber
         connectTimeout: const Duration(seconds: 18),
         sendTimeout: const Duration(seconds: 18),
         receiveTimeout: const Duration(seconds: 18),
@@ -44,24 +43,6 @@ class CrmApi implements ICrmApi{
           if (token != null) 'Authorization': 'Bearer $token',
          }
       )
-    );
-  }
-
-  ///metodo usado para buscar lista de visitas
-  @override
-  Future<List<JsonMap>> getAll({
-    required String uri,
-    Map<String, dynamic>? queryParameters,
-    int refreshAttempts = 0,
-  }) async {
-    // Passa a ação para o metodo _request, que vai empacotar isso com tratamento de erros.
-    return _request<List<JsonMap>>(
-          () async {
-        final response = await _dio.get(uri, queryParameters: queryParameters);
-        // Pega a resposta do servidor e transforma numa Lista de Mapas que o Flutter entende.
-        return List<JsonMap>.from(response.data);
-      },
-      refreshAttempts,
     );
   }
 
@@ -105,6 +86,7 @@ class CrmApi implements ICrmApi{
     } on DioException catch (e) {
       // erro de rede! Vamos ver se é problema de Token vencido.
       if (_isTokenExpirado(e)) {
+        print('🔄 Token expirado, tentativa $refreshAttempts de $_maxTokenRefreshAttempts');
         // Se já tentou renovar menos de 3 vezes, tenta de novo.
         if (refreshAttempts < _maxTokenRefreshAttempts) {
           await _tokenExpirado(refreshAttempts); // Chama a função que renova o token
@@ -131,7 +113,7 @@ class CrmApi implements ICrmApi{
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.sendTimeout:
-        throw Exception('Tempo de conexão excedido. Verifique sua internet.');
+        throw Exception('Tempo de conexão excedido');
       case DioExceptionType.cancel:
         throw Exception('Requisição cancelada.');
       case DioExceptionType.badResponse:
@@ -160,14 +142,33 @@ class CrmApi implements ICrmApi{
     }
   }
 
-  // função chamada quando a API avisa que o token atual venceu.
   Future<void> _tokenExpirado(int refreshAttempts) async {
     try {
-      // Pega a "senha de emergência" (refreshToken) salva no cache.
+      print('Tentando renovar token...');
       final refreshToken = _cache.getUsuario(cacheUsuarioKey)?.refreshToken ?? '';
 
-      // Pede para o LoginService ir na API trocar esse refreshToken por um Token novo.
-      await Modular.get<ILoginService>().refreshToken(refreshToken, refreshAttempts + 1);
+      // chama o endpoint de refresh diretamente com um Dio limpo, sem passar pelo _request
+      final dio = Dio(BaseOptions(
+        baseUrl: _baseUrl,
+        connectTimeout: const Duration(seconds: 18),
+        sendTimeout: const Duration(seconds: 18),
+        receiveTimeout: const Duration(seconds: 18),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ));
+
+      final response = await dio.post(
+        '/api/v1/usuario/refresh',
+        data: {'refreshToken': refreshToken},
+      );
+
+      if (response.data != null) {
+        final usuario = UsuarioEntity.fromJson(Map<String, dynamic>.from(response.data));
+        await _cache.setString(cacheUsuarioKey, jsonEncode(usuario.toJson()));
+        print('Token renovado com sucesso');
+      }
     } catch (e, s) {
       debugPrint('Erro ao renovar token: $e\n$s');
     }
@@ -179,9 +180,8 @@ class CrmApi implements ICrmApi{
     return e.response?.statusCode == 401 && _cache.getUsuario(cacheUsuarioKey)?.refreshToken != null;
   }
 
-  // Função de emergência: limpa tudo e joga o usuário para a tela de login.
   Future<void> _logout() async {
-    await Modular.get<ILoginService>().logout(); // Limpa banco de dados e cache
-    Modular.to.navigate('/login'); // Navega para fora do app
+    await _cache.remove(cacheUsuarioKey); // limpa direto no cache
+    Modular.to.navigate('/');
   }
 }

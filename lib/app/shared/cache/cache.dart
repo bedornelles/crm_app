@@ -8,13 +8,13 @@ import 'package:crm_app/app/shared/cache/cache_interface.dart';
 // Permite salvar, recuperar e remover dados simples em formato chave-valor.
 // Também oferece métodos específicos para manipular o usuário logado.
 class Cache implements ICache {
-  late SharedPreferences _prefs;
+  final SharedPreferences _prefs;
 
-  //inicializa a instacia de sharepreferences de forma assincrona
-  Cache(){
-    SharedPreferences.getInstance().then((prefs){
-      _prefs = prefs;
-    });
+  Cache(this._prefs);
+
+  static Future<Cache> criar() async {
+    final prefs = await SharedPreferences.getInstance();
+    return Cache(prefs);
   }
 
   // Salva uma string no cache com a chave fornecida.

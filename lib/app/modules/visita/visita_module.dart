@@ -11,11 +11,15 @@ import 'package:crm_app/app/modules/visita/visita_page.dart';
 import 'package:crm_app/app/modules/visita/identificar_empresa_id_page.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
 
+import '../../shared/cache/cache_interface.dart';
+
 class VisitaModule extends Module {
+  final ICache _cache;
+  VisitaModule(this._cache);
 
   @override
   List<Module> get imports => [
-    CacheModule(),
+    CacheModule(_cache),
   ];
 
   @override

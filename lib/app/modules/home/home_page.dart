@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                 ? Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 8.0),
               child: SizedBox(
-                height: 48, // ← era 44, aumentei para ficar mais grosso
+                height: 48,
                 child: TextField(
                   controller: _pesquisaController,
                   autofocus: true,
@@ -214,9 +214,7 @@ class _HomePageState extends State<HomePage> {
                     borderRadius: BorderRadius.circular(12),
                     child: InkWell(
                       onTap: () {
-                        // Primeiro fecha o Bottom Sheet
                         Navigator.pop(context);
-                        // Depois chama a função de logout no Controller
                         controller.desconectar();
                       },
                       borderRadius: BorderRadius.circular(12),
@@ -238,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             Icon(
-                              Icons.exit_to_app_rounded, // Ícone de saída
+                              Icons.exit_to_app_rounded,
                               color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.7),
                             ),
                           ],
@@ -296,9 +294,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () async {
-                  // fecha o modal primeiro
                   Navigator.of(ctx).pop();
-                  // depois dispara o popup nativo do sistema
                   final visitaController = Modular.get<VisitaController>();
                   await visitaController.obterLocalizacao();
                 },

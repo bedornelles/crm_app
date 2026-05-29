@@ -19,9 +19,7 @@ class SincronizacaoService implements Disposable {
 
   SincronizacaoService(this._visitaRepository, this._api, this._cache);
 
-  //vai iniciar o polling quando abrir o app
   void iniciar() {
-    //roda uma vez ao iniciar e depois de 30 em 30s
     _sincronizar();
     _timer = Timer.periodic(
       const Duration(seconds: 30),
@@ -29,8 +27,6 @@ class SincronizacaoService implements Disposable {
     );
   }
 
-
-  //para o polling
   void parar() {
     _timer?.cancel();
     _timer = null;
@@ -43,11 +39,10 @@ class SincronizacaoService implements Disposable {
     _sincronizando = true;
 
     try {
-      //so tenta sincronizar se tiver usuario logado
       final usuarioLogado = _cache.getUsuario(cacheUsuarioKey);
       if (usuarioLogado == null) return;
 
-      //busca todas as visitas pendentes no banco local
+
       final pendentes = await _visitaRepository.getAllNaoSincronizadas();
       if (pendentes.isEmpty) return;
 
@@ -60,7 +55,6 @@ class SincronizacaoService implements Disposable {
       print ('erro na sincronização: $e');
     }
     finally {
-      //libera mesmo se der erro
       _sincronizando = false;
     }
   }
@@ -68,18 +62,18 @@ class SincronizacaoService implements Disposable {
   Future<void> _enviarVisita(VisitaEntity visita) async {
     try {
       final payload = _montarPayload(visita);
-      print('DEBUG: Enviando visita da empresa: ${payload['nomeEmpresa']} | ID: ${payload['identificadorEmpresa']}');
+      print('Enviando visita: ${payload['nomeEmpresa']}');
 
       final res = await _api.post(uri: '/api/v1/visita', data: payload);
+      print('Resposta recebida: $res');
 
       if (res != null && res ['success'] == true) {
-        //sucesso - atualiza o status no banco lcoal
         await _visitaRepository.marcarComoSincronizada(visita.base.id);
         print('Sincronização OK: ${res['message']}');
 
       }else{
-        //erro da api success:false
         final erroMsg = res?['detail'] ?? res?['message'] ?? 'erro desconhecido na api';
+        print('Erro da API: $erroMsg');
         await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
       }
 
@@ -116,13 +110,10 @@ class SincronizacaoService implements Disposable {
       'localizacao': visita.localizacao ?? '',
     };
 
-    // remove campos nulos
-
     return payload;
 
   }
 
-  // o Modular chama isso automaticamente quando o módulo é destruído
   @override
   void dispose() {
     parar();

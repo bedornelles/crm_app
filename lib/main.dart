@@ -4,11 +4,10 @@ import 'dart:io';
 import 'package:crm_app/app/app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
 import 'app/app_module.dart';
+import 'app/shared/cache/cache.dart';
 import 'app/shared/database/database_local.dart';
 
 void main() {
@@ -18,7 +17,6 @@ void main() {
   runZonedGuarded(()async{
     WidgetsFlutterBinding.ensureInitialized();
 
-
     if (Platform.isWindows) {
       sqfliteFfiInit();
       sqflite.databaseFactory = databaseFactoryFfi;
@@ -27,9 +25,11 @@ void main() {
     //inicializa o banco de dados local sqlite
     await DatabaseLocal().getDb();
 
+    final cache = await Cache.criar();
+
     runApp(
       ModularApp(
-          module: AppModule(),
+          module: AppModule(cache),
           child: const AppWidget()
       ),
     );
