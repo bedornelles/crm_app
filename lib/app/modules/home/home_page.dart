@@ -414,7 +414,18 @@ class _EstadoVazio extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ElevatedButton(
-                onPressed: controller.limparFiltroData,
+                onPressed: () {
+                  controller.limparFiltroData();
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                    ),
+                    builder: (_) => const FiltroDataBottomSheet(),
+                  );
+                },
                 child: const Text('Experimente um filtro diferente'),
               ),
             ),

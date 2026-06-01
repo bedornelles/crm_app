@@ -612,9 +612,9 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                             child: Observer(
                               builder: (_) => ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(vertical: 18),
                                   backgroundColor: controller.visita.demonstrouInteresse == true
-                                      ? theme.colorScheme.primary
+                                      ? Colors.green
                                       : Colors.white,
                                   foregroundColor: controller.visita.demonstrouInteresse == true
                                       ? Colors.white
@@ -639,12 +639,14 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                               ),
                             ),
                           ),
+
                           const SizedBox(width: 16),
+
                           Expanded(
                             child: Observer(
                               builder: (_) => ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  padding: const EdgeInsets.symmetric(vertical: 18),
                                   backgroundColor: controller.visita.demonstrouInteresse == false
                                       ? theme.colorScheme.primary
                                       : Colors.white,

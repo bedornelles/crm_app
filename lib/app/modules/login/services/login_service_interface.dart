@@ -12,7 +12,7 @@ abstract class ILoginService {
 
   //renova o token de autenticaçao do usuario
   //Usa o token de renovação para pegar um novo token de acesso na API.
-  Future<UsuarioEntity> refreshToken(String refreshToken, int refreshAttempts);
+  // Future<UsuarioEntity> refreshToken(String refreshToken, int refreshAttempts);
 
   //realiza logout do usuario
   Future<void> logout();

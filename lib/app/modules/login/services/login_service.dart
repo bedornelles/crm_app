@@ -44,25 +44,25 @@ class LoginService implements ILoginService {
     return usuario;
   }
 
-  //Renva o token de autenticaçao do usuario
-  @override
-  Future<UsuarioEntity> refreshToken(String refreshToken, int refreshAttempts) async {
-    final response = await _api.post(
-      uri: '/api/v1/usuario/refresh',
-      data: {'refreshToken': refreshToken},
-      refreshAttempts: refreshAttempts
-    );
-
-    if (response == null) {
-      throw Exception('Erro ao atualizar token');
-    }
-
-    final usuario = UsuarioEntity.fromJson(response);
-
-    await _cache.setString(cacheUsuarioKey, jsonEncode(usuario.toJson()));
-
-    return usuario;
-  }
+  // //Renva o token de autenticaçao do usuario
+  // @override
+  // Future<UsuarioEntity> refreshToken(String refreshToken, int refreshAttempts) async {
+  //   final response = await _api.post(
+  //     uri: '/api/v1/usuario/refresh',
+  //     data: {'refreshToken': refreshToken},
+  //     refreshAttempts: refreshAttempts
+  //   );
+  //
+  //   if (response == null) {
+  //     throw Exception('Erro ao atualizar token');
+  //   }
+  //
+  //   final usuario = UsuarioEntity.fromJson(response);
+  //
+  //   await _cache.setString(cacheUsuarioKey, jsonEncode(usuario.toJson()));
+  //
+  //   return usuario;
+  // }
 
   @override
   Future<void> logout() async {
