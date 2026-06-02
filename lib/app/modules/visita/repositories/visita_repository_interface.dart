@@ -6,4 +6,8 @@ abstract class IVisitaRepository implements IRepository<VisitaEntity> {
   Future<void> marcarComoSincronizada(String id);
   Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario);
   Future<void> marcarComoErro(String id, String mensagemErro);
+
+  Future<List<String>> getEnderecos(String logradouro);
+  Future<List<String>> getCidades(String cidade);
+  Future<String> getLastCidade();
 }

@@ -149,5 +149,65 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
   }
 
   @override
+  Future<List<String>> getEnderecos(String logradouro) async {
+    final db = await DatabaseLocal().getDb();
+
+    final result = await db.query(
+      getTableName,
+      columns: ['logradouro_empresa'],
+      distinct: true,
+      where: '''
+      TRIM(logradouro_empresa) <> ''
+      AND TRIM(logradouro_empresa) LIKE ? COLLATE NOCASE
+    ''',
+      whereArgs: ['%${logradouro.trim()}%'],
+      limit: logradouro.isEmpty ? 10 : null,
+      orderBy: logradouro.isEmpty
+          ? '${BaseRepositoryLocal.dataHoraCriado} DESC'
+          : 'logradouro_empresa',
+    );
+
+    return result.map((e) => e['logradouro_empresa']?.toString() ?? '').toList();
+  }
+
+  @override
+  Future<List<String>> getCidades(String cidade) async {
+    final db = await DatabaseLocal().getDb();
+
+    final result = await db.query(
+      getTableName,
+      columns: ['cidade_empresa'],
+      distinct: true,
+      where: '''
+      TRIM(cidade_empresa) <> ''
+      AND TRIM(cidade_empresa) LIKE ? COLLATE NOCASE
+    ''',
+      whereArgs: ['%${cidade.trim()}%'],
+      limit: cidade.isEmpty ? 10 : null,
+      orderBy: cidade.isEmpty
+          ? '${BaseRepositoryLocal.dataHoraCriado} DESC'
+          : 'cidade_empresa',
+    );
+
+    return result.map((e) => e['cidade_empresa']?.toString() ?? '').toList();
+  }
+
+  @override
+  Future<String> getLastCidade() async {
+    final db = await DatabaseLocal().getDb();
+
+    final result = await db.query(
+      getTableName,
+      columns: ['cidade_empresa'],
+      limit: 1,
+      orderBy: '${BaseRepositoryLocal.dataHoraCriado} DESC',
+    );
+
+    if (result.isEmpty) return '';
+    return result.first['cidade_empresa']?.toString() ?? '';
+  }
+
+
+  @override
   void dispose() {}
 }

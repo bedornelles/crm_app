@@ -54,21 +54,33 @@ abstract class _VisitaControllerBase with Store {
 
   @action
   Future<bool> deveExibirPermissaoLocalizacao() async {
-    // busca no cache se já solicitou permissão antes
+
     final jaSolicitou = await _cache.getString(cachePermissaoLocalizacaoKey);
 
     if (jaSolicitou == null) {
-      // primeira vez — registra no cache para não perguntar de novo
+
       await _cache.setString(cachePermissaoLocalizacaoKey, 'true');
-      return true; // sinaliza para a página que deve abrir o modal
+      return true;
     }
 
-    return false; // já perguntou antes, não exibe mais
+    return false;
   }
 
   @action
   Future<void> obterLocalizacao() async {
     await _localizacaoService.obterLocalizacaoAtual();
+  }
+
+  Future<List<String>> getEnderecos(String logradouro) async {
+    return await _visitaService.getEnderecos(logradouro);
+  }
+
+  Future<List<String>> getCidades(String cidade) async {
+    return await _visitaService.getCidades(cidade);
+  }
+
+  Future<String> getLastCidade() async {
+    return await _visitaService.getLastCidade();
   }
 
 }

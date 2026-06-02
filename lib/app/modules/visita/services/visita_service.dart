@@ -8,6 +8,8 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
 
   VisitaService(super.repository);
 
+  //cada metodo so repassa a chamada pro repository
+
   @override
   Future<List<VisitaEntity>> getAllNaoSincronizadas() async {
     return await repository.getAllNaoSincronizadas();
@@ -16,5 +18,20 @@ class VisitaService extends BaseService<VisitaEntity, IVisitaRepository> impleme
   @override
   Future<List<VisitaEntity>> getVisitasPorUsuario(String idUsuario) async{
     return await repository.getVisitasPorUsuario(idUsuario);
+  }
+
+  @override
+  Future<List<String>> getEnderecos(String logradouro) async{
+    return await repository.getEnderecos(logradouro);
+  }
+
+  @override
+  Future<List<String>> getCidades(String cidade) async{
+    return await repository.getCidades(cidade);
+  }
+
+  @override
+  Future<String> getLastCidade() async {
+    return await repository.getLastCidade();
   }
 }

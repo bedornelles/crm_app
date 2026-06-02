@@ -5,8 +5,9 @@ import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/services.dart'; // Controla o que o teclado pode digitar
+import 'package:flutter/services.dart';
 import 'package:pkg_flutter_utils/masked.dart'; //pacote cervantes
 import 'package:pkg_flutter_utils/validators.dart'; //pacote cervantes
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -51,7 +52,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
   final Set<String> _camposComErro = {};
 
-  //controlador da animação "shake"
+  //controlador do shake
   late AnimationController _shakeNomeEmpresa;
   late AnimationController _shakeContato;
   late AnimationController _shakeLogradouro;
@@ -407,26 +408,48 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                     key: _logradouroKey,
                     child: _buildShakeField(
                       animationController: _shakeLogradouro,
-                      child: TextFormField(
-                        controller: _logradouroController,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w400,
-                        ),
-                        validator: InputValidator.required,
-                        onChanged: (_) {
+                      child: TypeAheadField<String>(
+                        controller:_logradouroController,
+                          builder:(context, textController, focusNode) => TextFormField(
+                          controller: textController,
+                          focusNode: focusNode,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                          ),
+                          validator: InputValidator.required,
+                          onChanged: (value) {
+                            controller.visita.logradouroEmpresa = value;
+                            if (_camposComErro.contains('logradouro')) {
+                              setState(() => _camposComErro.remove('logradouro'));
+                            }
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Av Barão do Rio Branco, centro',
+                            border: _camposComErro.contains('logradouro')
+                              ? OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                            )
+                                : null,
+                          ),
+                      ),
+                        suggestionsCallback: (search) async {
+                          return await controller.getEnderecos(search);
+                        },
+                        // como cada sugestão é exibida na lista
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion),
+                          );
+                        },
+                        // quando o usuário toca em uma sugestão
+                        onSelected: (suggestion) {
+                          _logradouroController.text = suggestion; // preenche o campo visualmente
+                          controller.visita.logradouroEmpresa = suggestion; // salva no MobX
                           if (_camposComErro.contains('logradouro')) {
                             setState(() => _camposComErro.remove('logradouro'));
                           }
                         },
-                        decoration: InputDecoration(
-                          hintText: 'Av Barão do Rio Branco, centro',
-                          border: _camposComErro.contains('logradouro')
-                            ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                          )
-                              : null,
-                        ),
                       ),
                     ),
                   ),
@@ -489,26 +512,44 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                     key: _cidadeKey,
                     child: _buildShakeField(
                       animationController: _shakeCidade,
-                      child: TextFormField(
+                      child: TypeAheadField<String>(
                         controller: _cidadeController,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w400,
+                        builder: (context, textController, focusNode) => TextFormField(
+                          controller: textController,
+                          focusNode: focusNode,
+                          style: const TextStyle(fontWeight: FontWeight.w400),
+                          validator: InputValidator.required,
+                          onChanged: (value) {
+                            controller.visita.cidadeEmpresa = value;
+                            if (_camposComErro.contains('cidade')) {
+                              setState(() => _camposComErro.remove('cidade'));
+                            }
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'São Paulo/SP',
+                            border: _camposComErro.contains('cidade')
+                                ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
+                            )
+                                : null,
+                          ),
                         ),
-                        validator: InputValidator.required,
-                        onChanged: (_) {
+                        suggestionsCallback: (search) async {
+                          return await controller.getCidades(search);
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return ListTile(
+                            title: Text(suggestion),
+                          );
+                        },
+                        onSelected: (suggestion) {
+                          _cidadeController.text = suggestion;
+                          controller.visita.cidadeEmpresa = suggestion;
                           if (_camposComErro.contains('cidade')) {
                             setState(() => _camposComErro.remove('cidade'));
                           }
                         },
-                        decoration: InputDecoration(
-                          hintText: 'São Paulo/SP',
-                          border: _camposComErro.contains('cidade')
-                              ? OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                          )
-                              : null,
-                        ),
                       ),
                     ),
                   ),
