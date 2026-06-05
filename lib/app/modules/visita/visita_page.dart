@@ -436,6 +436,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                         animationController: _shakeLogradouro,
                         child: TypeAheadField<String>(
                           controller:_logradouroController,
+                            emptyBuilder: (context) => const SizedBox.shrink(),
                             builder:(context, textController, focusNode) => TextFormField(
                             controller: textController,
                             focusNode: focusNode,
@@ -462,16 +463,16 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           suggestionsCallback: (search) async {
                             return await controller.getEnderecos(search);
                           },
-                          // como cada sugestão é exibida na lista
+
                           itemBuilder: (context, suggestion) {
                             return ListTile(
                               title: Text(suggestion),
                             );
                           },
-                          // quando o usuário toca em uma sugestão
+
                           onSelected: (suggestion) {
-                            _logradouroController.text = suggestion; // preenche o campo visualmente
-                            controller.visita.logradouroEmpresa = suggestion; // salva no MobX
+                            _logradouroController.text = suggestion;
+                            controller.visita.logradouroEmpresa = suggestion;
                             if (_camposComErro.contains('logradouro')) {
                               setState(() => _camposComErro.remove('logradouro'));
                             }
@@ -540,6 +541,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                         animationController: _shakeCidade,
                         child: TypeAheadField<String>(
                           controller: _cidadeController,
+                          emptyBuilder: (context) => const SizedBox.shrink(),
                           builder: (context, textController, focusNode) => TextFormField(
                             controller: textController,
                             focusNode: focusNode,
