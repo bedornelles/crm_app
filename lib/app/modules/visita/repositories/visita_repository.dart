@@ -148,6 +148,30 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     );
   }
 
+  Future<void> marcarComoFalhou(String id, String mensagemErro) async {
+    final db = await DatabaseLocal().getDb();
+    await db.update(
+      getTableName,
+      {'status_sincronizacao': StatusSincronizacao.falhou.valor,
+        'erro_sincronizacao': mensagemErro,
+      },
+        where: '$getIdColumnName = ?',
+        whereArgs: [id],
+    );
+  }
+
+  Future<void> resetarParaPendente(String id) async {
+    final db = await DatabaseLocal().getDb();
+    await db.update(
+      getTableName,
+      {'status_sincronizacao': StatusSincronizacao.pendente.valor,
+        'erro_sincronizacao': null,
+      },
+      where: '$getIdColumnName = ?',
+      whereArgs: [id],
+    );
+  }
+
   @override
   Future<List<String>> getEnderecos(String logradouro) async {
     final db = await DatabaseLocal().getDb();

@@ -1,7 +1,8 @@
 enum StatusSincronizacao {
   pendente,
   sincronizado,
-  erro;
+  erro,
+  falhou;
 
 
   //converte o enum para string para salvar no sqlite
@@ -13,6 +14,8 @@ enum StatusSincronizacao {
         return 'SINCRONIZADO';
       case StatusSincronizacao.erro:
         return 'ERRO';
+      case StatusSincronizacao.falhou:
+        return 'FALHOU';
     }
   }
 
@@ -22,8 +25,10 @@ enum StatusSincronizacao {
     switch (valor.toUpperCase()) {
       case 'SINCRONIZADO':
         return StatusSincronizacao.sincronizado;
-      case 'ERRO' :
+      case 'ERRO':
         return StatusSincronizacao.erro;
+      case 'FALHOU':
+        return StatusSincronizacao.falhou;
         default:
           return StatusSincronizacao.pendente;
     }

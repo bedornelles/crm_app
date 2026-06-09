@@ -59,6 +59,8 @@ class SincronizacaoService implements Disposable {
     }
   }
 
+  final Map<String, int> _tentativas = {};
+
   Future<void> _enviarVisita(VisitaEntity visita) async {
     try {
       final payload = _montarPayload(visita);
@@ -78,10 +80,27 @@ class SincronizacaoService implements Disposable {
       }
 
     } catch (e) {
-      final erroMsg = 'Falha na comunicação: ${e.toString()}';
-      await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
+      final erroMsg = 'Não foi possivel estabelecer a conexão com o servidor no momento.';
+
+      _tentativas[visita.base.id] = (_tentativas[visita.base.id] ?? 0) +1;
+      if(_tentativas[visita.base.id]! >= 3) {
+        await _visitaRepository.marcarComoFalhou(visita.base.id, erroMsg);
+        _tentativas.remove(visita.base.id);
+      } else {
+        await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
+      }
     }
   }
+
+  Future<void> sincronizarAgora() async {
+    await _sincronizar();
+  }
+  Future<void> tentarNovamente(String idVisita) async {
+    await _visitaRepository.resetarParaPendente(idVisita);
+    _tentativas.remove(idVisita);
+    await _sincronizar();
+  }
+
   Map<String, dynamic> _montarPayload(VisitaEntity visita) {
     final payload = <String, dynamic>{
       'dataVisita': visita.dataVisita.toIso8601String().split('T')[0],

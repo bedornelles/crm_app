@@ -2,7 +2,7 @@ import 'package:crm_app/app/modules/visita/enum/status_sincronizacao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
-
+import 'package:crm_app/app/modules/sincronizacao/sincronizacao_service.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 
 class VisitaCard extends StatelessWidget{
@@ -95,49 +95,106 @@ class VisitaCard extends StatelessWidget{
             color: Colors.red.shade600,
           ),
         );
+
+      case StatusSincronizacao.falhou:
+        return GestureDetector(
+          onTap: () => _mostrarModalErro(context),
+          behavior: HitTestBehavior.opaque,
+          child: Icon(
+            Icons.cloud_off_rounded,
+            size: 20,
+            color: Colors.red.shade600,
+          ),
+        );
     }
   }
 
   void _mostrarModalErro(BuildContext context) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            Container(
+              width: 56,
+              height: 56,
+              child: Icon(
+                Icons.error_outline_rounded,
+                color: Colors.red.shade400,
+                size: 28,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            const Text(
+              'Erro de sincronização',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              visita.erroSincronizacao ?? 'Erro desconhecido.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                height: 1.5,
+                color: Colors.grey.shade600,
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(ctx);
+                if (visita.statusSincronizacao == StatusSincronizacao.falhou) {
+                  // busca o serviço e tenta novamente
+                  final sincronizacaoService = Modular.get<SincronizacaoService>();
+                  await sincronizacaoService.tentarNovamente(visita.base.id);
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.cloud_off_rounded, color: Colors.red.shade600, size: 22),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Erro de sincronização',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  Text(
+                    visita.statusSincronizacao == StatusSincronizacao.falhou
+                        ? 'Tentar novamente'
+                        : 'Fechar',
+                  ),
+                  Icon(
+                    visita.statusSincronizacao == StatusSincronizacao.falhou
+                        ? Icons.sync
+                        : Icons.close,
+                    size: 20,
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              const Divider(height: 1),
-              const SizedBox(height: 16),
-              Text(
-                visita.erroSincronizacao ?? 'Erro desconhecido.',
-                style: const TextStyle(fontSize: 14, height: 1.5),
-              ),
-              const SizedBox(height: 24),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(),
-                  child: const Text('Fechar'),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
+      )
     );
   }
 }
