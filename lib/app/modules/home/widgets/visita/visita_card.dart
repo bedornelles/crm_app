@@ -79,10 +79,13 @@ class VisitaCard extends StatelessWidget{
         return const SizedBox.shrink();
 
       case StatusSincronizacao.pendente:
-        return Icon(
-          Icons.cloud_upload_outlined,
-          size: 20,
-          color: Colors.grey.shade400,
+        return SizedBox(
+          width: 15,
+          height: 15,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.5,
+            color: Colors.grey.shade400,
+          ),
         );
 
       case StatusSincronizacao.erro:
@@ -111,90 +114,90 @@ class VisitaCard extends StatelessWidget{
 
   void _mostrarModalErro(BuildContext context) {
     showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            Container(
-              width: 56,
-              height: 56,
-              child: Icon(
-                Icons.error_outline_rounded,
-                color: Colors.red.shade400,
-                size: 28,
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            const Text(
-              'Erro de sincronização',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Text(
-              visita.erroSincronizacao ?? 'Erro desconhecido.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.5,
-                color: Colors.grey.shade600,
-              ),
-            ),
-
-            const SizedBox(height: 32),
-
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pop(ctx);
-                if (visita.statusSincronizacao == StatusSincronizacao.falhou) {
-                  // busca o serviço e tenta novamente
-                  final sincronizacaoService = Modular.get<SincronizacaoService>();
-                  await sincronizacaoService.tentarNovamente(visita.base.id);
-                }
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    visita.statusSincronizacao == StatusSincronizacao.falhou
-                        ? 'Tentar novamente'
-                        : 'Fechar',
-                  ),
-                  Icon(
-                    visita.statusSincronizacao == StatusSincronizacao.falhou
-                        ? Icons.sync
-                        : Icons.close,
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
-          ],
+        context: context,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
-      )
+        builder: (ctx) => Padding(
+          padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              SizedBox(
+                width: 56,
+                height: 56,
+                child: Icon(
+                  Icons.error_outline_rounded,
+                  color: Colors.red.shade400,
+                  size: 28,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              const Text(
+                'Erro de sincronização',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Text(
+                visita.erroSincronizacao ?? 'Erro desconhecido.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  height: 1.5,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.pop(ctx);
+                  if (visita.statusSincronizacao == StatusSincronizacao.falhou) {
+                    // busca o serviço e tenta novamente
+                    final sincronizacaoService = Modular.get<SincronizacaoService>();
+                    await sincronizacaoService.tentarNovamente(visita.base.id);
+                  }
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      visita.statusSincronizacao == StatusSincronizacao.falhou
+                          ? 'Tentar novamente'
+                          : 'Fechar',
+                    ),
+                    Icon(
+                      visita.statusSincronizacao == StatusSincronizacao.falhou
+                          ? Icons.sync
+                          : Icons.close,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
     );
   }
 }
