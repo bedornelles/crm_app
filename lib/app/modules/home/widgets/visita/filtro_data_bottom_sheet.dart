@@ -209,7 +209,6 @@ class _CampoData extends StatelessWidget {
                 ),
                 Icon(
                   Icons.calendar_month_rounded,
-                  color: Colors.grey.shade400,
                 ),
               ],
             ),

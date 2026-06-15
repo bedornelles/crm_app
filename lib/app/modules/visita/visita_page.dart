@@ -1,16 +1,16 @@
-
-import 'dart:math';
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:crm_app/app/shared/widgets/demonstrou_interesse/demonstrou_interesse.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:pkg_flutter_utils/masked.dart'; //pacote cervantes
 import 'package:pkg_flutter_utils/validators.dart'; //pacote cervantes
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:crm_app/app/shared/widgets/text_form_field/text_form_field_default.dart';
+import 'package:crm_app/app/shared/widgets/type_ahead_field/type_ahead_field_default.dart';
 
 class VisitaPage extends StatefulWidget{
 
@@ -227,547 +227,205 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Nome da empresa',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-
-                    KeyedSubtree(
-                      key: _nomeEmpresaKey,
-                      child: _buildShakeField(
-                        animationController: _shakeNomeEmpresa,
-                        child: TextFormField(
-                          controller: _nomeEmpresaController,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                          ),
-                          validator: InputValidator.required,
-                          onChanged: (_) {
-                            if (_camposComErro.contains('nomeEmpresa')) {
-                              setState(() => _camposComErro.remove('nomeEmpresa'));
-                            }
-                          },
-                          decoration: InputDecoration(
-                              hintText: 'Lancheria do centro',
-                            border: _camposComErro.contains('nomeEmpresa')
-                              ? OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                                )
-                                :null,
-                          ),
-                        ),
-                      ),
+                    TextFormFieldDefault(
+                      label: 'Nome da empresa',
+                      controller: _nomeEmpresaController,
+                      hintText: 'Lancheria do centro',
+                      validator: InputValidator.required,
+                      fieldKey: _nomeEmpresaKey,
+                      shakeController: _shakeNomeEmpresa,
+                      temErro: _camposComErro.contains('nomeEmpresa'),
+                      onChanged: (_) {
+                        if (_camposComErro.contains('nomeEmpresa')) {
+                          setState(() => _camposComErro.remove('nomeEmpresa'));
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Contato na empresa',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                      KeyedSubtree(
-                        key: _contatoKey,
-                        child: _buildShakeField(
-                          animationController: _shakeContato,
-                          child: TextFormField(
-                          controller: _contatoController,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                          ),
-                          validator: InputValidator.required,
-                            onChanged: (_) {
-                              if (_camposComErro.contains('contato')) {
-                                setState(() => _camposComErro.remove('contato'));
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'João da Silva',
-                              border: _camposComErro.contains('contato')
-                                  ? OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                              )
-                                  : null,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                    const SizedBox(height: 16),
-
-                    Text(
-                      'CPF/CNPJ da empresa',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.secondary
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-
-                    KeyedSubtree(
-                      key: _cpfCnpjKey,
-                      child: _buildShakeField(
-                        animationController: _shakeCpfCnpj,
-                        child:TextFormField(
-                            controller: _cpfCnpjController, //controller conectada
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                            ),
-                            keyboardType: TextInputType.number,//puxa o teclado numerico, mas nao bloqueia a opção de colar texto ou digitar eltras em um teclado fisico
-                            inputFormatters: [
-                              InputMasked.cnpjCpf(value: _cpfCnpjController.text),
-                            ],
-                            onChanged: (_) {
-                              // remove o erro de borda quando o usuário digita
-                              if (_camposComErro.contains('cpfCnpj')) {
-                                setState(() => _camposComErro.remove('cpfCnpj'));
-                              }
-                            },
-                            validator: (value) => InputValidator(
-                              [CnpjCpfValidator()],
-                            ).validate(value),
-                            decoration: InputDecoration(
-                                hintText: '00.000.000/0000-00',
-                                border: _camposComErro.contains('cpfCnpj')
-                                ? OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                            )
-                                : null,
-                            ),
-                        ),
-                      ),
+                    TextFormFieldDefault(
+                      label: 'Contato na empresa',
+                      controller: _contatoController,
+                      hintText: 'João da Silva',
+                      validator: InputValidator.required,
+                      fieldKey: _contatoKey,
+                      shakeController: _shakeContato,
+                      temErro: _camposComErro.contains('contato'),
+                      onChanged: (_) {
+                        if (_camposComErro.contains('contato')) {
+                          setState(() => _camposComErro.remove('contato'));
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'E-mail da empresa',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.secondary
-                      ),
+                    TextFormFieldDefault(
+                      label: 'CPF/CNPJ da empresa',
+                      controller: _cpfCnpjController,
+                      hintText: '00.000.000/0000-00',
+                      textInputType: TextInputType.number,
+                      inputFormatters: [InputMasked.cnpjCpf(value: _cpfCnpjController.text)],
+                      validator: (value) => InputValidator([CnpjCpfValidator()]).validate(value),
+                      fieldKey: _cpfCnpjKey,
+                      shakeController: _shakeCpfCnpj,
+                      temErro: _camposComErro.contains('cpfCnpj'),
+                      onChanged: (_) {
+                        if (_camposComErro.contains('cpfCnpj')) {
+                          setState(() => _camposComErro.remove('cpfCnpj'));
+                        }
+                      },
                     ),
 
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 16),
 
-                    TextFormField(
+                    TextFormFieldDefault(
+                      label: 'E-mail da empresa',
                       controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'emailEmpresa@example.com',
-                      ),
-                      validator: (value){
+                      hintText: 'emailEmpresa@example.com',
+                      textInputType: TextInputType.emailAddress,
+                      validator: (value) {
                         final emailValido = EmailValidator.validate(value);
-                        if(!emailValido) return 'Digite um E-mail válido';
-
+                        if (!emailValido) return 'Digite um E-mail válido';
                         return null;
                       },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Telefone',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.secondary
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    TextFormField(
-                      //conectando a controller criada no topo da pag.
+                    TextFormFieldDefault(
+                      label: 'Telefone',
                       controller: _telefoneController,
-                      keyboardType: TextInputType.phone,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      //aplicando a mascara
-                      inputFormatters: [
-                        InputMasked.fone(value: _telefoneController.text),
-                      ],
-                      //aplicando a valuidação
-                      decoration: const InputDecoration(
-                          hintText: '(51) 9 9999-990099'
-                      ),
+                      hintText: '(51) 9 9999-9999',
+                      textInputType: TextInputType.phone,
+                      inputFormatters: [InputMasked.fone(value: _telefoneController.text)],
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Logradouro',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    KeyedSubtree(
-                      key: _logradouroKey,
-                      child: _buildShakeField(
-                        animationController: _shakeLogradouro,
-                        child: TypeAheadField<String>(
-                          controller:_logradouroController,
-                            emptyBuilder: (context) => const SizedBox.shrink(),
-                            builder:(context, textController, focusNode) => TextFormField(
-                            controller: textController,
-                            focusNode: focusNode,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                            ),
-                            validator: InputValidator.required,
-                            onChanged: (value) {
-                              controller.visita.logradouroEmpresa = value;
-                              if (_camposComErro.contains('logradouro')) {
-                                setState(() => _camposComErro.remove('logradouro'));
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Av Barão do Rio Branco, centro',
-                              border: _camposComErro.contains('logradouro')
-                                ? OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                              )
-                                  : null,
-                            ),
-                        ),
-                          suggestionsCallback: (search) async {
-                            return await controller.getEnderecos(search);
-                          },
-
-                          itemBuilder: (context, suggestion) {
-                            return ListTile(
-                              title: Text(suggestion),
-                            );
-                          },
-
-                          onSelected: (suggestion) {
-                            _logradouroController.text = suggestion;
-                            controller.visita.logradouroEmpresa = suggestion;
-                            if (_camposComErro.contains('logradouro')) {
-                              setState(() => _camposComErro.remove('logradouro'));
-                            }
-                          },
-                        ),
-                      ),
+                    TypeAheadFieldDefault(
+                      label: 'Logradouro',
+                      controller: _logradouroController,
+                      hintText: 'Av Barão do Rio Branco, centro',
+                      validator: InputValidator.required,
+                      fieldKey: _logradouroKey,
+                      shakeController: _shakeLogradouro,
+                      temErro: _camposComErro.contains('logradouro'),
+                      suggestionsCallback: (search) => controller.getEnderecos(search),
+                      onChanged: (value) {
+                        controller.visita.logradouroEmpresa = value!;
+                        if (_camposComErro.contains('logradouro')) {
+                          setState(() => _camposComErro.remove('logradouro'));
+                        }
+                      },
+                      onSelected: (suggestion) {
+                        _logradouroController.text = suggestion;
+                        controller.visita.logradouroEmpresa = suggestion;
+                        if (_camposComErro.contains('logradouro')) {
+                          setState(() => _camposComErro.remove('logradouro'));
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Número',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    KeyedSubtree(
-                      key: _numeroKey,
-                      child: _buildShakeField(
-                        animationController: _shakeNumero,
-                        child: TextFormField(
-                          controller: _numeroController,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w400
-                          ),
-                          validator: InputValidator.required,
-                          onChanged: (_) {
-                            if (_camposComErro.contains('numero')) {
-                              setState(() => _camposComErro.remove('numero'));
-                            }
-                          },
-                          decoration: InputDecoration(
-                            hintText: '1234',
-                            border: _camposComErro.contains('numero')
-                                ? OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                                )
-                                : null,
-                          ),
-                        ),
-                      ),
+                    TextFormFieldDefault(
+                      label: 'Número',
+                      controller: _numeroController,
+                      hintText: '1234',
+                      validator: InputValidator.required,
+                      fieldKey: _numeroKey,
+                      shakeController: _shakeNumero,
+                      temErro: _camposComErro.contains('numero'),
+                      onChanged: (_) {
+                        if (_camposComErro.contains('numero')) {
+                          setState(() => _camposComErro.remove('numero'));
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Cidade',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    KeyedSubtree(
-                      key: _cidadeKey,
-                      child: _buildShakeField(
-                        animationController: _shakeCidade,
-                        child: TypeAheadField<String>(
-                          controller: _cidadeController,
-                          emptyBuilder: (context) => const SizedBox.shrink(),
-                          builder: (context, textController, focusNode) => TextFormField(
-                            controller: textController,
-                            focusNode: focusNode,
-                            style: const TextStyle(fontWeight: FontWeight.w400),
-                            validator: InputValidator.required,
-                            onChanged: (value) {
-                              controller.visita.cidadeEmpresa = value;
-                              if (_camposComErro.contains('cidade')) {
-                                setState(() => _camposComErro.remove('cidade'));
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'São Paulo/SP',
-                              border: _camposComErro.contains('cidade')
-                                  ? OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide: BorderSide(color: Colors.red.shade600, width: 1.5),
-                              )
-                                  : null,
-                            ),
-                          ),
-                          suggestionsCallback: (search) async {
-                            return await controller.getCidades(search);
-                          },
-                          itemBuilder: (context, suggestion) {
-                            return ListTile(
-                              title: Text(suggestion),
-                            );
-                          },
-                          onSelected: (suggestion) {
-                            _cidadeController.text = suggestion;
-                            controller.visita.cidadeEmpresa = suggestion;
-                            if (_camposComErro.contains('cidade')) {
-                              setState(() => _camposComErro.remove('cidade'));
-                            }
-                          },
-                        ),
-                      ),
+                    TypeAheadFieldDefault(
+                      label: 'Cidade',
+                      controller: _cidadeController,
+                      hintText: 'São Paulo/SP',
+                      validator: InputValidator.required,
+                      fieldKey: _cidadeKey,
+                      shakeController: _shakeCidade,
+                      temErro: _camposComErro.contains('cidade'),
+                      suggestionsCallback: (search) => controller.getCidades(search),
+                      onChanged: (value) {
+                        controller.visita.cidadeEmpresa = value!;
+                        if (_camposComErro.contains('cidade')) {
+                          setState(() => _camposComErro.remove('cidade'));
+                        }
+                      },
+                      onSelected: (suggestion) {
+                        _cidadeController.text = suggestion;
+                        controller.visita.cidadeEmpresa = suggestion;
+                        if (_camposComErro.contains('cidade')) {
+                          setState(() => _camposComErro.remove('cidade'));
+                        }
+                      },
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Complemento',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    TextFormField(
+                    TextFormFieldDefault(
+                      label: 'Complemento',
                       controller: _complementoController,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'Sala 01, Ap 01, Perto de...',
-                      ),
+                      hintText: 'Sala 01, Ap 01, Perto de...',
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Sistema atual',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    TextFormField(
+                    TextFormFieldDefault(
+                      label: 'Sistema atual',
                       controller: _sistemaController,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: 'ERP Xyz',
-                      ),
+                      hintText: 'ERP Xyz',
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Valor Pago',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    TextFormField(
+                    TextFormFieldDefault(
+                      label: 'Valor Pago',
                       controller: _valorPagoController,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
-                      keyboardType: TextInputType.number,
+                      hintText: 'R\$ 99,90',
+                      textInputType: TextInputType.number,
                       inputFormatters: [
-                        // se o texto esta vazio passa null. se nao passa o texto. inserido pois o app quebra se o valor estiver vazio
                         InputMasked.currency(
                           value: _valorPagoController.text.isEmpty ? null : _valorPagoController.text,
                         ),
                       ],
-                      decoration: const InputDecoration(
-                        hintText: 'R\$ 99,90',
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Observer(
+                      builder: (_) => DemonstrouInteresse(
+                        label: 'Demonstrou interesse?',
+                        value: controller.visita.demonstrouInteresse,
+                        fieldKey: _interesseKey,
+                        shakeController: _shakeInteresse,
+                        temErro: _camposComErro.contains('interesse'),
+                        onChanged: (novoValor) {
+                          controller.visita.demonstrouInteresse = novoValor;
+                          if (_camposComErro.contains('interesse')) {
+                            setState(() => _camposComErro.remove('interesse'));
+                          }
+                        },
                       ),
                     ),
 
                     const SizedBox(height: 16),
 
-                    Text(
-                      'Demonstrou interesse?',
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: theme.colorScheme.secondary
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    KeyedSubtree(
-                      key: _interesseKey,
-                      child: _buildShakeField(
-                        animationController: _shakeInteresse,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Observer(
-                                builder: (_) => ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 18),
-                                    backgroundColor: controller.visita.demonstrouInteresse == true
-                                        ? Colors.green
-                                        : Colors.white,
-                                    foregroundColor: controller.visita.demonstrouInteresse == true
-                                        ? Colors.white
-                                        : theme.colorScheme.secondary,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      // borda vermelha individual no botão Sim
-                                      side: _camposComErro.contains('interesse')
-                                          ? BorderSide(color: Colors.red.shade600, width: 1.5)
-                                          : BorderSide.none,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    controller.visita.demonstrouInteresse = true;
-                                    if (_camposComErro.contains('interesse')) {
-                                      setState(() => _camposComErro.remove('interesse'));
-                                    }
-                                  },
-                                  icon: const Icon(Icons.thumb_up_alt_outlined, size: 20),
-                                  label: const Text('Sim', style: TextStyle(fontSize: 15)),
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(width: 16),
-
-                            Expanded(
-                              child: Observer(
-                                builder: (_) => ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(vertical: 18),
-                                    backgroundColor: controller.visita.demonstrouInteresse == false
-                                        ? theme.colorScheme.primary
-                                        : Colors.white,
-                                    foregroundColor: controller.visita.demonstrouInteresse == false
-                                        ? Colors.white
-                                        : theme.colorScheme.secondary,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      // borda vermelha individual no botão Não
-                                      side: _camposComErro.contains('interesse')
-                                          ? BorderSide(color: Colors.red.shade600, width: 1.5)
-                                          : BorderSide.none,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    controller.visita.demonstrouInteresse = false;
-                                    if (_camposComErro.contains('interesse')) {
-                                      setState(() => _camposComErro.remove('interesse'));
-                                    }
-                                  },
-                                  icon: const Icon(Icons.thumb_down_alt_outlined, size: 20),
-                                  label: const Text('Não', style: TextStyle(fontSize: 15)),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-
-                    ),
-
-                    const SizedBox(width: 16),
-
-                    Text(
-                      'Observações',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: theme.colorScheme.secondary,
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    TextFormField(
+                    TextFormFieldDefault(
+                      label: 'Observações',
                       controller: _observacoesController,
                       maxLines: 4,
                       maxLength: 1500,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                      ),
                     ),
 
                     const SizedBox(height: 24),
@@ -887,23 +545,6 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
     );
   }
 
-  Widget _buildShakeField({
-    required AnimationController animationController,
-    required Widget child,
-  }) {
-    return AnimatedBuilder(
-        animation: animationController,
-        builder: (context, child){
-          final offset = sin(animationController.value * pi * 6) * 8;
-          return Transform.translate(
-            offset: Offset(offset, 0),
-            child: child,
-          );
-        },
-      child: child,
-    );
-  }
-
   Future<void> _mostrarModalDescartar() async {
     await showModalBottomSheet(
       context: context,
@@ -955,7 +596,6 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
             const SizedBox(height: 24),
 
-            // botão descartar
             InkWell(
               onTap: () {
                 Navigator.pop(ctx);

@@ -158,6 +158,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
+  //perfil e logout
   void mostrarMenuPerfil(BuildContext context, HomeController controller) {
     showModalBottomSheet(
         context: context,
@@ -251,6 +253,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // confirmação logout
   Future<void> _mostrarConfirmacaoLogout() async {
     await showModalBottomSheet(
         context: context,
@@ -342,7 +345,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
+  //modal permisao de localizaçao
   void _mostrarModalPermissaoLocalizacao(BuildContext context) {
     showDialog(
       context: context,
@@ -412,6 +415,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+//banner para mostrar o filtro ativo
 class _BannerFiltroAtivo extends StatelessWidget {
   final HomeController controller;
 
