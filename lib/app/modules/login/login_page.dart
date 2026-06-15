@@ -3,6 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:crm_app/app/modules/login/login_controller.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../../shared/widgets/dialogs/bottom_sheet_error.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -150,17 +152,16 @@ class _LoginPageState extends State<LoginPage> {
   }
   Future<void> save(Future<void> Function() onSave) async {
     try {
-      if (formKey.currentState != null &&
-          formKey.currentState!.validate()) {
+      if (formKey.currentState != null && formKey.currentState!.validate()) {
         await onSave();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        await BottomSheetError.show(
+          context,
+          message: e.toString().replaceFirst('Exception: ', ''),
+        );
+      }
     }
   }
 }

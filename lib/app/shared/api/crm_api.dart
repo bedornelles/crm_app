@@ -35,7 +35,6 @@ class CrmApi implements ICrmApi{
         sendTimeout: const Duration(seconds: 18),
         receiveTimeout: const Duration(seconds: 18),
 
-        //info escondidas que sao enviadas junto da requisição
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -58,10 +57,8 @@ class CrmApi implements ICrmApi{
       print('DEBUG API: Tipo real da resposta -> ${response.data.runtimeType}');
       print('DEBUG API: Conteúdo real da resposta -> ${response.data}');
 
-      // O erro acontece na linha abaixo se response.data não for um Map
       if (response.data == null) return null;
 
-      // Se a API mandar uma String, o código abaixo quebra.
       if (response.data is Map) {
         return JsonMap.from(response.data);
       } else {
@@ -73,41 +70,33 @@ class CrmApi implements ICrmApi{
     );
   }
 
-
   //tod o get e post passam por aqui
   //ele tenta executar a ação, se der erro ele analisa o que houve
   Future<T> _request<T>(
-      Future<T> Function() action, // A ação que queremos fazer (o get ou o post)
+      Future<T> Function() action,
       int refreshAttempts,
       ) async {
     try {
-      // Tenta fazer a requisição de fato...
       return await action();
     } on DioException catch (e) {
-      // erro de rede! Vamos ver se é problema de Token vencido.
       if (_isTokenExpirado(e)) {
-        print('🔄 Token expirado, tentativa $refreshAttempts de $_maxTokenRefreshAttempts');
-        // Se já tentou renovar menos de 3 vezes, tenta de novo.
+        print('Token expirado, tentativa $refreshAttempts de $_maxTokenRefreshAttempts');
         if (refreshAttempts < _maxTokenRefreshAttempts) {
-          await _tokenExpirado(refreshAttempts); // Chama a função que renova o token
-          return _request(action, refreshAttempts + 1); // Tenta fazer o get/post original de novo!
+          await _tokenExpirado(refreshAttempts);
+          return _request(action, refreshAttempts + 1);
         }
 
-        // Se já tentou 3 vezes e não conseguiu renovar, desiste e desloga o usuário.
         await _logout();
         throw Exception('Sessão expirada, faça login novamente.');
       }
 
-      // Se não for erro de token vencido (ex: senha errada, servidor fora do ar, sem internet),
-      // manda para a função que traduz o erro.
       await _tratarErro(e);
-      rethrow; // Repassa o erro traduzido para a tela mostrar ao usuário.
+      rethrow;
     } catch (e) {
-      throw Exception('Erro inesperado: $e'); // Qualquer erro bizarro que não seja do Dio cai aqui.
+      throw Exception('Erro inesperado: $e');
     }
   }
 
-  // Traduz os erros técnicos do servidor para mensagens amigáveis em português.
   Future<void> _tratarErro(DioException e) async {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -117,23 +106,20 @@ class CrmApi implements ICrmApi{
       case DioExceptionType.cancel:
         throw Exception('Requisição cancelada.');
       case DioExceptionType.badResponse:
-      // O servidor devolveu um erro intencional (ex: 400 Bad Request, 404 Not Found)
+
         final data = e.response?.data;
         final statusCode = e.response?.statusCode;
 
-        // Tenta ler a mensagem de erro que o backend mandou no corpo da resposta
         if (data is JsonMap) {
           final title = data['title'] ?? data['message'] ?? 'Erro na requisição';
           final errors = data['errors'];
           String detail = '';
 
-          // Se a API mandou uma lista de erros detalhados, junta tudo numa string só.
           if (errors is JsonMap && errors['messages'] is List) {
             detail = (errors['messages'] as List).join(', ');
           }
           throw Exception('$title${detail.isNotEmpty ? '\n$detail' : ''}');
         }
-        // Se a API não mandou uma mensagem amigável, mostra o código (ex: Erro HTTP 500)
         throw Exception('Erro HTTP $statusCode: ${e.response?.statusMessage}');
       case DioExceptionType.unknown:
         throw Exception('Erro desconhecido: ${e.message} | tipo: ${e.type} | erro: ${e.error} | response: ${e.response}');
@@ -147,7 +133,6 @@ class CrmApi implements ICrmApi{
       print('Tentando renovar token...');
       final refreshToken = _cache.getUsuario(cacheUsuarioKey)?.refreshToken ?? '';
 
-      // chama o endpoint de refresh diretamente com um Dio limpo, sem passar pelo _request
       final dio = Dio(BaseOptions(
         baseUrl: _baseUrl,
         connectTimeout: const Duration(seconds: 18),
@@ -174,14 +159,12 @@ class CrmApi implements ICrmApi{
     }
   }
 
-  // verifica se o erro foi de Autorização (Status 401 - Não Autorizado)
-  // e se o usuário tem um refreshToken guardado para tentarmos salvá-lo.
   bool _isTokenExpirado(DioException e) {
     return e.response?.statusCode == 401 && _cache.getUsuario(cacheUsuarioKey)?.refreshToken != null;
   }
 
   Future<void> _logout() async {
-    await _cache.remove(cacheUsuarioKey); // limpa direto no cache
+    await _cache.remove(cacheUsuarioKey);
     Modular.to.navigate('/login');
   }
 }

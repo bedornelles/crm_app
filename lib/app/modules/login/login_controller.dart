@@ -32,8 +32,6 @@ abstract class _LoginControllerBase with Store {
     try {
       _loading = true;
       await _loginService.login(username, password);
-
-      // Se deu tudo certo (não lançou Exception), navega para as Visitas
       Modular.to.navigate('/home/');
     } finally {
       _loading = false;
