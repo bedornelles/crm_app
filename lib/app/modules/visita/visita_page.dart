@@ -12,6 +12,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crm_app/app/shared/widgets/text_form_field/text_form_field_default.dart';
 import 'package:crm_app/app/shared/widgets/type_ahead_field/type_ahead_field_default.dart';
 
+import '../../shared/widgets/dialogs/modal_descartar.dart';
+
 class VisitaPage extends StatefulWidget{
 
   const VisitaPage({super.key});
@@ -132,10 +134,11 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) async{
+      onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         if (_temAlteracoes) {
-          await _mostrarModalDescartar();
+          await ModalDescartar.show(
+              context, onDescartar: () => Modular.to.pop());
         } else {
           Modular.to.pop();
         }
@@ -542,110 +545,6 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
           ),
         ),
       )
-    );
-  }
-
-  Future<void> _mostrarModalDescartar() async {
-    await showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // alça
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: const Text(
-                'Descartar alterações?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            const Text(
-              'Você possui alterações não salvas. Deseja sair e descartá-las?',
-              style: TextStyle(
-                fontSize: 14,
-                height: 1.5,
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            InkWell(
-              onTap: () {
-                Navigator.pop(ctx);
-                Modular.to.pop();
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  children: [
-                    Icon(Icons.check, color: Theme.of(context).colorScheme.secondary),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Descartar',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            Divider(color: Colors.grey.shade200),
-
-
-            InkWell(
-              onTap: () => Navigator.pop(ctx),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: Row(
-                  children: [
-                    Icon(Icons.close, color: Theme.of(context).colorScheme.secondary),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Cancelar',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
