@@ -4,10 +4,6 @@ class UsuarioEntity {
   String token;
   String refreshToken;
 
-  //GETTERS REATIVOS
-  // em vex de salvar o nome em uma variavel fixa, le direto no token
-  // isso garante que a info esta sempre sinc com o que o servidor enviou
-
   String get nome {
     final payload = JwtUtils().decodeJwt(token);
     return payload['nome'];

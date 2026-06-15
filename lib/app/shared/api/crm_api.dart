@@ -182,6 +182,6 @@ class CrmApi implements ICrmApi{
 
   Future<void> _logout() async {
     await _cache.remove(cacheUsuarioKey); // limpa direto no cache
-    Modular.to.navigate('/');
+    Modular.to.navigate('/login');
   }
 }

@@ -1,6 +1,7 @@
 import 'package:crm_app/app/modules/home/home_module.dart';
 import 'package:crm_app/app/modules/login/login_module.dart';
 import 'package:crm_app/app/modules/sincronizacao/sincronizacao_module.dart';
+import 'package:crm_app/app/modules/sincronizacao/splash/splash_module.dart';
 import 'package:crm_app/app/shared/api/api_module.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
@@ -27,7 +28,8 @@ class AppModule extends Module {
   }
   @override
   void routes(RouteManager r) {
-    r.module('/', module: LoginModule(_cache));
+    r.module('/', module: SplashModule(_cache));
+    r.module('/login', module: LoginModule(_cache));
     r.module('/home', module: HomeModule(_cache));
     r.module('/visita', module: VisitaModule(_cache));
   }

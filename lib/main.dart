@@ -22,7 +22,6 @@ void main() {
       sqflite.databaseFactory = databaseFactoryFfi;
     }
 
-    //inicializa o banco de dados local sqlite
     await DatabaseLocal().getDb();
 
     final cache = await Cache.criar();
@@ -34,7 +33,6 @@ void main() {
       ),
     );
   }, (error, stack){
-    //se o app crashar ele imprime o erro aqui
     debugPrintStack(label: error.toString(), stackTrace: stack);
   });
 

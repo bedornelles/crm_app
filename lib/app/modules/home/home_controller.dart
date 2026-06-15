@@ -148,7 +148,7 @@ abstract class _HomeControllerBase with Store {
       await _cache.remove(cacheUsuarioKey);
 
       //redireciona e destroi a home
-      Modular.to.navigate('/');
+      Modular.to.navigate('/login');
 
       print('logou concluido');
     } catch (e) {
