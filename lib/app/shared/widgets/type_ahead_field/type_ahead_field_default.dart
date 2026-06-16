@@ -15,6 +15,7 @@ class TypeAheadFieldDefault extends StatelessWidget {
   final GlobalKey? fieldKey;
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
 
   const TypeAheadFieldDefault({
     super.key,
@@ -30,6 +31,7 @@ class TypeAheadFieldDefault extends StatelessWidget {
     this.fieldKey,
     this.focusNode,
     this.textInputAction,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -45,6 +47,7 @@ class TypeAheadFieldDefault extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w400),
         validator: validator,
         textInputAction: textInputAction,
+        textCapitalization: textCapitalization,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,

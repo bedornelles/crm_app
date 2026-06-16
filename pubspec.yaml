@@ -33,6 +33,7 @@ dependencies:
     git:
       url: git@github.com:dev-cervantes/pkg_flutter_utils.git
       ref: v2.8
+  signalr_netcore: ^1.4.4
 
 
 dev_dependencies:

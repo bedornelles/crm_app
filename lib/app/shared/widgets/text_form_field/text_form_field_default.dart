@@ -17,6 +17,7 @@ class TextFormFieldDefault extends StatelessWidget {
   final TextInputAction? textInputAction;
   final int? maxLines;
   final int? maxLength;
+  final TextCapitalization textCapitalization;
 
   const TextFormFieldDefault({
     super.key,
@@ -34,6 +35,7 @@ class TextFormFieldDefault extends StatelessWidget {
     this.textInputAction,
     this.maxLines = 1,
     this.maxLength,
+    this.textCapitalization = TextCapitalization.none,
   });
 
   @override
@@ -50,6 +52,7 @@ class TextFormFieldDefault extends StatelessWidget {
       maxLines: maxLines,
       maxLength: maxLength,
       textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
