@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:crm_app/app/app_widget.dart';
+import 'package:crm_app/app/modules/sincronizacao/splash/splash_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;

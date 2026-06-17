@@ -17,6 +17,7 @@ class TextFormFieldDefault extends StatelessWidget {
   final TextInputAction? textInputAction;
   final int? maxLines;
   final int? maxLength;
+  final bool mostrarContador;
   final TextCapitalization textCapitalization;
 
   const TextFormFieldDefault({
@@ -35,7 +36,9 @@ class TextFormFieldDefault extends StatelessWidget {
     this.textInputAction,
     this.maxLines = 1,
     this.maxLength,
+    this.mostrarContador = true,
     this.textCapitalization = TextCapitalization.none,
+
   });
 
   @override
@@ -56,6 +59,7 @@ class TextFormFieldDefault extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hintText,
+        counterText: mostrarContador ? null : '',
         border: temErro
             ? OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

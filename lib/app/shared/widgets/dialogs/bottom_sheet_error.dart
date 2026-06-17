@@ -32,19 +32,15 @@ class BottomSheetError {
             ),
             const SizedBox(height: 24),
             Center(
-              child: Container(
+              child: SizedBox(
                 width: 64,
                 height: 64,
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  shape: BoxShape.circle,
-                ),
                 child: Icon(Icons.error_outline, color: Colors.red.shade400, size: 32),
               ),
             ),
             const SizedBox(height: 16),
             const Text(
-              'Ocorreu um erro',
+              'Ops!',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),

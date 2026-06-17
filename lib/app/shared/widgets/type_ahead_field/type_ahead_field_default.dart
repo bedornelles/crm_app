@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class TypeAheadFieldDefault extends StatelessWidget {
@@ -16,6 +17,9 @@ class TypeAheadFieldDefault extends StatelessWidget {
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final TextCapitalization textCapitalization;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLength;
+  final bool mostrarContador;
 
   const TypeAheadFieldDefault({
     super.key,
@@ -32,6 +36,9 @@ class TypeAheadFieldDefault extends StatelessWidget {
     this.focusNode,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
+    this.inputFormatters,
+    this.maxLength,
+    this.mostrarContador = true,
   });
 
   @override
@@ -48,9 +55,12 @@ class TypeAheadFieldDefault extends StatelessWidget {
         validator: validator,
         textInputAction: textInputAction,
         textCapitalization: textCapitalization,
+        inputFormatters: inputFormatters,
+        maxLength: maxLength,
         onChanged: onChanged,
         decoration: InputDecoration(
           hintText: hintText,
+          counterText: mostrarContador ? null : '',
           border: temErro
               ? OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),

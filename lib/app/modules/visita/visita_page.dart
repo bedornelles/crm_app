@@ -11,7 +11,6 @@ import 'package:pkg_flutter_utils/validators.dart'; //pacote cervantes
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crm_app/app/shared/widgets/text_form_field/text_form_field_default.dart';
 import 'package:crm_app/app/shared/widgets/type_ahead_field/type_ahead_field_default.dart';
-
 import '../../shared/widgets/dialogs/modal_descartar.dart';
 
 class VisitaPage extends StatefulWidget{
@@ -236,6 +235,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       hintText: 'Lancheria do centro',
                       validator: InputValidator.required,
                       textCapitalization: TextCapitalization.words,
+                      maxLength: 150,
+                      mostrarContador: false,
                       fieldKey: _nomeEmpresaKey,
                       shakeController: _shakeNomeEmpresa,
                       temErro: _camposComErro.contains('nomeEmpresa'),
@@ -254,6 +255,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       hintText: 'João da Silva',
                       validator: InputValidator.required,
                       textCapitalization: TextCapitalization.words,
+                      maxLength:150,
+                      mostrarContador: false,
                       fieldKey: _contatoKey,
                       shakeController: _shakeContato,
                       temErro: _camposComErro.contains('contato'),
@@ -289,6 +292,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'E-mail da empresa',
                       controller: _emailController,
                       hintText: 'emailEmpresa@example.com',
+                      maxLength: 150,
+                      mostrarContador: false,
                       textInputType: TextInputType.emailAddress,
                       validator: (value) {
                         final emailValido = EmailValidator.validate(value);
@@ -303,6 +308,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'Telefone',
                       controller: _telefoneController,
                       hintText: '(51) 9 9999-9999',
+                      maxLength: 16,
+                      mostrarContador: false,
                       textInputType: TextInputType.phone,
                       inputFormatters: [InputMasked.fone(value: _telefoneController.text)],
                     ),
@@ -315,6 +322,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       hintText: 'Av Barão do Rio Branco, centro',
                       validator: InputValidator.required,
                       textCapitalization: TextCapitalization.words,
+                      maxLength: 50,
+                      mostrarContador: false,
                       fieldKey: _logradouroKey,
                       shakeController: _shakeLogradouro,
                       temErro: _camposComErro.contains('logradouro'),
@@ -340,6 +349,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'Número',
                       controller: _numeroController,
                       hintText: '1234',
+                      maxLength: 50,
+                      mostrarContador: false,
                       validator: InputValidator.required,
                       fieldKey: _numeroKey,
                       shakeController: _shakeNumero,
@@ -359,6 +370,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       hintText: 'São Paulo/SP',
                       validator: InputValidator.required,
                       textCapitalization: TextCapitalization.words,
+                      maxLength: 50,
+                      mostrarContador: false,
                       fieldKey: _cidadeKey,
                       shakeController: _shakeCidade,
                       temErro: _camposComErro.contains('cidade'),
@@ -384,7 +397,9 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'Complemento',
                       controller: _complementoController,
                       hintText: 'Sala 01, Ap 01, Perto de...',
-                      textCapitalization: TextCapitalization.sentences ,
+                      maxLength: 50,
+                      mostrarContador: false,
+                      textCapitalization: TextCapitalization.sentences,
                     ),
 
                     const SizedBox(height: 16),
@@ -393,7 +408,9 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'Sistema atual',
                       controller: _sistemaController,
                       hintText: 'ERP Xyz',
-                      textCapitalization: TextCapitalization.sentences ,
+                      maxLength: 50,
+                      mostrarContador: false,
+                      textCapitalization: TextCapitalization.sentences,
                     ),
 
                     const SizedBox(height: 16),
@@ -402,6 +419,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       label: 'Valor Pago',
                       controller: _valorPagoController,
                       hintText: 'R\$ 99,90',
+                      maxLength: 15,
+                      mostrarContador: false,
                       textInputType: TextInputType.number,
                       inputFormatters: [
                         InputMasked.currency(
@@ -435,7 +454,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       controller: _observacoesController,
                       maxLines: 4,
                       maxLength: 1500,
-                      textCapitalization: TextCapitalization.sentences ,
+                      textCapitalization: TextCapitalization.sentences,
                     ),
 
                     const SizedBox(height: 24),
