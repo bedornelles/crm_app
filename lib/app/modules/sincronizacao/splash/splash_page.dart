@@ -16,15 +16,13 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-
     _controller.load();
-
     _fadeInLogo();
   }
 
   void _fadeInLogo() {
     Future.delayed(const Duration(milliseconds: 200), () {
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _opacity = 1.0;
         });
@@ -35,7 +33,10 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Color.lerp(
+        Theme.of(context).colorScheme.primary,
+        Colors.black,
+        0.5,),
       body: Center(
         child: AnimatedOpacity(
           opacity: _opacity,
