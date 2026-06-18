@@ -211,17 +211,13 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           color: theme.colorScheme.secondary,
                         )
                       ),
-                      //input ja "nasce" com data e hora atual
                       initialValue: DateTime.now(),
-                      //faz abrir o calendario e depois o relogio
                       mode: DateTimeFieldPickerMode.dateAndTime,
-                      //faz o texto ficar no formato br (dep. INTL)
                       dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
-                      //salva a data e hora selecionada na variavel 'novaData'
+                      firstDate: DateTime.now().subtract(const Duration(days: 7)),
+                      lastDate: DateTime.now(),
                       onDateSelected: (DateTime? novaData){
-                        //verifica se o user seleionou alguma coisa
                         if (novaData != null) {
-                          //envia para controller guardar Mobx
                           controller.visita.dataVisita = novaData;
                         }
                       }
