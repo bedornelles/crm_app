@@ -249,6 +249,7 @@ class _FiltroPersonalizadoSheetState extends State<_FiltroPersonalizadoSheet> {
       initialDate: DateTime.now(),
       firstDate: DateTime(2025),
       lastDate: DateTime.now(),
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
 
     if (picked != null) {

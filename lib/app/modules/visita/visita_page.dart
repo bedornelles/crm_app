@@ -218,6 +218,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       dateFormat: DateFormat('dd/MM/yyyy HH:mm'),
                       firstDate: DateTime.now().subtract(const Duration(days: 7)),
                       lastDate: DateTime.now(),
+                      initialEntryMode: DatePickerEntryMode.calendarOnly,
                       onDateSelected: (DateTime? novaData){
                         if (novaData != null) {
                           controller.visita.dataVisita = novaData;
