@@ -48,6 +48,12 @@ class TypeAheadFieldDefault extends StatelessWidget {
     Widget field = TypeAheadField<String>(
       controller: controller,
       emptyBuilder: (context) => const SizedBox.shrink(),
+      decorationBuilder: (context, child) => Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        elevation: 4,
+        child: child,
+      ),
       builder: (context, textController, focusNode) => TextFormField(
         controller: textController,
         focusNode: focusNode,
