@@ -25,6 +25,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
   final controller = Modular.get<VisitaController>();
   final _formKey = GlobalKey<FormState>();
+  bool _salvando = false;
 
   final _telefoneController = TextEditingController();
   final _cpfCnpjController = TextEditingController();
@@ -135,6 +136,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
+        if(_salvando) return;
         if (_temAlteracoes) {
           await ModalDescartar.show(
               context, onDescartar: () => Modular.to.pop());
@@ -456,61 +458,66 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                     const SizedBox(height: 24),
 
                     ElevatedButton(
-                      onPressed: () async {
+                      onPressed: _salvando ? null : () async {
                         bool estaValido = _formKey.currentState!.validate();
                         bool escolheuInteresse = controller.visita.demonstrouInteresse != null;
 
                         //validação
                         if (estaValido && escolheuInteresse) {
-                          controller.visita.nomeEmpresa = _nomeEmpresaController.text;
-                          controller.visita.nomeContatoEmpresa = _contatoController.text;
-                          controller.visita.cpfCnpjEmpresa = _cpfCnpjController.text;
-                          controller.visita.emailEmpresa = _emailController.text;
-                          controller.visita.telefoneEmpresa = _telefoneController.text;
-                          controller.visita.logradouroEmpresa = _logradouroController.text;
-                          controller.visita.numeroEmpresa = _numeroController.text;
-                          controller.visita.cidadeEmpresa = _cidadeController.text;
-                          controller.visita.complementoEmpresa = _complementoController.text;
-                          controller.visita.sistemaAtual = _sistemaController.text;
-                          controller.visita.valorPago = _valorPagoController.text;
-                          controller.visita.observacoes = _observacoesController.text;
+                          setState(() => _salvando = true);
+                          try{
+                            controller.visita.nomeEmpresa = _nomeEmpresaController.text;
+                            controller.visita.nomeContatoEmpresa = _contatoController.text;
+                            controller.visita.cpfCnpjEmpresa = _cpfCnpjController.text;
+                            controller.visita.emailEmpresa = _emailController.text;
+                            controller.visita.telefoneEmpresa = _telefoneController.text;
+                            controller.visita.logradouroEmpresa = _logradouroController.text;
+                            controller.visita.numeroEmpresa = _numeroController.text;
+                            controller.visita.cidadeEmpresa = _cidadeController.text;
+                            controller.visita.complementoEmpresa = _complementoController.text;
+                            controller.visita.sistemaAtual = _sistemaController.text;
+                            controller.visita.valorPago = _valorPagoController.text;
+                            controller.visita.observacoes = _observacoesController.text;
 
-                          final homeController = Modular.get<HomeController>();
-                          final visita = await controller.salvar();
+                            final homeController = Modular.get<HomeController>();
+                            final visita = await controller.salvar();
 
-                          if (visita != null) {
-                            await homeController.load();
-                            Modular.to.pop(visita);
+                            if (visita != null) {
+                              await homeController.load();
+                              Modular.to.pop(visita);
+                            }
+                          } finally {
+                            if (mounted) setState(() => _salvando = false);
                           }
-                        } else {
+                          } else {
 
-                          final cpfCnpjInvalido = InputValidator(
-                            [CnpjCpfValidator()],
-                          ).validate(_cpfCnpjController.text) != null;
+                            final cpfCnpjInvalido = InputValidator(
+                              [CnpjCpfValidator()],
+                            ).validate(_cpfCnpjController.text) != null;
 
-                          // marca os campos vazios com erro para pintar a borda
-                          setState(() {
-                            if (_nomeEmpresaController.text.isEmpty) {
-                              _camposComErro.add('nomeEmpresa');
-                            }
-                            if (_contatoController.text.isEmpty) {
-                              _camposComErro.add('contato');
-                            }
-                            if (_logradouroController.text.isEmpty) {
-                              _camposComErro.add('logradouro');
-                            }
-                            if (_numeroController.text.isEmpty) {
-                              _camposComErro.add('numero');
-                            }
-                            if (_cidadeController.text.isEmpty) {
-                              _camposComErro.add('cidade');
-                            }
-                            if (!escolheuInteresse) {
-                              _camposComErro.add('interesse');
-                            }
-                            if (cpfCnpjInvalido) {
-                              _camposComErro.add('cpfCnpj');
-                            }
+                            // marca os campos vazios com erro para pintar a borda
+                            setState(() {
+                              if (_nomeEmpresaController.text.isEmpty) {
+                                _camposComErro.add('nomeEmpresa');
+                              }
+                              if (_contatoController.text.isEmpty) {
+                                _camposComErro.add('contato');
+                              }
+                              if (_logradouroController.text.isEmpty) {
+                                _camposComErro.add('logradouro');
+                              }
+                              if (_numeroController.text.isEmpty) {
+                                _camposComErro.add('numero');
+                              }
+                              if (_cidadeController.text.isEmpty) {
+                                _camposComErro.add('cidade');
+                              }
+                              if (!escolheuInteresse) {
+                                _camposComErro.add('interesse');
+                              }
+                              if (cpfCnpjInvalido) {
+                                _camposComErro.add('cpfCnpj');
+                              }
                           });
 
                           // coleta todos os campos vazios em ordem
@@ -549,8 +556,17 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                           }
                         }
                       },
+                      child: _salvando
+                          ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                      )
 
-                      child: const Row(
+                      : const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
