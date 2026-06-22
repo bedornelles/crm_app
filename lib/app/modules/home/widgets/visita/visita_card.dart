@@ -50,6 +50,8 @@ class VisitaCard extends StatelessWidget{
 
               Text(
                 visita.tituloExibicao,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -60,6 +62,8 @@ class VisitaCard extends StatelessWidget{
 
               Text(
                 visita.nomeContatoEmpresa,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
