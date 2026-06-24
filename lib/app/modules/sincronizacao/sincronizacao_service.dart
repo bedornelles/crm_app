@@ -34,7 +34,6 @@ class SincronizacaoService implements Disposable {
 
   Future<void> _sincronizar() async {
 
-    //se ja ta tondando ignora esse disparo do timer
     if (_sincronizando) return;
     _sincronizando = true;
 
@@ -89,6 +88,15 @@ class SincronizacaoService implements Disposable {
       } else {
         await _visitaRepository.marcarComoErro(visita.base.id, erroMsg);
       }
+    }
+  }
+
+  Future<void> sincronizarVisita(VisitaEntity visita) async {
+    try {
+      await _enviarVisita(visita);
+      onSincronizacaoConcluida?.call();
+    } catch (e) {
+      print('erro ao sincronizar visita: $e');
     }
   }
 

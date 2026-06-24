@@ -12,6 +12,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:crm_app/app/shared/widgets/text_form_field/text_form_field_default.dart';
 import 'package:crm_app/app/shared/widgets/type_ahead_field/type_ahead_field_default.dart';
 import '../../shared/widgets/dialogs/modal_descartar.dart';
+import '../sincronizacao/sincronizacao_service.dart';
 
 class VisitaPage extends StatefulWidget{
 
@@ -484,6 +485,9 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                             final visita = await controller.salvar();
 
                             if (visita != null) {
+                              final sincronizacaoService = Modular.get<SincronizacaoService>();
+                              sincronizacaoService.sincronizarVisita(visita);
+
                               await homeController.load();
                               Modular.to.pop(visita);
                             }

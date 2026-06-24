@@ -78,7 +78,7 @@ abstract class _HomeControllerBase with Store {
   }
 
   @observable
-  FiltroData filtroData = FiltroData.hoje; //padrao
+  FiltroData filtroData = FiltroData.hoje;
 
   @observable
   DateTime? dataInicio;
@@ -144,10 +144,8 @@ abstract class _HomeControllerBase with Store {
     try {
       print('iniciando o logout');
 
-      //limpar o cache
       await _cache.remove(cacheUsuarioKey);
 
-      //redireciona e destroi a home
       Modular.to.navigate('/login');
 
       print('logou concluido');
@@ -173,26 +171,19 @@ abstract class _HomeControllerBase with Store {
 
         //descodificando o token
         if (token != null) {
-          // 1. O JWT tem 3 partes separadas por ponto. O Payload é a parte do meio (índice 1).
+
           final parts = token.split('.');
           if (parts.length == 3) {
             final payload = parts[1];
 
-            // 2. O Dart precisa que o Base64 esteja perfeitamente alinhado, então normaliza
             final String normalizedPayload = base64Url.normalize(payload);
 
-            // 3. Descodifica de Base64 para String (JSON)
             final String decodedPayload = utf8.decode(base64Url.decode(normalizedPayload));
 
-            // 4. Transforma a String num Map para poder ler as chaves
             final Map<String, dynamic> payloadMap = jsonDecode(decodedPayload);
-
-            // chaves exatas que o back-end colocou dentro do Token
-            print('Conteúdo de dentro do Token: $payloadMap');
 
             nomeUsuario = payloadMap['nome'] ?? 'Usuário';
 
-            //extrai o id do usuario do token
             idUsuarioLogado = payloadMap['id_usuario'] ?? '';
 
             List<String> nomes = nomeUsuario.trim().split(' ');
@@ -216,16 +207,12 @@ abstract class _HomeControllerBase with Store {
     try {
       _loading = true;
 
-      // 1. Primeiro, carrega os dados do usuário (Nome, Iniciais e ID) do cache/token.
-      // Precisa esperar isso terminar para ter o 'idUsuarioLogado' preenchido.
       await carregarDadosUsuario();
 
-      // 2. Agora que tem o ID, chama o novo metodo filtrado.
       if (idUsuarioLogado.isNotEmpty) {
         final lista = await _service.getVisitasPorUsuario(idUsuarioLogado);
         visitas = ObservableList.of(lista);
       } else {
-        // Caso não encontre o ID (ex: erro no token), limpa a lista
         visitas = ObservableList<VisitaEntity>();
         print('Aviso: Nenhum ID de usuário encontrado para filtrar as visitas.');
       }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:pkg_flutter_utils/validators.dart';
+import '../sincronizacao/sincronizacao_service.dart';
 import 'identificar_empresa_id_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:crm_app/app/modules/home/home_controller.dart';
@@ -166,7 +167,12 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
         final homeController = Modular.get<HomeController>();
         final String idUsuario = homeController.idUsuarioLogado;
 
-        await controller.salvar(idUsuario);
+        final visita = await controller.salvar(idUsuario);
+
+        if (visita != null) {
+          final sincronizacaoService = Modular.get<SincronizacaoService>();
+          sincronizacaoService.sincronizarVisita(visita);
+        }
 
         await homeController.load();
 
