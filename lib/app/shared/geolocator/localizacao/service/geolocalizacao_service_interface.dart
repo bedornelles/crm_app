@@ -1,3 +1,3 @@
-abstract class ILocalizacaoService {
+abstract class IGeolocalizacaoService {
   Future<String?> obterLocalizacaoAtual();
 }

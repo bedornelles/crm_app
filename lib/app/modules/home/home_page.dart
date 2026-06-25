@@ -26,17 +26,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     controller.load();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final visitaController = Modular.get<VisitaController>();
-      final deveExibir = await visitaController.deveExibirPermissaoLocalizacao();
-      if (deveExibir && mounted) {
-        PermissaoLocalizacao.show(
-          context,
-          onContinuar: () async {
-            await visitaController.obterLocalizacao();
-          },
-        );
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _verificarPermissaoLocalizacao();
     });
   }
 
@@ -44,6 +35,21 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _pesquisaController.dispose();
     super.dispose();
+  }
+
+  Future<void> _verificarPermissaoLocalizacao() async {
+    final visitaController = Modular.get<VisitaController>();
+    final deveExibir = await visitaController.deveExibirPermissaoLocalizacao();
+
+    if (deveExibir && mounted) {
+      PermissaoLocalizacao.show(
+        context,
+        onContinuar: () async {
+          await visitaController.obterLocalizacao();
+          _verificarPermissaoLocalizacao(); // verifica novamente após solicitar
+        },
+      );
+    }
   }
 
   @override
