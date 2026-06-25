@@ -24,7 +24,7 @@ abstract class _HomeControllerBase with Store {
   _HomeControllerBase(this._service, this._cache) {
     _sincronizacaoSubscription = Modular.get<AppController>()
         .sincronizacaoStream
-        .listen((_) {
+        .listen((value) {
       load();
     });
   }

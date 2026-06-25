@@ -31,7 +31,7 @@ class ConfirmacaoLogout {
               width: double.infinity,
               child: Text(
                 'Você tem certeza que deseja sair?',
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               ),
             ),

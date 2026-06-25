@@ -1,15 +1,12 @@
-import 'dart:convert';
-
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/home/widgets/menu_perfil_bottom_sheet/menu_perfil_bottom_sheet.dart';
 import 'package:crm_app/app/modules/home/widgets/visita/filtro_data_bottom_sheet.dart';
 import 'package:crm_app/app/modules/home/widgets/visita/visita_card.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:crm_app/app/modules/visita/enum/filtro_data.dart';
+import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../shared/widgets/dialogs/confirmacao_logout.dart';
 import '../../shared/widgets/dialogs/permissao_localizacao.dart';

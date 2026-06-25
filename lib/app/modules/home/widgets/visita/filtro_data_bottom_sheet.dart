@@ -269,11 +269,90 @@ class _FiltroPersonalizadoSheetState extends State<_FiltroPersonalizadoSheet> {
   }
 
   void _confirmar() {
-    if (_dataInicio == null || _dataFim == null) return;
+    if (_dataInicio == null || _dataFim == null) {
+      _mostrarErroDataPersonalizada('Preencha as duas datas para continuar.');
+      return;
+    }
+    if(_dataFim!.isBefore(_dataInicio!)){
+      _mostrarErroDataPersonalizada('Redefina a data inicial, pois ela não pode ser posterior a data final!',
+        onTentarNovamente: () => setState(() {
+          _dataInicio = null;
+          _dataFim = null;
+        }),
+      );
+      return;
+    }
     Navigator.pop(context, {
       'inicio': _dataInicio!,
       'fim': _dataFim!,
     });
+  }
+  
+  void _mostrarErroDataPersonalizada(String mensagem, {VoidCallback? onTentarNovamente}) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        builder: (ctx) => Padding(
+          padding: const EdgeInsets.only(top: 12, left: 24, right: 24, bottom: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Icon(Icons.error_outline, color: Theme.of(context).colorScheme.primary, size: 30),
+              const SizedBox(height: 12),
+              Text(
+                'Ops!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                mensagem,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, height: 1.5),
+              ),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    onTentarNovamente?.call();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        'Tentar novamente',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                        ),
+                      ),
+                      Icon(Icons.refresh, size: 18),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
   }
 
   @override

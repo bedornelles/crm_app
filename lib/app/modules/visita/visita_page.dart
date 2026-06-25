@@ -206,8 +206,8 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
 
                     const SizedBox(height: 8),
 
-                    //cria o input de data/hora
                     DateTimeFormField(
+                      enabled: false,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.calendar_month_rounded,

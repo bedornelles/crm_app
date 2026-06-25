@@ -6,7 +6,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 class AppController implements Disposable{
   final SincronizacaoService _sincronizacaoService;
 
-  //
   final _sincronizacaoStreamController = StreamController<void>.broadcast();
   Stream<void> get sincronizacaoStream => _sincronizacaoStreamController.stream;
 

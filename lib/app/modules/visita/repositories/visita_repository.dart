@@ -14,10 +14,9 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
 
   @override
   void create(Batch batch) {
-    // Aqui usamos as variáveis da classe pai para criar as colunas de controle do padrão base
     batch.execute('''
       CREATE TABLE IF NOT EXISTS $getTableName (
-        $getIdColumnName TEXT PRIMARY KEY,
+      $getIdColumnName TEXT PRIMARY KEY,
       ${BaseRepositoryLocal.dataHoraCriado} TEXT,
       ${BaseRepositoryLocal.dataHoraUltimaAlteracao} TEXT,
       ${BaseRepositoryLocal.dataHoraDeletado} TEXT,
@@ -148,6 +147,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     );
   }
 
+  @override
   Future<void> marcarComoFalhou(String id, String mensagemErro) async {
     final db = await DatabaseLocal().getDb();
     await db.update(
@@ -160,6 +160,7 @@ class VisitaRepositoryLocal extends TableRepositoryLocal<VisitaEntity> implement
     );
   }
 
+  @override
   Future<void> resetarParaPendente(String id) async {
     final db = await DatabaseLocal().getDb();
     await db.update(

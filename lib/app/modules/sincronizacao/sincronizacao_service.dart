@@ -126,7 +126,7 @@ class SincronizacaoService implements Disposable {
             .replaceAll('.', '')
             .replaceAll(',', '.')
             .trim(),
-      ) ?? 0.0,
+      ),
       'interessado': visita.demonstrouInteresse,
       'observacao': visita.observacoes,
       'logradouroEmpresa': visita.logradouroEmpresa,
