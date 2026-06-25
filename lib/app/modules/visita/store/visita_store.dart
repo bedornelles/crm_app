@@ -161,27 +161,4 @@ abstract class _VisitaStoreBase with Store {
     idUsuario: idUsuario,
     erroSincronizacao: erroSincronizacao,
   );
-
-  VisitaStore clone() => VisitaStore(
-    base: base.clone(),
-    dataVisita: dataVisita,
-    nomeEmpresa: nomeEmpresa,
-    nomeContatoEmpresa: nomeContatoEmpresa,
-    identificadorEmpresa: identificadorEmpresa,
-    emailEmpresa: emailEmpresa,
-    cpfCnpjEmpresa: cpfCnpjEmpresa,
-    telefoneEmpresa: telefoneEmpresa,
-    logradouroEmpresa: logradouroEmpresa,
-    numeroEmpresa: numeroEmpresa,
-    cidadeEmpresa: cidadeEmpresa,
-    complementoEmpresa: complementoEmpresa,
-    sistemaAtual: sistemaAtual,
-    valorPago: valorPago,
-    demonstrouInteresse: demonstrouInteresse,
-    observacoes: observacoes,
-    statusSincronizacao: statusSincronizacao,
-    localizacao: localizacao,
-    idUsuario: idUsuario,
-    erroSincronizacao: erroSincronizacao,
-  );
 }
