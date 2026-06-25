@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:pkg_flutter_utils/validators.dart';
@@ -66,6 +67,9 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
                   animationController: _shakeId,
                   child: TextFormField(
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
                     validator: InputValidator.required,
                     onChanged: (value) {
                       controller.setIdEmpresa(value);
