@@ -1,4 +1,5 @@
 import 'package:crm_app/app/modules/visita/enum/status_sincronizacao.dart';
+import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -22,9 +23,7 @@ class VisitaCard extends StatelessWidget{
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () => Modular.to.pushNamed(
-          '/visita/detalhe',
-          arguments: visita,
+        onTap: () => Modular.to.pushNamed('$visitaRouter$visitaDetalheRouter', arguments: visita,
         ),
 
         child: Padding(

@@ -25,7 +25,6 @@ class LoginModule extends Module{
   }
   @override
   void routes(RouteManager r) {
-    // Qnd entrar no LoginModule, mostra a LoginPage
     r.child('/', child: (context) => const LoginPage());
   }
 }

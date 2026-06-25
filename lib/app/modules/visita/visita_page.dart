@@ -1,5 +1,6 @@
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
+import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:crm_app/app/shared/widgets/demonstrou_interesse/demonstrou_interesse.dart';
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
             PopupMenuButton<String>(
               onSelected: (String result) async {
                 if (result == 'identificar_id'){
-                  await Modular.to.pushNamed('/visita/identificarId');
+                  await Modular.to.pushNamed('$visitaRouter$visitaIdentificarIdRouter');
                 }
               },
               shape: RoundedRectangleBorder(

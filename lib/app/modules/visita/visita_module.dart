@@ -7,6 +7,7 @@ import 'package:crm_app/app/modules/visita/services/visita_service_interface.dar
 import 'package:crm_app/app/modules/visita/visita_controller.dart';
 import 'package:crm_app/app/modules/visita/visita_detalhe_page.dart';
 import 'package:crm_app/app/shared/geolocator/geolocator_module.dart';
+import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:crm_app/app/modules/visita/visita_page.dart';
 import 'package:crm_app/app/modules/visita/identificar_empresa_id_page.dart';
@@ -36,8 +37,8 @@ class VisitaModule extends Module {
   @override
   void routes(RouteManager r) {
     r.child('/', child: (context) => const VisitaPage());
-    r.child('/identificarId', child: (context) => const IdentificarEmpresaIdPage());
-    r.child('/detalhe', child: (context) => VisitaDetalhePage(
+    r.child(visitaIdentificarIdRouter, child: (context) => const IdentificarEmpresaIdPage());
+    r.child(visitaDetalheRouter, child: (context) => VisitaDetalhePage(
         visita: r.args.data as VisitaEntity,
     ));
   }

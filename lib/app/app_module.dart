@@ -5,6 +5,7 @@ import 'package:crm_app/app/modules/sincronizacao/splash/splash_module.dart';
 import 'package:crm_app/app/shared/api/api_module.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
+import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'modules/visita/visita_module.dart';
 import 'package:crm_app/app/app_controller.dart';
@@ -28,9 +29,9 @@ class AppModule extends Module {
   }
   @override
   void routes(RouteManager r) {
-    r.module('/', module: SplashModule(_cache));
-    r.module('/login', module: LoginModule(_cache));
-    r.module('/home', module: HomeModule(_cache));
-    r.module('/visita', module: VisitaModule(_cache));
+    r.module(splashRouter, module: SplashModule(_cache));
+    r.module(loginRouter, module: LoginModule(_cache));
+    r.module(homeRouter, module: HomeModule(_cache));
+    r.module(visitaRouter, module: VisitaModule(_cache));
   }
 }
