@@ -28,6 +28,7 @@ abstract class VisitaStoreFactory {
     statusSincronizacao: entity.statusSincronizacao,
     localizacao: entity.localizacao,
     idUsuario: entity.idUsuario,
+    erroSincronizacao: entity.erroSincronizacao,
   );
 
   static VisitaStore novo(String idUsuario) => VisitaStore(
@@ -50,6 +51,7 @@ abstract class VisitaStoreFactory {
     statusSincronizacao: StatusSincronizacao.pendente,
     localizacao: null,
     idUsuario: idUsuario,
+    erroSincronizacao: null,
   );
 }
 
@@ -111,6 +113,9 @@ abstract class _VisitaStoreBase with Store {
   @observable
   String? localizacao;
 
+  @observable
+  String? erroSincronizacao;
+
   _VisitaStoreBase({
     required this.base,
     required this.dataVisita,
@@ -131,6 +136,7 @@ abstract class _VisitaStoreBase with Store {
     required this.statusSincronizacao,
     required this.localizacao,
     required this.idUsuario,
+    required this.erroSincronizacao,
   });
 
   VisitaEntity toEntity() => VisitaEntity(
@@ -153,6 +159,7 @@ abstract class _VisitaStoreBase with Store {
     statusSincronizacao: statusSincronizacao,
     localizacao: localizacao,
     idUsuario: idUsuario,
+    erroSincronizacao: erroSincronizacao,
   );
 
   VisitaStore clone() => VisitaStore(
@@ -175,5 +182,6 @@ abstract class _VisitaStoreBase with Store {
     statusSincronizacao: statusSincronizacao,
     localizacao: localizacao,
     idUsuario: idUsuario,
+    erroSincronizacao: erroSincronizacao,
   );
 }

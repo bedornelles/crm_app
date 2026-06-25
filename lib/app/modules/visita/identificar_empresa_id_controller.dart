@@ -58,6 +58,8 @@ abstract class _IdentificarEmpresaIdControllerBase with Store{
         complementoEmpresa: '',
         sistemaAtual: '',
         valorPago: '',
+        erroSincronizacao: null,
+        localizacao: null,
       );
 
       await _visitaService.saveOrUpdate(entity);

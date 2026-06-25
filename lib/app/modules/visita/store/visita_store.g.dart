@@ -352,6 +352,24 @@ mixin _$VisitaStore on _VisitaStoreBase, Store {
     });
   }
 
+  late final _$erroSincronizacaoAtom = Atom(
+    name: '_VisitaStoreBase.erroSincronizacao',
+    context: context,
+  );
+
+  @override
+  String? get erroSincronizacao {
+    _$erroSincronizacaoAtom.reportRead();
+    return super.erroSincronizacao;
+  }
+
+  @override
+  set erroSincronizacao(String? value) {
+    _$erroSincronizacaoAtom.reportWrite(value, super.erroSincronizacao, () {
+      super.erroSincronizacao = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
@@ -373,7 +391,8 @@ demonstrouInteresse: ${demonstrouInteresse},
 observacoes: ${observacoes},
 statusSincronizacao: ${statusSincronizacao},
 idUsuario: ${idUsuario},
-localizacao: ${localizacao}
+localizacao: ${localizacao},
+erroSincronizacao: ${erroSincronizacao}
     ''';
   }
 }
