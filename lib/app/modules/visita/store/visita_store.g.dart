@@ -250,13 +250,13 @@ mixin _$VisitaStore on _VisitaStoreBase, Store {
   );
 
   @override
-  String get valorPago {
+  String? get valorPago {
     _$valorPagoAtom.reportRead();
     return super.valorPago;
   }
 
   @override
-  set valorPago(String value) {
+  set valorPago(String? value) {
     _$valorPagoAtom.reportWrite(value, super.valorPago, () {
       super.valorPago = value;
     });

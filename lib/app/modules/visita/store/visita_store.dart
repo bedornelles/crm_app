@@ -45,7 +45,7 @@ abstract class VisitaStoreFactory {
     cidadeEmpresa: '',
     complementoEmpresa: null,
     sistemaAtual: null,
-    valorPago: '',
+    valorPago: null,
     demonstrouInteresse: null,
     observacoes: null,
     statusSincronizacao: StatusSincronizacao.pendente,
@@ -96,7 +96,7 @@ abstract class _VisitaStoreBase with Store {
   String? sistemaAtual;
 
   @observable
-  String valorPago;
+  String? valorPago;
 
   @observable
   bool? demonstrouInteresse;

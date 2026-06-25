@@ -120,13 +120,15 @@ class SincronizacaoService implements Disposable {
       'telefoneEmpresa': visita.telefoneEmpresa?.replaceAll(
           RegExp(r'[^0-9]'), ''),
       'sistemaAtual': visita.sistemaAtual,
-      'valorPago': double.tryParse(
-        visita.valorPago
-            .replaceAll('R\$', '')
-            .replaceAll('.', '')
-            .replaceAll(',', '.')
-            .trim(),
-      ),
+      'valorPago': visita.valorPago == null ||visita.valorPago!.trim().isEmpty
+        ?null
+        : double.tryParse(
+            visita.valorPago!
+              .replaceAll('R\$', '')
+              .replaceAll('.', '')
+              .replaceAll(',', '.')
+              .trim(),
+        ),
       'interessado': visita.demonstrouInteresse,
       'observacao': visita.observacoes,
       'logradouroEmpresa': visita.logradouroEmpresa,

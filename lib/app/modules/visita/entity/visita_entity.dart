@@ -19,7 +19,7 @@ class VisitaEntity implements IBaseEntity{
   String cidadeEmpresa;
   String? complementoEmpresa;
   String? sistemaAtual;
-  String valorPago;
+  String? valorPago;
   bool demonstrouInteresse;
   String? observacoes;
   StatusSincronizacao statusSincronizacao;
@@ -100,7 +100,7 @@ class VisitaEntity implements IBaseEntity{
       cidadeEmpresa: map['cidade_empresa'] ?? '',
       complementoEmpresa: map['complemento_empresa'],
       sistemaAtual: map['sistema_atual'],
-      valorPago: map['valor_pago'] ?? '',
+      valorPago: map['valor_pago'],
       demonstrouInteresse: map['demonstrou_interesse'] == 1,
       observacoes: map['observacoes'],
       statusSincronizacao: StatusSincronizacao.fromValor(map['status_sincronizacao'] ?? 'PENDENTE'),
