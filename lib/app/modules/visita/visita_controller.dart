@@ -42,12 +42,15 @@ abstract class _VisitaControllerBase with Store {
     saving = true;
 
     try {
+      print('1. iniciando - ${DateTime.now()}');
       final localizacao = await _geolocalizacaoService.obterLocalizacaoAtual();
-
+      print('2. localizacao obtida - ${DateTime.now()}');
       final entity = visita.toEntity();
       entity.localizacao = localizacao;
 
       await _visitaService.saveOrUpdate(entity);
+      print('3. salvo no banco - ${DateTime.now()}');
+
       return entity;
     } finally {
       saving = false;

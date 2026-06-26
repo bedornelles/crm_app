@@ -4,8 +4,6 @@ import 'package:crm_app/app/modules/sincronizacao/splash/splash_page.dart';
 import 'package:crm_app/app/shared/api/api_module.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:crm_app/app/shared/cache/cache_interface.dart';
-import 'package:path/path.dart';
 
 class SplashModule extends Module {
 

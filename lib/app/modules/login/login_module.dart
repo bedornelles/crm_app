@@ -6,8 +6,6 @@ import 'package:crm_app/app/modules/login/login_page.dart';
 import 'package:crm_app/app/modules/login/services/login_service_interface.dart';
 import 'package:crm_app/app/modules/login/services/login_service.dart';
 
-import '../../shared/cache/cache_interface.dart';
-
 class LoginModule extends Module{
 
   @override

@@ -2,7 +2,6 @@ import 'package:crm_app/app/shared/geolocator/permissao/service/permissao_locali
 import 'package:crm_app/app/shared/geolocator/permissao/service/permissao_localizacao_service_interface.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
-import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'localizacao/service/geolocalizacao_service.dart';
 import 'localizacao/service/geolocalizacao_service_interface.dart';
 
