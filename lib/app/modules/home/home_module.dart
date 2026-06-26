@@ -9,13 +9,10 @@ import '../../shared/cache/cache_interface.dart';
 
 
 class HomeModule extends Module{
-  final ICache _cache;
-  HomeModule(this._cache);
-
   @override
   List<Module> get imports => [
-    CacheModule(_cache),
-    VisitaModule(_cache),
+    CacheModule(),
+    VisitaModule(),
   ];
 
   @override

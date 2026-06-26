@@ -7,13 +7,10 @@ import 'localizacao/service/geolocalizacao_service.dart';
 import 'localizacao/service/geolocalizacao_service_interface.dart';
 
 class GeolocatorModule extends Module {
-  final ICache _cache;
-
-  GeolocatorModule(this._cache);
 
   @override
   List<Module> get imports => [
-    CacheModule(_cache),
+    CacheModule(),
   ];
 
   @override

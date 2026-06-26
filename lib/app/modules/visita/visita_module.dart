@@ -16,13 +16,10 @@ import 'package:crm_app/app/shared/cache/cache_module.dart';
 import '../../shared/cache/cache_interface.dart';
 
 class VisitaModule extends Module {
-  final ICache _cache;
-  VisitaModule(this._cache);
-
   @override
   List<Module> get imports => [
-    CacheModule(_cache),
-    GeolocatorModule(_cache),
+    CacheModule(),
+    GeolocatorModule(),
   ];
 
   @override

@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         context,
         onContinuar: () async {
           await visitaController.obterLocalizacao();
-          _verificarPermissaoLocalizacao(); // verifica novamente após solicitar
+          _verificarPermissaoLocalizacao();
         },
       );
     }
@@ -179,7 +179,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-//banner para mostrar o filtro ativo
 class _BannerFiltroAtivo extends StatelessWidget {
   final HomeController controller;
 

@@ -7,14 +7,11 @@ import 'package:flutter_modular/flutter_modular.dart';
 import '../../shared/cache/cache_interface.dart';
 
 class SincronizacaoModule extends Module{
-  final ICache _cache;
-  SincronizacaoModule(this._cache);
-
   @override
   List<Module> get imports => [
-    ApiModule(_cache),
-    CacheModule(_cache),
-    VisitaModule(_cache),
+    ApiModule(),
+    CacheModule(),
+    VisitaModule(),
   ];
 
   @override

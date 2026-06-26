@@ -3,7 +3,6 @@ import 'package:crm_app/app/modules/login/login_module.dart';
 import 'package:crm_app/app/modules/sincronizacao/sincronizacao_module.dart';
 import 'package:crm_app/app/modules/sincronizacao/splash/splash_module.dart';
 import 'package:crm_app/app/shared/api/api_module.dart';
-import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
 import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -11,15 +10,12 @@ import 'modules/visita/visita_module.dart';
 import 'package:crm_app/app/app_controller.dart';
 
 class AppModule extends Module {
-  final ICache _cache;
-
-  AppModule(this._cache);
 
   @override
   List<Module> get imports => [
-    CacheModule(_cache),
-    ApiModule(_cache),
-    SincronizacaoModule(_cache),
+    CacheModule(),
+    ApiModule(),
+    SincronizacaoModule(),
   ];
 
 
@@ -29,9 +25,9 @@ class AppModule extends Module {
   }
   @override
   void routes(RouteManager r) {
-    r.module(splashRouter, module: SplashModule(_cache));
-    r.module(loginRouter, module: LoginModule(_cache));
-    r.module(homeRouter, module: HomeModule(_cache));
-    r.module(visitaRouter, module: VisitaModule(_cache));
+    r.module(splashRouter, module: SplashModule());
+    r.module(loginRouter, module: LoginModule());
+    r.module(homeRouter, module: HomeModule());
+    r.module(visitaRouter, module: VisitaModule());
   }
 }

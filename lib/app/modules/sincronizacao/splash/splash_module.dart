@@ -8,15 +8,12 @@ import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:path/path.dart';
 
 class SplashModule extends Module {
-  final ICache _cache;
-
-  SplashModule(this._cache);
 
   @override
   List<Module> get imports => [
-    CacheModule(_cache),
-    ApiModule(_cache),
-    LoginModule(_cache)
+    CacheModule(),
+    ApiModule(),
+    LoginModule(),
   ];
 
   @override
