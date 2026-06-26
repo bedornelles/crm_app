@@ -15,7 +15,6 @@ abstract class _VisitaControllerBase with Store {
   final IGeolocalizacaoService _geolocalizacaoService;
   final IPermissaoLocalizacaoService _permissaoLocalizacaoService;
 
-  //construtor que vai pedir o repositorio para o modular
   _VisitaControllerBase(
       this._visitaService,
       this._geolocalizacaoService,
@@ -25,15 +24,25 @@ abstract class _VisitaControllerBase with Store {
   @observable
   bool saving = false;
 
-  //store da visita que esta sendo criada
   @observable
   VisitaStore visita = VisitaStoreFactory.novo('');
 
-  //inicialuza o store com id do usuario logado
-  //chama assim que a tela abre
+  Future<void>? _carregandoLocalizacao;
+
+  @observable
+  String? localizacaoAtual;
+
   @action
   void init(String idUsuario) {
     visita = VisitaStoreFactory.novo(idUsuario);
+  }
+
+  void iniciarCarregamentoLocalizacao() {
+    _carregandoLocalizacao = _carregarLocalizacao();
+  }
+
+  Future<void> _carregarLocalizacao() async {
+    localizacaoAtual = await _geolocalizacaoService.obterLocalizacaoAtual();
   }
 
   @action
@@ -42,16 +51,17 @@ abstract class _VisitaControllerBase with Store {
     saving = true;
 
     try {
-      print('1. iniciando - ${DateTime.now()}');
-      final localizacao = await _geolocalizacaoService.obterLocalizacaoAtual();
-      print('2. localizacao obtida - ${DateTime.now()}');
+
+      if (_carregandoLocalizacao != null) {
+        await _carregandoLocalizacao;
+      }
+
       final entity = visita.toEntity();
-      entity.localizacao = localizacao;
+      entity.localizacao = localizacaoAtual;
 
       await _visitaService.saveOrUpdate(entity);
-      print('3. salvo no banco - ${DateTime.now()}');
-
       return entity;
+
     } finally {
       saving = false;
     }

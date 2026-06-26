@@ -87,6 +87,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
     super.initState();
     final homeController = Modular.get<HomeController>();
     controller.init(homeController.idUsuarioLogado);
+    controller.iniciarCarregamentoLocalizacao();
 
     _shakeNomeEmpresa = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _shakeContato = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));

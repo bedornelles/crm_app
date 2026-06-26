@@ -45,6 +45,24 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     });
   }
 
+  late final _$localizacaoAtualAtom = Atom(
+    name: '_VisitaControllerBase.localizacaoAtual',
+    context: context,
+  );
+
+  @override
+  String? get localizacaoAtual {
+    _$localizacaoAtualAtom.reportRead();
+    return super.localizacaoAtual;
+  }
+
+  @override
+  set localizacaoAtual(String? value) {
+    _$localizacaoAtualAtom.reportWrite(value, super.localizacaoAtual, () {
+      super.localizacaoAtual = value;
+    });
+  }
+
   late final _$salvarAsyncAction = AsyncAction(
     '_VisitaControllerBase.salvar',
     context: context,
@@ -98,7 +116,8 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
   String toString() {
     return '''
 saving: ${saving},
-visita: ${visita}
+visita: ${visita},
+localizacaoAtual: ${localizacaoAtual}
     ''';
   }
 }
