@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crm_app/app/modules/login/services/login_service_interface.dart';
 import 'package:crm_app/app/modules/visita/enum/filtro_data.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
 import 'package:crm_app/app/shared/router/routes.dart';
@@ -18,11 +19,12 @@ class HomeController = _HomeControllerBase with _$HomeController;
 abstract class _HomeControllerBase with Store {
   final IVisitaService _service;
   final ICache _cache;
+  final ILoginService _loginService;
 
   StreamSubscription? _sincronizacaoSubscription;
   Timer? _debounceTimer;
 
-  _HomeControllerBase(this._service, this._cache) {
+  _HomeControllerBase(this._service, this._cache, this._loginService) {
     _sincronizacaoSubscription = Modular.get<AppController>()
         .sincronizacaoStream
         .listen((value) {
@@ -142,7 +144,7 @@ abstract class _HomeControllerBase with Store {
 
   @action
   Future<void> desconectar() async {
-      await _cache.remove(cacheUsuarioKey);
+      await _loginService.logout();
       Modular.to.navigate(loginRouter);
   }
 

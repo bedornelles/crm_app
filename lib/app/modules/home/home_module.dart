@@ -1,5 +1,6 @@
 import 'package:crm_app/app/modules/home/home_controller.dart';
 import 'package:crm_app/app/modules/home/home_page.dart';
+import 'package:crm_app/app/modules/login/login_module.dart';
 import 'package:crm_app/app/shared/cache/cache_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:crm_app/app/modules/visita/visita_module.dart';
@@ -11,6 +12,7 @@ class HomeModule extends Module{
   List<Module> get imports => [
     CacheModule(),
     VisitaModule(),
+    LoginModule(),
   ];
 
   @override
