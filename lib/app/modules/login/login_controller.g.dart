@@ -60,6 +60,26 @@ mixin _$LoginController on _LoginControllerBase, Store {
     });
   }
 
+  late final _$loginAsyncAction = AsyncAction(
+    '_LoginControllerBase.login',
+    context: context,
+  );
+
+  @override
+  Future<void> login(String username, String password) {
+    return _$loginAsyncAction.run(() => super.login(username, password));
+  }
+
+  late final _$logoutAsyncAction = AsyncAction(
+    '_LoginControllerBase.logout',
+    context: context,
+  );
+
+  @override
+  Future<void> logout() {
+    return _$logoutAsyncAction.run(() => super.logout());
+  }
+
   late final _$_LoginControllerBaseActionController = ActionController(
     name: '_LoginControllerBase',
     context: context,

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:crm_app/app/modules/visita/enum/filtro_data.dart';
 import 'package:crm_app/app/shared/cache/cache_interface.dart';
+import 'package:crm_app/app/shared/router/routes.dart';
 import 'package:mobx/mobx.dart';
 import 'package:crm_app/app/modules/visita/entity/visita_entity.dart';
 import 'package:crm_app/app/modules/visita/services/visita_service_interface.dart';
@@ -141,17 +142,8 @@ abstract class _HomeControllerBase with Store {
 
   @action
   Future<void> desconectar() async {
-    try {
-      print('iniciando o logout');
-
       await _cache.remove(cacheUsuarioKey);
-
-      Modular.to.navigate('/login');
-
-      print('logou concluido');
-    } catch (e) {
-      print('erro ao deslogar: $e');
-    }
+      Modular.to.navigate(loginRouter);
   }
 
 

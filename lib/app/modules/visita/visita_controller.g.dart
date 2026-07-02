@@ -95,6 +95,36 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     return _$obterLocalizacaoAsyncAction.run(() => super.obterLocalizacao());
   }
 
+  late final _$getEnderecosAsyncAction = AsyncAction(
+    '_VisitaControllerBase.getEnderecos',
+    context: context,
+  );
+
+  @override
+  Future<List<String>> getEnderecos(String logradouro) {
+    return _$getEnderecosAsyncAction.run(() => super.getEnderecos(logradouro));
+  }
+
+  late final _$getCidadesAsyncAction = AsyncAction(
+    '_VisitaControllerBase.getCidades',
+    context: context,
+  );
+
+  @override
+  Future<List<String>> getCidades(String cidade) {
+    return _$getCidadesAsyncAction.run(() => super.getCidades(cidade));
+  }
+
+  late final _$getLastCidadeAsyncAction = AsyncAction(
+    '_VisitaControllerBase.getLastCidade',
+    context: context,
+  );
+
+  @override
+  Future<String> getLastCidade() {
+    return _$getLastCidadeAsyncAction.run(() => super.getLastCidade());
+  }
+
   late final _$_VisitaControllerBaseActionController = ActionController(
     name: '_VisitaControllerBase',
     context: context,
@@ -107,6 +137,18 @@ mixin _$VisitaController on _VisitaControllerBase, Store {
     );
     try {
       return super.init(idUsuario);
+    } finally {
+      _$_VisitaControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void iniciarCarregamentoLocalizacao() {
+    final _$actionInfo = _$_VisitaControllerBaseActionController.startAction(
+      name: '_VisitaControllerBase.iniciarCarregamentoLocalizacao',
+    );
+    try {
+      return super.iniciarCarregamentoLocalizacao();
     } finally {
       _$_VisitaControllerBaseActionController.endAction(_$actionInfo);
     }

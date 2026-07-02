@@ -43,6 +43,7 @@ dev_dependencies:
   mobx_codegen: ^2.7.2
   build_runner: ^2.6.1
   flutter_launcher_icons: ^0.14.1
+  mockito: ^5.4.4
 
 dependency_overrides:
   intl: 0.19.0

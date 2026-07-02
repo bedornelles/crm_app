@@ -19,9 +19,7 @@ class IdentificarEmpresaIdPage extends StatefulWidget {
 
 class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> with TickerProviderStateMixin{
   final controller = Modular.get<IdentificarEmpresaIdController>();
-  //puxa a função getIdUsuarioLogado da visitacontroller
   final visitaController = Modular.get<VisitaController>();
-  //para validar os formularios
   final _formKey = GlobalKey<FormState>();
   final _idKey = GlobalKey();
   final _contatoKey = GlobalKey();
@@ -35,6 +33,7 @@ class _IdentificarEmpresaIdPageState extends State<IdentificarEmpresaIdPage> wit
     super.initState();
     _shakeId = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
     _shakeContato = AnimationController(vsync: this, duration: const Duration(milliseconds: 400));
+    controller.iniciarCarregamentoLocalizacao();
   }
 
   @override

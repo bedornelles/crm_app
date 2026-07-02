@@ -35,8 +35,11 @@ abstract class _VisitaControllerBase with Store {
   @action
   void init(String idUsuario) {
     visita = VisitaStoreFactory.novo(idUsuario);
+    localizacaoAtual = null;
+    _carregandoLocalizacao = null;
   }
 
+  @action
   void iniciarCarregamentoLocalizacao() {
     _carregandoLocalizacao = _carregarLocalizacao();
   }
@@ -77,14 +80,17 @@ abstract class _VisitaControllerBase with Store {
     await _permissaoLocalizacaoService.solicitarPermissao();
   }
 
+  @action
   Future<List<String>> getEnderecos(String logradouro) async {
     return await _visitaService.getEnderecos(logradouro);
   }
 
+  @action
   Future<List<String>> getCidades(String cidade) async {
     return await _visitaService.getCidades(cidade);
   }
 
+  @action
   Future<String> getLastCidade() async {
     return await _visitaService.getLastCidade();
   }

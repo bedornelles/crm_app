@@ -82,6 +82,24 @@ mixin _$IdentificarEmpresaIdController
     });
   }
 
+  late final _$localizacaoAtualAtom = Atom(
+    name: '_IdentificarEmpresaIdControllerBase.localizacaoAtual',
+    context: context,
+  );
+
+  @override
+  String? get localizacaoAtual {
+    _$localizacaoAtualAtom.reportRead();
+    return super.localizacaoAtual;
+  }
+
+  @override
+  set localizacaoAtual(String? value) {
+    _$localizacaoAtualAtom.reportWrite(value, super.localizacaoAtual, () {
+      super.localizacaoAtual = value;
+    });
+  }
+
   late final _$salvarAsyncAction = AsyncAction(
     '_IdentificarEmpresaIdControllerBase.salvar',
     context: context,
@@ -145,7 +163,8 @@ mixin _$IdentificarEmpresaIdController
 saving: ${saving},
 idEmpresa: ${idEmpresa},
 contato: ${contato},
-observacoes: ${observacoes}
+observacoes: ${observacoes},
+localizacaoAtual: ${localizacaoAtual}
     ''';
   }
 }

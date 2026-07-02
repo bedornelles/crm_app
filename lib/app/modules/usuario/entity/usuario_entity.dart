@@ -24,11 +24,10 @@ class UsuarioEntity {
     'refreshToken': refreshToken,
   };
 
-  //TRADUTOR
   //transforma o mapa de dados que vem da API nessa classe
   factory UsuarioEntity.fromJson(Map<String, dynamic> json) {
     return UsuarioEntity(
-      token: json['accessToken'], // Nome do campo que vem da API
+      token: json['accessToken'],
       refreshToken: json['refreshToken'],
     );
   }
