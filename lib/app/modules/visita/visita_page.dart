@@ -312,7 +312,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       hintText: '(51) 9 9999-9999',
                       maxLength: 16,
                       mostrarContador: false,
-                      textInputType: TextInputType.phone,
+                      textInputType: TextInputType.number,
                       inputFormatters: [InputMasked.fone(value: _telefoneController.text)],
                     ),
 
@@ -354,6 +354,7 @@ class _VisitaPageState extends State<VisitaPage> with TickerProviderStateMixin{
                       maxLength: 50,
                       mostrarContador: false,
                       validator: InputValidator.required,
+                      textInputType: TextInputType.number,
                       fieldKey: _numeroKey,
                       shakeController: _shakeNumero,
                       temErro: _camposComErro.contains('numero'),

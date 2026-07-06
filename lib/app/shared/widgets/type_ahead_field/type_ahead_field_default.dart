@@ -61,7 +61,10 @@ class TypeAheadFieldDefault extends StatelessWidget {
         validator: validator,
         textInputAction: textInputAction,
         textCapitalization: textCapitalization,
-        inputFormatters: inputFormatters,
+        inputFormatters: [
+          FilteringTextInputFormatter.deny(RegExp(r'^\s')),
+          ...?inputFormatters,
+        ],
         maxLength: maxLength,
         onChanged: onChanged,
         decoration: InputDecoration(

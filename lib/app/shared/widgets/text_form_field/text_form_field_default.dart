@@ -50,7 +50,10 @@ class TextFormFieldDefault extends StatelessWidget {
       focusNode: focusNode,
       style: const TextStyle(fontWeight: FontWeight.w400),
       keyboardType: textInputType,
-      inputFormatters: inputFormatters,
+      inputFormatters: [
+        FilteringTextInputFormatter.deny(RegExp(r'^\s')),
+        ...?inputFormatters,
+      ],
       validator: validator,
       maxLines: maxLines,
       maxLength: maxLength,
